@@ -1,0 +1,104 @@
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta http-equiv='X-UA-Compatible' content='IE=edge' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>{{title}}</title>
+    <link rel='stylesheet' href='./css/style.css' />
+    <script src='./js/script.js'></script>
+  </head>
+  <body>
+    <div id='base'>
+      <div id='container'>
+        <h1>TAI BookStore</h1>
+        <button id='btn-addBook' onclick='openForm()'>Add New Book</button>
+        <table id='tb-books'>
+          <tr class='row'>
+            <th>Title</th>
+            <th>Price</th>
+            <th>Author</th>
+            <th>Publication Date</th>
+            <th>Edit</th>
+            <th>Remove</th>
+          </tr>
+          {{#each data}}
+            <tr class='row'>
+              <td>{{title}}</td>
+              <td>{{price}}</td>
+              <td>{{author}}</td>
+              <td>{{publication_date}}</td>
+              <td><button id='btn-Update' onclick='updateBook()'><img
+                    src='./imgs/edit.png'
+                    width='20px'
+                    alt=''
+                  /></button></td>
+              <td><button id='btn-Delete' onclick='deleteBook({{id}})'>
+                  <img src='./imgs/delete.png' width='20px' alt='' />
+                </button></td>
+            </tr>
+          {{/each}}
+        </table>
+        <div class='modalAddBook'>
+          <div class='formPopup' id='popupForm' style='display:none'>
+            <form action='/' method='post' class='formContainer'>
+              <h3>Add New Book</h3>
+              <p>
+                <label for='title'>
+                  Book Title
+                </label>
+                <input
+                  type='text'
+                  id='title'
+                  placeholder='Name of Book'
+                  name='title'
+                  required
+                />
+              </p>
+              <p>
+                <label for='text'>
+                  Price
+                </label>
+                <input
+                  type='text'
+                  id='price'
+                  placeholder='in NRs.'
+                  name='price'
+                  required
+                />
+              </p>
+              <p>
+                <label for='text'>
+                  Author
+                </label>
+                <input
+                  type='text'
+                  id='price'
+                  placeholder='Author&#39s Name'
+                  name='author'
+                  required
+                />
+              </p>
+              <p>
+                <label for='text'>
+                  Publication Date
+                </label>
+                <input
+                  type='text'
+                  id='publication_date'
+                  placeholder='YYYY/MM/DD'
+                  name='publication_date'
+                />
+              </p>
+              <button type='submit' class='btn' id='btn-save'>Save</button>
+              <button
+                type='button'
+                class='btn cancel'
+                onclick='closeForm()'
+              >Close</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

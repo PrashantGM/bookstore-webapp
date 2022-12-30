@@ -1,0 +1,60 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Times New Roman', Times, serif;
+}
+#base {
+  display: flex;
+  justify-content: center;
+}
+h1 {
+  text-align: center;
+  margin-bottom: 60px;
+}
+#container {
+  margin: 10px;
+  padding: 10px;
+}
+#tb-books {
+  width: 200px;
+}
+th {
+  padding: 5px;
+  background-color: lightblue;
+  text-align: center;
+}
+td {
+  padding: 5px 10px;
+
+  background-color: azure;
+}
+button {
+  background-color: rgb(107, 107, 208);
+  padding: 5px;
+  color: white;
+}
+#btn-Delete,
+#btn-Update {
+  background-color: azure;
+  border: none;
+}
+
+input {
+  border: none;
+  background-color: rgb(223, 235, 246);
+  width: 200px;
+  height: 35px;
+}
+label {
+  margin-right: 10px;
+}
+
+#popupform {
+  background-color: azure;
+  padding: 20px;
+
+  border: 1px dashed black;
+}
+h3 {
+  font-family: 'Times New Roman', Times, serif;
+}
