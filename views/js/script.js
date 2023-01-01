@@ -1,32 +1,84 @@
+const { parse } = require('dotenv');
+
 //this opens new form when add new book button is clicked
 const BOOK_URL = 'http://localhost:8000/books';
-function openForm() {
+function openForm(actionType, id) {
   const form = document.getElementById('popupForm');
   form.style.display = 'block';
 
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    const title = document.querySelector('input[name="title"]').value;
-    const price = document.querySelector('input[name="price"]').value;
-    const author = document.querySelector('input[name="author"]').value;
-    const date = document.querySelector('input[name="publication_date"]').value;
+  if (actionType === 'add') {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const title = document.querySelector('input[name="title"]').value;
+      const price = document.querySelector('input[name="price"]').value;
+      const author = document.querySelector('input[name="author"]').value;
+      const date = document.querySelector(
+        'input[name="publication_date"]'
+      ).value;
 
-    const data = { title, price, author, publication_date: date };
-    fetch(BOOK_URL, {
+      const data = { title, price, author, publication_date: date };
+      fetch(BOOK_URL, {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+        body: JSON.stringify(data),
+      })
+        .then(function (res) {
+          console.log(res);
+        })
+        .catch(function (err) {
+          console.log(err);
+        });
+    });
+  } else {
+    fetch(`/books/${id}`, {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      method: 'POST',
-      body: JSON.stringify(data),
+      method: 'GET',
     })
-      .then(function (res) {
-        console.log(res);
+      .then((res) => res.json())
+      .then((booksData) => {
+        const { title, price, author, parsedDate } = booksData.data;
+        document.querySelector('#h3-newbook').textContent = 'Edit Book';
+        document.querySelector('#btn-save').textContent = 'Update';
+        document.querySelector('input[name="title"]').value = title;
+        document.querySelector('input[name="price"]').value = price;
+        document.querySelector('input[name="author"]').value = author;
+        document.querySelector('input[name="publication_date"]').value =
+          parsedDate;
       })
       .catch(function (err) {
         console.log(err);
       });
-  });
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const title = document.querySelector('input[name="title"]').value;
+      const price = document.querySelector('input[name="price"]').value;
+      const author = document.querySelector('input[name="author"]').value;
+      const date = document.querySelector(
+        'input[name="publication_date"]'
+      ).value;
+      const data = { title, price, author, publication_date: date };
+      fetch(`/books/${id}`, {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        method: 'PUT',
+        body: JSON.stringify(data),
+      })
+        .then(function (res) {
+          console.log(res);
+        })
+        .catch(function (err) {
+          console.log(err);
+        });
+    });
+  }
   document.getElementById('tb-books').style.display = 'none';
   document.getElementById('btn-addBook').style.display = 'none';
 }
@@ -37,6 +89,13 @@ function closeForm() {
   document.getElementById('tb-books').style.display = 'block';
   document.getElementById('btn-addBook').style.display = 'block';
   window.location.href = BOOK_URL;
+}
+function addBook() {
+  openForm('add', '');
+}
+//updates corresponding book
+function updateBook(id) {
+  openForm('update', id);
 }
 
 //deletes corresponding book

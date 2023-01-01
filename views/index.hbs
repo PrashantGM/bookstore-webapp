@@ -11,7 +11,7 @@
     <div id='base'>
       <div id='container'>
         <h1>TAI BookStore</h1>
-        <button id='btn-addBook' onclick='openForm()'>Add New Book</button>
+        <button id='btn-addBook' onclick='addBook()'>Add New Book</button>
         <table id='tb-books'>
           <tr class='row'>
             <th>Title</th>
@@ -27,7 +27,7 @@
               <td>{{price}}</td>
               <td>{{author}}</td>
               <td>{{publication_date}}</td>
-              <td><button id='btn-Update' onclick='updateBook()'><img
+              <td><button id='btn-Update' onclick='updateBook({{id}})'><img
                     src='./imgs/edit.png'
                     width='20px'
                     alt=''
@@ -41,7 +41,7 @@
         <div class='modalAddBook'>
           <div class='formPopup' id='popupForm' style='display:none'>
             <form action='/' method='post' class='formContainer'>
-              <h3>Add New Book</h3>
+              <h3 id='h3-newbook'>Add New Book</h3>
               <p>
                 <label for='title'>
                   Book Title

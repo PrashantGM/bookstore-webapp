@@ -10,10 +10,11 @@ datasource db {
 model Book{
   id Int @id @default(autoincrement())
   title String
-  genre String
+  // genre String
+  // description String
   price Int
   author String
-  publication_date DateTime
+  publication_date DateTime @db.Date
 }
 
 // model User{
