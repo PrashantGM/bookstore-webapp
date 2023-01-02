@@ -1,38 +1,34 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const cloudinary = require('../middlewares/cloudinary');
 
 const addBook = async (req, res) => {
   try {
     //validation to be done later
-    const {
-      title,
-      image,
-      genre,
-      description,
-      price,
-      author,
-      publication_date,
-    } = req.body;
-    // const data = {
-    //   title: 'Slime',
-    //   image: 'image',
-    //   genre: ['fantasy', 'action'],
-    //   description: 'kjlkl',
-    //   price: '299',
-    //   author: 'kjlk',
-    //   publication_date: '2022/12/12',
-    // };
-    // console.log(req.body);
+    const { title, genre, description, price, author, publication_date } =
+      req.body;
+    console.log(title);
+    console.log(req.file.path);
+    // const result = await cloudinary.uploader.upload(req.file.path, {
+    //   public_id: `bookstore/books/${title}`,
+    //   width: 400,
+    //   height: 300,
+    //   crop: 'fill',
+    // });
+    let result = 'imagedummy';
+    console.log(result);
+
     const intPrice = Number(price);
     // console.log(intPrice);
     const parsedDate = new Date(publication_date);
     console.log(parsedDate);
+
     const book = await prisma.book.create({
       data: {
         title: title,
         genre: genre,
         description: description,
-        image: image,
+        image: result.secure_url,
         price: intPrice,
         author: author,
         publication_date: parsedDate,
@@ -49,7 +45,7 @@ const getAllBooks = async (req, res) => {
   try {
     const book = await prisma.book.findMany({
       where: {
-        genre: { hasSome: ['action', 'supernatural'] },
+        genre: { hasSome: ['action', 'sci-fi', 'supernatural'] },
       },
     });
     const bookWithParsedDate = book.map((b) => {

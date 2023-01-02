@@ -46,7 +46,12 @@
         </table>
         <div class='modalAddBook'>
           <div class='formPopup' id='popupForm' style='display:none'>
-            <form action='/' method='post' class='formContainer'>
+            <form
+              action='/'
+              enctype='multipart/form-data'
+              method='post'
+              class='formContainer'
+            >
               <h3 id='h3-newbook'>Add New Book</h3>
               <p>
                 <label for='title'>
@@ -65,11 +70,10 @@
                   Book Image
                 </label>
                 <input
-                  type='text'
-                  id='img-book'
-                  placeholder='Book Image'
+                  type='file'
+                  id='bookImg'
                   name='image'
-                  required
+                  accept='image/png, image/jpeg'
                 />
               </p>
               <p>

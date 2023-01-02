@@ -2,9 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
-
 const booksRoute = require('./routes/books');
-
 const PORT = process.env.PORT;
 const HOST = '127.0.0.1'; //dev
 
