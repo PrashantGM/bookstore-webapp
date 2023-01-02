@@ -7,29 +7,36 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
 model Book{
   id Int @id @default(autoincrement())
   title String
-  // genre String
-  // description String
+  genre String[]
+  description String
+  image String
   price Int
   author String
   publication_date DateTime @db.Date
+  user User[]
+
+  @@map(name:"books")
 }
 
-// model User{
-//   id Int @id @default(autoincrement())
-//   email String @unique
-//   name String?
-//   role Role @default(USER)
-// }
+model User{
+  id Int @id @default(autoincrement())
+  email String @unique
+  username String?
+  password String
+  role Role @default(USER)
+  readingList Book @relation(fields: [bookId], references: [id])
+  bookId Int
+  @@map(name:"users")
+}
 
-// model Profile{
-//   id Int @id @default(autoincrement())
-//   readingList String
-// }
 
-// enum Role{
-//   USER
-//   ADMIN
-// }
+
+
+enum Role{
+  USER
+  ADMIN
+}

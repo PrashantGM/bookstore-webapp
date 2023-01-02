@@ -4,13 +4,41 @@ const prisma = new PrismaClient();
 const addBook = async (req, res) => {
   try {
     //validation to be done later
-    const { title, price, author, publication_date } = req.body;
+    const {
+      title,
+      image,
+      genre,
+      description,
+      price,
+      author,
+      publication_date,
+    } = req.body;
+    // const data = {
+    //   title: 'Slime',
+    //   image: 'image',
+    //   genre: ['fantasy', 'action'],
+    //   description: 'kjlkl',
+    //   price: '299',
+    //   author: 'kjlk',
+    //   publication_date: '2022/12/12',
+    // };
+    // console.log(req.body);
     const intPrice = Number(price);
+    // console.log(intPrice);
     const parsedDate = new Date(publication_date);
+    console.log(parsedDate);
     const book = await prisma.book.create({
-      data: { title, price: intPrice, author, publication_date: parsedDate },
+      data: {
+        title: title,
+        genre: genre,
+        description: description,
+        image: image,
+        price: intPrice,
+        author: author,
+        publication_date: parsedDate,
+      },
     });
-
+    // console.log(book);
     res.status(201).json({ msg: 'Successfully added!', data: book });
   } catch (error) {
     res.status(500).json({ msg: error });
@@ -19,7 +47,11 @@ const addBook = async (req, res) => {
 
 const getAllBooks = async (req, res) => {
   try {
-    const book = await prisma.book.findMany();
+    const book = await prisma.book.findMany({
+      where: {
+        genre: { hasSome: ['action', 'supernatural'] },
+      },
+    });
     const bookWithParsedDate = book.map((b) => {
       const date = new Date(b.publication_date);
       let month = date.getUTCMonth() + 1;
@@ -28,7 +60,10 @@ const getAllBooks = async (req, res) => {
       const newDate = year + '/' + month + '/' + day;
       return {
         id: b.id,
+        image: b.image,
+        genre: b.genre,
         title: b.title,
+        description: b.description,
         price: b.price,
         author: b.author,
         publication_date: newDate,

@@ -1,5 +1,3 @@
-const { parse } = require('dotenv');
-
 //this opens new form when add new book button is clicked
 const BOOK_URL = 'http://localhost:8000/books';
 function openForm(actionType, id) {
@@ -10,13 +8,27 @@ function openForm(actionType, id) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       const title = document.querySelector('input[name="title"]').value;
+      const image = document.querySelector('input[name="image"]').value;
+      const genre = document.querySelector('input[name="genre"]').value;
+      let genreArr = genre.split(',');
+      const description = document.querySelector(
+        'textarea[name="description"]'
+      ).value;
       const price = document.querySelector('input[name="price"]').value;
       const author = document.querySelector('input[name="author"]').value;
       const date = document.querySelector(
         'input[name="publication_date"]'
       ).value;
 
-      const data = { title, price, author, publication_date: date };
+      const data = {
+        title,
+        image,
+        genre: genreArr,
+        description,
+        price,
+        author,
+        publication_date: date,
+      };
       fetch(BOOK_URL, {
         headers: {
           Accept: 'application/json',
@@ -42,10 +54,14 @@ function openForm(actionType, id) {
     })
       .then((res) => res.json())
       .then((booksData) => {
-        const { title, price, author, parsedDate } = booksData.data;
+        const { title, image, genre, description, price, author, parsedDate } =
+          booksData.data;
         document.querySelector('#h3-newbook').textContent = 'Edit Book';
         document.querySelector('#btn-save').textContent = 'Update';
         document.querySelector('input[name="title"]').value = title;
+        document.querySelector('input[name="image"]').value = image;
+        document.querySelector('input[name="genre"]').value = genre;
+        document.querySelector('input[name="description"]').value = description;
         document.querySelector('input[name="price"]').value = price;
         document.querySelector('input[name="author"]').value = author;
         document.querySelector('input[name="publication_date"]').value =
@@ -57,12 +73,25 @@ function openForm(actionType, id) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       const title = document.querySelector('input[name="title"]').value;
+      const image = document.querySelector('input[name="image"]').value;
+      const genre = document.querySelector('input[name="genre"]').value;
+      const description = document.querySelector(
+        'input[name="description"]'
+      ).value;
       const price = document.querySelector('input[name="price"]').value;
       const author = document.querySelector('input[name="author"]').value;
       const date = document.querySelector(
         'input[name="publication_date"]'
       ).value;
-      const data = { title, price, author, publication_date: date };
+      const data = {
+        title,
+        image,
+        genre,
+        description,
+        price,
+        author,
+        publication_date: date,
+      };
       fetch(`/books/${id}`, {
         headers: {
           Accept: 'application/json',

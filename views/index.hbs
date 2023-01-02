@@ -15,6 +15,9 @@
         <table id='tb-books'>
           <tr class='row'>
             <th>Title</th>
+            <th>Image</th>
+            <th>Genre</th>
+            <th>Description</th>
             <th>Price</th>
             <th>Author</th>
             <th>Publication Date</th>
@@ -24,6 +27,9 @@
           {{#each data}}
             <tr class='row'>
               <td>{{title}}</td>
+              <td>{{image}}</td>
+              <td>{{genre}}</td>
+              <td>{{description}}</td>
               <td>{{price}}</td>
               <td>{{author}}</td>
               <td>{{publication_date}}</td>
@@ -55,7 +61,43 @@
                 />
               </p>
               <p>
-                <label for='text'>
+                <label for='image'>
+                  Book Image
+                </label>
+                <input
+                  type='text'
+                  id='img-book'
+                  placeholder='Book Image'
+                  name='image'
+                  required
+                />
+              </p>
+              <p>
+                <label for='title'>
+                  Genre
+                </label>
+                <input
+                  type='text'
+                  id='genre'
+                  placeholder='Eg; action,sci-fi,etc.'
+                  name='genre'
+                  required
+                />
+              </p>
+              <p>
+                <p id='p-desc'>
+                  <label for='description'>
+                    Description
+                  </label>
+                  <textarea
+                    name='description'
+                    id='description'
+                    placeholder='Short Overview Of Book'
+                    cols='24'
+                    rows='6'
+                  ></textarea>
+                </p>
+                <label id='lbl-price' for='text'>
                   Price
                 </label>
                 <input

@@ -45,6 +45,10 @@ input {
   width: 200px;
   height: 35px;
 }
+textarea {
+  border: none;
+  background-color: rgb(223, 235, 246);
+}
 label {
   margin-right: 10px;
 }
@@ -55,6 +59,14 @@ label {
 
   border: 1px dashed black;
 }
-h3 {
+textarea {
   font-family: 'Times New Roman', Times, serif;
+}
+
+p {
+  display: flex;
+  justify-content: space-between;
+}
+#lbl-price {
+  margin-right: 80px;
 }
