@@ -1,3 +1,4 @@
+const fs = require('fs').promises;
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const cloudinary = require('../middlewares/cloudinary');
@@ -7,26 +8,19 @@ const addBook = async (req, res) => {
     //validation to be done later
     const { title, genre, description, price, author, publication_date } =
       req.body;
-    console.log(title);
-    console.log(req.file.path);
-    // const result = await cloudinary.uploader.upload(req.file.path, {
-    //   public_id: `bookstore/books/${title}`,
-    //   width: 400,
-    //   height: 300,
-    //   crop: 'fill',
-    // });
-    let result = 'imagedummy';
-    console.log(result);
-
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      public_id: `bookstore/books/${title}`,
+      width: 400,
+      height: 300,
+      crop: 'fill',
+    });
+    const genreArr = genre.split(',');
     const intPrice = Number(price);
-    // console.log(intPrice);
     const parsedDate = new Date(publication_date);
-    console.log(parsedDate);
-
     const book = await prisma.book.create({
       data: {
         title: title,
-        genre: genre,
+        genre: genreArr,
         description: description,
         image: result.secure_url,
         price: intPrice,
@@ -34,7 +28,7 @@ const addBook = async (req, res) => {
         publication_date: parsedDate,
       },
     });
-    // console.log(book);
+    await fs.unlink(req.file.path);
     res.status(201).json({ msg: 'Successfully added!', data: book });
   } catch (error) {
     res.status(500).json({ msg: error });
@@ -45,7 +39,7 @@ const getAllBooks = async (req, res) => {
   try {
     const book = await prisma.book.findMany({
       where: {
-        genre: { hasSome: ['action', 'sci-fi', 'supernatural'] },
+        genre: { hasSome: ['Action', 'sci-fi', 'supernatural'] },
       },
     });
     const bookWithParsedDate = book.map((b) => {
@@ -66,7 +60,10 @@ const getAllBooks = async (req, res) => {
       };
     });
 
-    res.render('index', { title: 'BookStore', data: bookWithParsedDate });
+    res.render('./admin/index', {
+      title: 'BookStore',
+      data: bookWithParsedDate,
+    });
   } catch (error) {
     res.status(500).json({ msg: error });
   }
@@ -77,7 +74,6 @@ const getBookById = async (req, res) => {
     const id = Number(req.params.id);
 
     const book = await prisma.book.findUnique({ where: { id } });
-    console.log(book);
     const date = new Date(book.publication_date);
     let month = date.getUTCMonth() + 1;
     let day = date.getUTCDate();
@@ -94,12 +90,29 @@ const getBookById = async (req, res) => {
 const updateBook = async (req, res) => {
   try {
     const id = Number(req.params.id);
-    const { title, price, author, publication_date } = req.body;
+    const {
+      title,
+      image,
+      genre,
+      description,
+      price,
+      author,
+      publication_date,
+    } = req.body;
+    const genreArr = genre.split(',');
     const intPrice = Number(price);
     const parsedDate = new Date(publication_date);
     const book = await prisma.book.update({
       where: { id },
-      data: { title, price: intPrice, author, publication_date },
+      data: {
+        title,
+        image,
+        genre: genreArr,
+        description,
+        price: intPrice,
+        author,
+        publication_date: parsedDate,
+      },
     });
     res.status(200).json({ msg: 'Successfully updated!', data: book });
   } catch (error) {

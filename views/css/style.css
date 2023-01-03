@@ -70,3 +70,15 @@ p {
 #lbl-price {
   margin-right: 80px;
 }
+
+/* tr {
+  display: flex;
+  justify-content: space-evenly;
+} */
+td {
+  overflow: hidden;
+}
+
+#td-desc {
+  height: 50px;
+}

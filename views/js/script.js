@@ -3,36 +3,25 @@ const BOOK_URL = 'http://localhost:8000/books';
 function openForm(actionType, id) {
   const form = document.getElementById('popupForm');
   form.style.display = 'block';
+  const trueForm = document.querySelector('.formContainer');
 
   if (actionType === 'add') {
-    // let filePath = '';
-    // const imageInput = document.querySelector('input[name="image"]');
-    // imageInput.addEventListener('change', (event) => {
-    //   const files = event.target.files;
-    //   filePath = files.fullName;
-    //   console.log(files);
-    //   console.log('heheh');
-    // });
-    form.addEventListener('submit', function (e) {
+    trueForm.addEventListener('submit', function (e) {
       e.preventDefault();
       const formData = new FormData();
       formData.append(
         'title',
         document.querySelector('input[name="title"]').value
       );
-      let filePath = '';
-      var imageInput = document.querySelector('input[name="image"]');
-      var fReader = new FileReader();
-      fReader.readAsDataURL(imageInput.files[0]);
-      fReader.onloadend = function (event) {
-        filePath = event.target.result;
-      };
+      formData.append(
+        'image',
+        document.querySelector('input[name="image"]').files[0]
+      );
 
-      console.log('now file', filePath);
-      formData.append('image', filePath);
-      const genre = document.querySelector('input[name="genre"]').value;
-      let genreArr = genre.split(',');
-      formData.append('genre', genreArr);
+      formData.append(
+        'genre',
+        document.querySelector('input[name="genre"]').value
+      );
       formData.append(
         'description',
         document.querySelector('textarea[name="description"]').value
@@ -76,7 +65,8 @@ function openForm(actionType, id) {
         document.querySelector('#h3-newbook').textContent = 'Edit Book';
         document.querySelector('#btn-save').textContent = 'Update';
         document.querySelector('input[name="title"]').value = title;
-        // document.querySelector('input[name="image"]').value = image;
+        document.querySelector('input[name="image"]').style.display = 'none';
+        document.querySelector('#img-display').src = image;
         document.querySelector('input[name="genre"]').value = genre;
         document.querySelector('textarea[name="description"]').value =
           description;
@@ -88,13 +78,14 @@ function openForm(actionType, id) {
       .catch(function (err) {
         console.log(err);
       });
-    form.addEventListener('submit', function (e) {
+    trueForm.addEventListener('submit', function (e) {
       e.preventDefault();
       const title = document.querySelector('input[name="title"]').value;
-      const image = document.querySelector('input[name="image"]').value;
+      const image = document.querySelector('#img-display').src;
+      console.log(image);
       const genre = document.querySelector('input[name="genre"]').value;
       const description = document.querySelector(
-        'input[name="description"]'
+        'textarea[name="description"]'
       ).value;
       const price = document.querySelector('input[name="price"]').value;
       const author = document.querySelector('input[name="author"]').value;
@@ -110,6 +101,7 @@ function openForm(actionType, id) {
         author,
         publication_date: date,
       };
+
       fetch(`/books/${id}`, {
         headers: {
           Accept: 'application/json',
