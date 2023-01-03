@@ -27,7 +27,7 @@ model User{
   email String @unique
   username String?
   password String
-  role Role @default(USER)
+  role Role? @default(USER)
   readingList Book @relation(fields: [bookId], references: [id])
   bookId Int
   @@map(name:"users")
