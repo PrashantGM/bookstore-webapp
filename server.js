@@ -1,9 +1,12 @@
 'use strict';
 const express = require('express');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
+
 const booksRoute = require('./routes/books');
 const usersRoute = require('./routes/users');
+
 const PORT = process.env.PORT;
 const HOST = '127.0.0.1'; //dev
 
@@ -14,12 +17,13 @@ app.use(
   })
 );
 app.use(express.json());
-
+app.use(cookieParser(process.env.JWT_SECRET));
 app.use(express.static('views'));
 app.set('view engine', 'hbs');
 
 //rendering hbs templates
 app.get('/', (req, res) => {
+  console.log(req.signedCookies);
   res.render('home');
 });
 
