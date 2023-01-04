@@ -6,7 +6,10 @@ require('dotenv').config();
 
 const booksRoute = require('./routes/books');
 const usersRoute = require('./routes/users');
-
+const {
+  authenticateUser,
+  authorizePermissions,
+} = require('./middlewares/auth');
 const PORT = process.env.PORT;
 const HOST = '127.0.0.1'; //dev
 
@@ -23,7 +26,6 @@ app.set('view engine', 'hbs');
 
 //rendering hbs templates
 app.get('/', (req, res) => {
-  console.log(req.signedCookies);
   res.render('home');
 });
 
@@ -31,7 +33,7 @@ app.get('/user/register', (req, res) => {
   res.render('register');
 });
 
-app.use('/books', booksRoute);
+app.use('/books', [authenticateUser, authorizePermissions], booksRoute);
 app.use('/user', usersRoute);
 
 app.listen(PORT, HOST, () => {
