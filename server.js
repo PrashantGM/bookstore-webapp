@@ -26,14 +26,16 @@ app.set('view engine', 'hbs');
 
 //rendering hbs templates
 app.get('/', (req, res) => {
-  res.render('home');
+  res.render('./pages/home');
 });
 
 app.get('/user/register', (req, res) => {
-  res.render('register');
+  res.render('./pages/register');
 });
-
-app.use('/books', [authenticateUser, authorizePermissions], booksRoute);
+app.get('/user/login', (req, res) => {
+  res.render('./pages/login');
+});
+app.use('/books', booksRoute);
 app.use('/user', usersRoute);
 
 app.listen(PORT, HOST, () => {

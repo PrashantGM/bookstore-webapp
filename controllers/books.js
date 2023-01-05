@@ -39,7 +39,7 @@ const getAllBooks = async (req, res) => {
   try {
     const book = await prisma.book.findMany({
       where: {
-        genre: { hasSome: ['Action', 'sci-fi', 'supernatural'] },
+        genre: { hasSome: ['Action', 'Sci-fi', 'Supernatural'] },
       },
     });
     const bookWithParsedDate = book.map((b) => {
@@ -132,4 +132,40 @@ const deleteBook = async (req, res) => {
   }
 };
 
-module.exports = { addBook, getAllBooks, getBookById, updateBook, deleteBook };
+const getBooksForUser = async (req, res) => {
+  try {
+    const page = Number(req.query.page) || 1;
+    console.log(page);
+    const limit = 3;
+    const skipValue = (page - 1) * limit;
+
+    const books = await prisma.book.findMany({
+      skip: skipValue,
+      take: limit,
+      select: {
+        title: true,
+        image: true,
+        genre: true,
+        description: true,
+        author: true,
+        price: true,
+      },
+
+      orderBy: {
+        title: 'asc',
+      },
+    });
+    res.status(200).json(books);
+  } catch (error) {
+    res.status(500).json({ msg: error });
+  }
+};
+
+module.exports = {
+  addBook,
+  getAllBooks,
+  getBookById,
+  updateBook,
+  deleteBook,
+  getBooksForUser,
+};

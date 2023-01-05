@@ -17,7 +17,8 @@ model Book{
   price Int
   author String
   publication_date DateTime @db.Date
-  user User[]
+  user User @relation(fields: [user_id], references: [id])
+  user_id Int
 
   @@map(name:"books")
 }
@@ -28,8 +29,7 @@ model User{
   username String?
   password String
   role Role? @default(USER)
-  readingList Book @relation(fields: [bookId], references: [id])
-  bookId Int
+  reading_list Book[] 
   @@map(name:"users")
 }
 

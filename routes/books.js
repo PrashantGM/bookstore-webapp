@@ -12,9 +12,17 @@ const {
   getBookById,
   updateBook,
   deleteBook,
+  getBooksForUser,
 } = require('../controllers/books');
 
-router.route('/').post(upload.single('image'), addBook).get(getAllBooks);
-router.route('/:id').get(getBookById).put(updateBook).delete(deleteBook);
-
+router
+  .route('/admin')
+  .post(authenticateUser, authorizePermissions, upload.single('image'), addBook)
+  .get(authenticateUser, authorizePermissions, getAllBooks);
+router
+  .route('/admin/:id')
+  .get(authenticateUser, authorizePermissions, getBookById)
+  .put(authenticateUser, authorizePermissions, updateBook)
+  .delete(authenticateUser, authorizePermissions, deleteBook);
+router.route('/').get(getBooksForUser);
 module.exports = router;

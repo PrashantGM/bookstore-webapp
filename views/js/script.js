@@ -1,5 +1,5 @@
 //this opens new form when add new book button is clicked
-const BOOK_URL = 'http://localhost:8000/books';
+const BOOK_URL = 'http://localhost:8000/books/admin';
 function openForm(actionType, id) {
   const form = document.getElementById('popupForm');
   form.style.display = 'block';
@@ -51,7 +51,7 @@ function openForm(actionType, id) {
         });
     });
   } else {
-    fetch(`/books/${id}`, {
+    fetch(`/books/admin/${id}`, {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -102,7 +102,7 @@ function openForm(actionType, id) {
         publication_date: date,
       };
 
-      fetch(`/books/${id}`, {
+      fetch(`/books/admin/${id}`, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
