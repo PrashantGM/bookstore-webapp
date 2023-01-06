@@ -31,6 +31,9 @@ app.get('/', (req, res) => {
   res.render('./pages/home');
 });
 
+app.get('/landing', (req, res) => {
+  res.render('./pages/landing');
+});
 app.get('/user/register', (req, res) => {
   res.render('./pages/register');
 });

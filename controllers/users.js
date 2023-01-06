@@ -6,6 +6,8 @@ const prisma = new PrismaClient();
 const registerUser = async (req, res) => {
   try {
     const { username, email, password } = req.body;
+    console.log('this was executed');
+    console.log(req.body);
     const salt = await bcrypt.genSalt(10);
     const users = await prisma.user.findUnique({ where: { email } });
     console.log('users' + users);
@@ -19,7 +21,6 @@ const registerUser = async (req, res) => {
         username,
         email,
         password: encryptedPassword,
-        bookId: 1,
       },
     });
     const tokenUser = { email: user.email, id: user.id, role: user.role };
@@ -78,4 +79,26 @@ const logout = async (req, res) => {
   res.status(200).json({ msg: 'user logged out!' });
 };
 
-module.exports = { registerUser, loginUser, getSingleUser, logout };
+const addBooksToReadingList = async (req, res) => {
+  //ToDo
+  const { id } = req.body;
+  console.log(req.body);
+  const userId = Number(req.params.id);
+  // console.log(title);
+  const bookToUser = await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      reading_list: { create: [{ title: 'normal title' }] },
+    },
+  });
+};
+
+module.exports = {
+  registerUser,
+  loginUser,
+  getSingleUser,
+  logout,
+  addBooksToReadingList,
+};

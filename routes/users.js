@@ -6,11 +6,15 @@ const {
   loginUser,
   getSingleUser,
   logout,
+  addBooksToReadingList,
 } = require('../controllers/users');
 
 router.route('/register').post(registerUser);
 router.route('/login').post(loginUser);
-router.route('/:id').get(authenticateUser, getSingleUser);
+router
+  .route('/:id')
+  .get(authenticateUser, getSingleUser)
+  .patch(addBooksToReadingList);
 router.route('/logout').get(logout);
 
 module.exports = router;

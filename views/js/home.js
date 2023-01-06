@@ -9,7 +9,7 @@ async function getBooksFromServer(page) {
   //     window.location.pathname + '?' + searchParams.toString();
   //   history.pushState(null, '', newRelativePathQuery);
   // }
-  console.log(page);
+
   const books = await fetch(`http://localhost:8000/books?page=${page}`, {
     headers: {
       'Content-Type': 'application/json',
@@ -17,7 +17,7 @@ async function getBooksFromServer(page) {
     method: 'GET',
   });
   const result = await books.json();
-  console.log(result);
+
   bookData = result;
 
   bookData.forEach((book) => {
@@ -36,6 +36,7 @@ async function getBooksFromServer(page) {
     divNovel.appendChild(divImg);
 
     let imgBook = document.createElement('img');
+    imgBook.id = 'img-book';
     imgBook.src = book.image;
     imgBook.alt = 'img-book';
     divImg.appendChild(imgBook);
@@ -45,10 +46,34 @@ async function getBooksFromServer(page) {
     pAuthor.innerHTML = `By ${book.author}`;
     divNovel.appendChild(pAuthor);
 
+    let divGR = document.createElement('div');
+    divGR.id = 'div-gr';
+    divNovel.appendChild(divGR);
+
     let pGenre = document.createElement('p');
     pGenre.className = 'el-novel p-genre';
     pGenre.innerHTML = book.genre;
-    divNovel.appendChild(pGenre);
+    divGR.appendChild(pGenre);
+
+    let imgRead = document.createElement('img');
+    imgRead.title = 'Add to Reading List';
+    // imgRead.onclick =
+    //   'getCardDetails({ id: ${book.id}, title: ${book.title} })';
+    imgRead.addEventListener('click', (e) => {
+      // e.preventDefault();
+      console.log('clicked');
+      fetch(`http://localhost:8000/user/${1}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'PATCH',
+        body: JSON.stringify({ id: book.id, title: book.title }),
+      });
+    });
+    imgRead.id = 'img-read';
+    imgRead.src = '../imgs/book.png';
+    imgRead.width = '30';
+    divGR.appendChild(imgRead);
 
     let pPrice = document.createElement('p');
     pPrice.className = 'el-novel p-price';
@@ -62,26 +87,71 @@ async function getBooksFromServer(page) {
   });
 }
 
-async function getBooksForUser(button) {
-  if (button === 'next') {
-    page += 1;
+async function load(page) {
+  await getBooksFromServer(page);
+  await pagination();
+  // await addReadingList();
+}
+load(page);
+async function pagination() {
+  let divControls = document.createElement('div');
+  divControls.className = 'page-controls';
 
-    // var elements = document.getElementsByClassName('.div-novel');
-    // for (var i = 0, len = elements.length; i < len; i++) {
-    //   elements[i].remove();
-    // }
-    document.querySelectorAll('.div-novel').forEach((e) => e.remove());
+  let btnPrev = document.createElement('button');
+  btnPrev.id = 'btn-previous';
+  let imgPrev = document.createElement('img');
+  imgPrev.src = '../imgs/less-than.png';
+  imgPrev.width = '25';
+  imgPrev.alt = 'icon-prev';
 
-    getBooksFromServer(page);
-  } else {
-    page = -1;
-    if (page < 1) {
-      page = 1;
-    }
-    document.querySelectorAll('.div-novel').forEach((e) => e.remove());
+  let btnNext = document.createElement('button');
+  btnNext.id = 'btn-next';
+  let imgNext = document.createElement('img');
+  imgNext.src = '../imgs/greater-than.png';
+  imgNext.width = '25';
+  imgNext.alt = 'icon-next';
 
-    getBooksFromServer(page);
+  btnPrev.appendChild(imgPrev);
+  btnNext.appendChild(imgNext);
+  divControls.appendChild(btnPrev);
+  divControls.appendChild(btnNext);
+  container.appendChild(divControls);
+
+  btnPrev = document.getElementById('btn-previous');
+  if (btnPrev) {
+    btnPrev.addEventListener('click', (e) => {
+      e.preventDefault();
+      page -= 1;
+      if (page < 1) {
+        page = 1;
+      }
+      document.querySelectorAll('.div-novel').forEach((e) => e.remove());
+      document.querySelector('.page-controls').remove();
+      load(page);
+    });
+  }
+
+  btnNext = document.getElementById('btn-next');
+  if (btnNext) {
+    btnNext.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.querySelectorAll('.div-novel').forEach((e) => e.remove());
+      page += 1;
+      document.querySelector('.page-controls').remove();
+      load(page);
+      // getBooksFromServer(page);
+    });
   }
 }
 
-getBooksFromServer(page);
+// async function addReadingList() {
+//   document.getElementById('img-read').addEventListener('click', (e) => {
+//     e.preventDefault();
+//     console.log('clicked');
+//     console.log(e);
+//   });
+// }
+
+function getCardDetails({ id, title }) {
+  console.log(id, title);
+}

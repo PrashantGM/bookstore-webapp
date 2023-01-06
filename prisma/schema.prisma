@@ -17,8 +17,7 @@ model Book{
   price Int
   author String
   publication_date DateTime @db.Date
-  user User @relation(fields: [user_id], references: [id])
-  user_id Int
+  user User[] 
 
   @@map(name:"books")
 }

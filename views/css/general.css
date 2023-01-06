@@ -7,9 +7,13 @@
 body {
   font-family: 'Rubik', sans-serif;
   line-height: 1;
-  color: #555;
+  color: #333;
 }
 
+#page-container {
+  position: relative;
+  min-height: 100vh;
+}
 .section {
   width: 40%;
   margin: 0 auto;
@@ -29,16 +33,12 @@ a {
   color: #333;
 }
 
-.logo {
-  height: 2.2rem;
-}
-
 .main-nav-list {
   list-style: none;
   display: flex;
   justify-content: start;
-  margin-left: 30rem;
-  gap: 3.2rem;
+  margin-left: 40rem;
+  gap: 40px;
 }
 
 .main-nav-link:link,
@@ -47,7 +47,6 @@ a {
   text-decoration: none;
   color: #333;
   font-size: 16px;
-  transition: all 0.3s;
 }
 
 .div-novel {
@@ -58,6 +57,7 @@ a {
   border: 1px solid rgb(178, 175, 175);
   padding: 15px;
   overflow: hidden;
+  margin: 15px auto;
 }
 
 #h1-title {
@@ -69,18 +69,24 @@ a {
   justify-content: stretch;
   padding-bottom: 30px;
 }
-img {
+#img-book {
   flex: 1 1 auto;
 }
+
+#div-gr {
+  display: flex;
+  justify-content: space-between;
+}
+
 .el-novel {
   color: black;
   margin: 10px;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .p-author {
   margin: 0;
-  margin-left: 10px;
+  margin-left: 12px;
   font-weight: bold;
 }
 .p-genre {
@@ -93,6 +99,7 @@ img {
 .page-controls {
   display: flex;
   justify-content: center;
+  margin: auto;
 }
 #btn-previous,
 #btn-next {
@@ -101,4 +108,96 @@ img {
   border: none;
   margin: 10px;
   background-color: transparent;
+}
+
+/* login page */
+.container-2 {
+  margin: 150px auto;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.f-space-between {
+  display: flex;
+  justify-content: space-between;
+}
+.f-center {
+  margin: 10px;
+  display: flex;
+  justify-content: center;
+}
+#form-login {
+  background-color: rgb(227, 240, 245);
+  padding: 40px;
+}
+
+#email,
+#password {
+  margin-left: 5px;
+}
+
+#btn-login {
+  padding: 5px;
+  border: none;
+  background-color: rgb(88, 150, 171);
+  color: #333;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: bold;
+}
+.p-b-20 {
+  padding-bottom: 20px;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 5px 20px;
+  background-color: lightblue;
+}
+.logo-col {
+  padding: 10px;
+  margin-top: 10px;
+}
+.m-5 {
+  margin: 5px;
+}
+.m-l-5 {
+  margin-left: 5px;
+}
+.m-10 {
+  margin: 10px;
+}
+.m-t-10 {
+  margin-top: 10px;
+}
+.p-10 {
+  padding: 10px;
+}
+
+.footer-nav {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.footer-heading {
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.footer-link:link,
+.footer-link:visited {
+  text-decoration: none;
+}
+.m-t-5 {
+  margin-top: 5px;
+}
+
+.footer-col2 {
+  display: flex;
+  gap: 100px;
+  justify-content: space-between;
 }
