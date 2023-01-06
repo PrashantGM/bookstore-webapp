@@ -127,6 +127,7 @@ a {
   display: flex;
   justify-content: center;
 }
+#form-register,
 #form-login {
   background-color: rgb(227, 240, 245);
   padding: 40px;
@@ -200,4 +201,10 @@ a {
   display: flex;
   gap: 100px;
   justify-content: space-between;
+}
+
+#a-login,
+#a-register {
+  text-decoration: underline;
+  color: darkblue;
 }

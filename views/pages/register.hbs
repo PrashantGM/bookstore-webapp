@@ -4,17 +4,37 @@
     <meta http-equiv='X-UA-Compatible' content='IE=edge' />
     <meta name='viewport' content='width=device-width, initial-scale=1.0' />
     <title>User Registration</title>
+    <link rel="stylesheet" href="../css/general.css">
   </head>
   <body>
-    <form method='post' id='form-register'>
-      <label for='username'>Username</label>
-      <input type='text' id='username' name='username' />
-      <label for='email'>Email</label>
-      <input type='email' id='email' name='email' />
-      <label for='password'>Password</label>
-      <input type='password' id='password' name='password' />
-      <input type='submit' value='Register' />
-    </form>
+    {{>header}}
+    <div class='container-2'>
+
+      <form method='post' id='form-register'>
+        <h3 class='f-center p-b-20'>
+          Register Your Account
+        </h3>
+        <div class='f-space-between'>
+          <label for='username'>Username</label>
+          <input type='text' id='username' name='username' />
+        </div>
+        <div class='f-space-between m-t-10'>
+          <label for='email'>Email</label>
+          <input type='email' id='email' name='email' />
+        </div>
+        <br />
+        <div class='f-space-between'>
+          <label for='password'>Password</label>
+          <input type='password' id='password' name='password' />
+        </div>
+        <div class='f-center'>
+          <input type='submit' id='btn-login' value='Register' />
+        </div>
+        <p class="m-10 p-10">Existing account? <a href="/user/login" id="a-login"> Login </a></p>
+      </form>
+    </div>
+  
+    {{>footer}}
     <script src='../js/register.js'></script>
 
   </body>
