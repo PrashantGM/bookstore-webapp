@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
+const hbs = require('hbs');
 
 const booksRoute = require('./routes/books');
 const usersRoute = require('./routes/users');
@@ -24,6 +25,7 @@ app.use(cookieParser(process.env.JWT_SECRET));
 app.use(express.static('views'));
 app.set('view engine', 'hbs');
 
+hbs.registerPartials(__dirname + '/views/partials/');
 //rendering hbs templates
 app.get('/', (req, res) => {
   res.render('./pages/home');

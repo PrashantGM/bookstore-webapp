@@ -15,7 +15,7 @@ loginForm.addEventListener('submit', (e) => {
       if (data.role === 'ADMIN') {
         window.location.replace('http://localhost:8000/books/admin');
       } else {
-        window.location.replace('http://localhost:8000/home');
+        window.location.replace('http://localhost:8000/');
       }
     });
 });

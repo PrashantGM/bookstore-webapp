@@ -8,42 +8,14 @@
 
   </head>
   <body>
-    <header class='header'>
-      <a href='#'>
-        <h2>BookStore</h2>
-      </a>
-      <nav class='main-nav'>
-        <ul class='main-nav-list'>
-          <li><a class='main-nav-link' href='#'>Home</a></li>
-          <li><a class='main-nav-link' href='#'>Genre</a></li>
-          <li><a class='main-nav-link' href='#'>Contact Us</a></li>
-          <li><a class='main-nav-link' href='#'>Login</a></li>
-        </ul>
-      </nav>
-    </header>
+    <div id="page-container">
+   {{>header}}
     <section class='section'>
       <div class='container'>
-
-        <div class='page-controls'>
-          <button id='btn-previous' onclick='getBooksForUser("prev")'>
-            <img
-              src='../imgs/less-than.png'
-              width='25px'
-              alt='icon-previous'
-              srcset=''
-            />
-          </button>
-          <button id='btn-next' onclick='getBooksForUser("next")'>
-            <img
-              src='../imgs/greater-than.png'
-              width='25px'
-              alt='icon-next'
-              srcset=''
-            />
-          </button>
-        </div>
       </div>
     </section>
+    
+    </div>
     <script src='../js/home.js'></script>
   </body>
 </html>
