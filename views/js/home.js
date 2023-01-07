@@ -62,13 +62,17 @@ async function getBooksFromServer(page) {
     imgRead.addEventListener('click', (e) => {
       // e.preventDefault();
       console.log('clicked');
+      console.log(book);
+      console.log(book.id);
       fetch(`http://localhost:8000/user/${1}`, {
         headers: {
           'Content-Type': 'application/json',
         },
         method: 'PATCH',
         body: JSON.stringify({ id: book.id, title: book.title }),
-      });
+      })
+        .then((res) => res.json())
+        .then((data) => console.log(data));
     });
     imgRead.id = 'img-read';
     imgRead.src = '../imgs/book.png';

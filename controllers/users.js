@@ -80,19 +80,22 @@ const logout = async (req, res) => {
 };
 
 const addBooksToReadingList = async (req, res) => {
-  //ToDo
-  const { id } = req.body;
-  console.log(req.body);
-  const userId = Number(req.params.id);
-  // console.log(title);
-  const bookToUser = await prisma.user.update({
-    where: {
-      id: userId,
-    },
-    data: {
-      reading_list: { create: [{ title: 'normal title' }] },
-    },
-  });
+  try {
+    const { id } = req.body;
+    console.log(req.body);
+    const userId = Number(req.params.id);
+    const bookToUser = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        reading_list: { connect: [{ id }] },
+      },
+    });
+    res.status(200).json(bookToUser);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 };
 
 module.exports = {
