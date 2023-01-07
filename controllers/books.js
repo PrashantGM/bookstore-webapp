@@ -142,14 +142,6 @@ const getBooksForUser = async (req, res) => {
     const books = await prisma.book.findMany({
       skip: skipValue,
       take: limit,
-      select: {
-        title: true,
-        image: true,
-        genre: true,
-        description: true,
-        author: true,
-        price: true,
-      },
 
       orderBy: {
         title: 'asc',

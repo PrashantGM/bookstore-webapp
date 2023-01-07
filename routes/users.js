@@ -7,6 +7,7 @@ const {
   getSingleUser,
   logout,
   addBooksToReadingList,
+  viewReadingList,
 } = require('../controllers/users');
 
 router.route('/register').post(registerUser);
@@ -15,6 +16,7 @@ router
   .route('/:id')
   .get(authenticateUser, getSingleUser)
   .patch(addBooksToReadingList);
+router.route('/reads/:id').get(viewReadingList);
 router.route('/logout').get(logout);
 
 module.exports = router;

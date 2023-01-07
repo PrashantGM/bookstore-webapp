@@ -79,6 +79,7 @@ const logout = async (req, res) => {
   res.status(200).json({ msg: 'user logged out!' });
 };
 
+//adds books to user's reading list
 const addBooksToReadingList = async (req, res) => {
   try {
     const { id } = req.body;
@@ -98,10 +99,28 @@ const addBooksToReadingList = async (req, res) => {
   }
 };
 
+// sends books in user's reading list to front-end
+const viewReadingList = async (req, res) => {
+  try {
+    const userId = Number(req.params.id);
+    const readingList = await prisma.user.findMany({
+      where: {
+        id: userId,
+      },
+      include: { reading_list: true },
+    });
+    res.status(200).json(readingList);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
   getSingleUser,
   logout,
   addBooksToReadingList,
+  viewReadingList,
 };
