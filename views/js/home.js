@@ -1,24 +1,38 @@
 let page = 1;
 let bookData = [];
+let userID = 1;
 const container = document.querySelector('.container');
-async function getBooksFromServer(page) {
-  // if ('URLSearchParams' in window) {
-  //   var searchParams = new URLSearchParams(window.location.search);
-  //   searchParams.set('page', page);
-  //   var newRelativePathQuery =
-  //     window.location.pathname + '?' + searchParams.toString();
-  //   history.pushState(null, '', newRelativePathQuery);
-  // }
+const section = document.querySelector('.section');
+async function getBooksFromServer(page, readingList) {
+  if ('URLSearchParams' in window) {
+    var searchParams = new URLSearchParams(window.location.search);
+    searchParams.set('page', page);
+    var newRelativePathQuery =
+      window.location.pathname + '?' + searchParams.toString();
+    history.pushState(null, '', newRelativePathQuery);
+  }
+  if (!readingList) {
+    const books = await fetch(`http://localhost:8000/books?page=${page}`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'GET',
+    });
+    const result = await books.json();
 
-  const books = await fetch(`http://localhost:8000/books?page=${page}`, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    method: 'GET',
-  });
-  const result = await books.json();
+    bookData = result;
+  } else {
+    const books = await fetch(`http://localhost:8000/user/reads/${userID}`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'GET',
+    });
+    const result = await books.json();
 
-  bookData = result;
+    const readingLists = result[0].reading_list;
+    bookData = readingLists;
+  }
 
   bookData.forEach((book) => {
     const divNovel = document.createElement('div');
@@ -37,6 +51,7 @@ async function getBooksFromServer(page) {
 
     let imgBook = document.createElement('img');
     imgBook.id = 'img-book';
+    imgBook.width = '20';
     imgBook.src = book.image;
     imgBook.alt = 'img-book';
     divImg.appendChild(imgBook);
@@ -84,15 +99,15 @@ async function getBooksFromServer(page) {
     pPrice.innerHTML = `Rs. ${book.price}`;
     divNovel.appendChild(pPrice);
 
-    let pDesc = document.createElement('p');
-    pDesc.className = 'el-novel p-desc';
-    pDesc.innerHTML = book.description;
-    divNovel.appendChild(pDesc);
+    // let pDesc = document.createElement('p');
+    // pDesc.className = 'el-novel p-desc';
+    // pDesc.innerHTML = book.description;
+    // divNovel.appendChild(pDesc);
   });
 }
 
 async function load(page) {
-  await getBooksFromServer(page);
+  await getBooksFromServer(page, false);
   await pagination();
   // await addReadingList();
 }
@@ -119,7 +134,7 @@ async function pagination() {
   btnNext.appendChild(imgNext);
   divControls.appendChild(btnPrev);
   divControls.appendChild(btnNext);
-  container.appendChild(divControls);
+  section.appendChild(divControls);
 
   btnPrev = document.getElementById('btn-previous');
   if (btnPrev) {
@@ -156,6 +171,14 @@ async function pagination() {
 //   });
 // }
 
-function getCardDetails({ id, title }) {
-  console.log(id, title);
+function viewUserProfile() {
+  const navUser = document.getElementById('li-user');
+  // navUser.remov;
+}
+
+function viewReadingList() {
+  document.querySelectorAll('.div-novel').forEach((e) => e.remove());
+
+  document.querySelector('.page-controls').remove();
+  getBooksFromServer(page, true);
 }

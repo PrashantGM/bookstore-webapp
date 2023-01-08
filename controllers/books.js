@@ -38,10 +38,11 @@ const addBook = async (req, res) => {
 const getAllBooks = async (req, res) => {
   try {
     const book = await prisma.book.findMany({
-      where: {
-        genre: { hasSome: ['Action', 'Sci-fi', 'Supernatural'] },
-      },
+      // where: {
+      // genre: { hasSome: ['Action', 'Sci-fi', 'Supernatural'] },
+      // },
     });
+    console.log(book);
     const bookWithParsedDate = book.map((b) => {
       const date = new Date(b.publication_date);
       let month = date.getUTCMonth() + 1;
@@ -136,7 +137,7 @@ const getBooksForUser = async (req, res) => {
   try {
     const page = Number(req.query.page) || 1;
     console.log(page);
-    const limit = 3;
+    const limit = 6;
     const skipValue = (page - 1) * limit;
 
     const books = await prisma.book.findMany({

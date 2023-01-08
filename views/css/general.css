@@ -15,10 +15,18 @@ body {
   min-height: 100vh;
 }
 .section {
-  width: 40%;
+  width: 50%;
   margin: 0 auto;
+  margin-top: 20px;
 }
 
+.container {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 1fr 1fr;
+  justify-items: center;
+}
 .header {
   display: flex;
   justify-content: space-around;
@@ -50,14 +58,12 @@ a {
 }
 
 .div-novel {
-  margin: 50px;
-  width: 500px;
-  height: 560px;
+  width: 300px;
+  height: 350px;
   background-color: rgb(234, 244, 251);
   border: 1px solid rgb(178, 175, 175);
   padding: 15px;
   overflow: hidden;
-  margin: 15px auto;
 }
 
 #h1-title {
@@ -66,8 +72,8 @@ a {
 
 #div-img {
   display: flex;
-  justify-content: stretch;
-  padding-bottom: 30px;
+  justify-content: center;
+  padding-bottom: 10px;
 }
 #img-book {
   flex: 1 1 auto;
@@ -122,6 +128,15 @@ a {
   display: flex;
   justify-content: space-between;
 }
+.f-space-even {
+  display: flex;
+  justify-content: space-evenly;
+}
+.f-space-around {
+  display: flex;
+  justify-content: space-around;
+}
+
 .f-center {
   margin: 10px;
   display: flex;
@@ -155,7 +170,7 @@ a {
   position: absolute;
   bottom: 0;
   width: 100%;
-  padding: 5px 20px;
+  padding: 5px 30px;
   background-color: lightblue;
 }
 .logo-col {
@@ -207,4 +222,39 @@ a {
 #a-register {
   text-decoration: underline;
   color: darkblue;
+}
+
+#li-user {
+}
+
+.btn-profile {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  font-size: 16px;
+  color: #333;
+}
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: rgb(234, 244, 251);
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+.dropdown-content a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.li-user:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: lightblue;
 }
