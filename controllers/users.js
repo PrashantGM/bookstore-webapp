@@ -33,7 +33,6 @@ const registerUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   try {
-    console.log('ey');
     const { email, password } = req.body;
     console.log(email, password);
     if (!email || !password) {
@@ -53,7 +52,12 @@ const loginUser = async (req, res) => {
       return res.status(401).json('Incorrect Credentials');
       // throw new Error('Incorrect Credentials');
     }
-    const tokenUser = { email: user.email, id: user.id, role: user.role };
+    const tokenUser = {
+      username: user.username,
+      email: user.email,
+      id: user.id,
+      role: user.role,
+    };
     attachCookiesToRes({ res, user: tokenUser });
     res.status(200).json({ data: tokenUser });
   } catch (error) {
@@ -71,10 +75,23 @@ const getSingleUser = async (req, res) => {
   res.status(200).json(user);
 };
 
+const checkLoggedIn = async (req, res) => {
+  // console.log(req.signedCookies);
+  const token = req.signedCookies.token;
+  if (!token) {
+    return res.status(401).json({ success: false, msg: 'You must login' });
+  }
+  var payload = Buffer.from(token.split('.')[1], 'base64').toString();
+  console.log(payload);
+  res.status(200).json({ success: true, payload });
+};
+
 const logout = async (req, res) => {
   res.cookie('token', '', {
     httpOnly: true,
     expires: new Date(Date.now()),
+    // secure: process.env.NODE_ENV === 'production',
+    // signed: true,
   });
   res.status(200).json({ msg: 'user logged out!' });
 };
@@ -83,7 +100,6 @@ const logout = async (req, res) => {
 const addBooksToReadingList = async (req, res) => {
   try {
     const { id } = req.body;
-    console.log(req.body);
     const userId = Number(req.params.id);
     const bookToUser = await prisma.user.update({
       where: {
@@ -123,4 +139,5 @@ module.exports = {
   logout,
   addBooksToReadingList,
   viewReadingList,
+  checkLoggedIn,
 };

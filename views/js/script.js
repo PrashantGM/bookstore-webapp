@@ -1,5 +1,5 @@
 //this opens new form when add new book button is clicked
-const BOOK_URL = 'http://localhost:8000/books/admin';
+const BOOK_URL = 'http://localhost:8000/user/admin/books';
 function openForm(actionType, id) {
   const form = document.getElementById('popupForm');
   form.style.display = 'block';
@@ -74,6 +74,7 @@ function openForm(actionType, id) {
         document.querySelector('input[name="author"]').value = author;
         document.querySelector('input[name="publication_date"]').value =
           parsedDate;
+        console.log('I ran');
       })
       .catch(function (err) {
         console.log(err);

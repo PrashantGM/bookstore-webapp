@@ -1,3 +1,5 @@
+const navDropdown = document.querySelector('.dropdown-content');
+navDropdown.style.display = 'none';
 const registerForm = document.getElementById('form-register');
 registerForm.addEventListener('submit', (e) => {
   e.preventDefault();

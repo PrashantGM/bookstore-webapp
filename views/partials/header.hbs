@@ -8,12 +8,24 @@
       <li><a class='main-nav-link' href='#'>Genre</a></li>
       <li><a class='main-nav-link' href='#'>Contact Us</a></li>
       <li class='li-user main-nav-link'>
-        <button class='btn-profile'><i class='fa fa-user-circle'></i>
-          prashant
-          <i class='fa fa-caret-down'></i></button>
+        <button class='btn-profile'>
+          {{! <i class='fa fa-user-circle'></i> }}
+          Login
+          {{! <i class='fa fa-caret-down'></i> }}
+        </button>
         <div class='dropdown-content'>
-          <a class='main-nav-link' onclick='viewReadingList()'>Reading List</a>
-          <a class='main-nav-link' href='/user/logout'>Logout</a>
+          <a
+            class='main-nav-link'
+            id='nav-reading'
+            onclick='viewReadingList()'
+          >Reading List</a>
+
+          <a
+            class='main-nav-link'
+            id='nav-dashboard'
+            href='books/admin'
+          >Dashboard</a>
+          <a class='main-nav-link' id='nav-logout' onclick='logout()'>Logout</a>
         </div>
       </li>
     </ul>

@@ -42,7 +42,7 @@ const getAllBooks = async (req, res) => {
       // genre: { hasSome: ['Action', 'Sci-fi', 'Supernatural'] },
       // },
     });
-    console.log(book);
+    console.log('book');
     const bookWithParsedDate = book.map((b) => {
       const date = new Date(b.publication_date);
       let month = date.getUTCMonth() + 1;
@@ -136,7 +136,7 @@ const deleteBook = async (req, res) => {
 const getBooksForUser = async (req, res) => {
   try {
     const page = Number(req.query.page) || 1;
-    console.log(page);
+
     const limit = 6;
     const skipValue = (page - 1) * limit;
 

@@ -1,16 +1,53 @@
 let page = 1;
 let bookData = [];
 let userID = 1;
+
 const container = document.querySelector('.container');
 const section = document.querySelector('.section');
 async function getBooksFromServer(page, readingList) {
-  if ('URLSearchParams' in window) {
-    var searchParams = new URLSearchParams(window.location.search);
-    searchParams.set('page', page);
-    var newRelativePathQuery =
-      window.location.pathname + '?' + searchParams.toString();
-    history.pushState(null, '', newRelativePathQuery);
+  const btnProfile = document.querySelector('.btn-profile');
+  const navDropdown = document.querySelector('.dropdown-content');
+
+  // navDropdown.style.display = 'none';
+  let parsedUserData = {};
+  try {
+    const userData = await viewLoggedIn();
+
+    parsedUserData = JSON.parse(userData);
+    console.log(parsedUserData);
+
+    if (parsedUserData) {
+      const navItem = document.querySelector('.li-user');
+      btnProfile.textContent = parsedUserData.username;
+      const userIcon = document.createElement('i');
+      userIcon.className = 'fa fa-user-circle';
+      btnProfile.appendChild(userIcon);
+      console.log(parsedUserData.username);
+      const downIcon = document.createElement('i');
+      downIcon.className = 'fa fa-caret-down';
+      btnProfile.appendChild(downIcon);
+
+      const navlinkDash = document.querySelector('#nav-dashboard');
+      navlinkDash.style.display = 'none';
+
+      if (parsedUserData.role === 'ADMIN') {
+        console.log('i ran here');
+        navlinkDash.style.display = 'block';
+      }
+    }
+  } catch (error) {
+    // console.log(error);
   }
+
+  if (!parsedUserData.username) {
+    console.log('here');
+    navDropdown.style.display = 'none';
+    btnProfile.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.location.href = 'http://localhost:8000/user/login';
+    });
+  }
+
   if (!readingList) {
     const books = await fetch(`http://localhost:8000/books?page=${page}`, {
       headers: {
@@ -109,6 +146,7 @@ async function getBooksFromServer(page, readingList) {
 async function load(page) {
   await getBooksFromServer(page, false);
   await pagination();
+  viewLoggedIn();
   // await addReadingList();
 }
 load(page);
@@ -170,6 +208,22 @@ async function pagination() {
 //     console.log(e);
 //   });
 // }
+async function viewLoggedIn() {
+  try {
+    const payload = await fetch('http://localhost:8000/user/stat', {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'GET',
+    });
+    const userData = await payload.json();
+    console.log(userData.payload);
+
+    return userData.payload;
+  } catch (error) {
+    // console.log(error);
+  }
+}
 
 function viewUserProfile() {
   const navUser = document.getElementById('li-user');
@@ -181,4 +235,15 @@ function viewReadingList() {
 
   document.querySelector('.page-controls').remove();
   getBooksFromServer(page, true);
+}
+
+function logout() {
+  fetch('http://localhost:8000/user/logout', {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    method: 'POST',
+  }).then(() => {
+    window.location.replace('http://localhost:8000');
+  });
 }

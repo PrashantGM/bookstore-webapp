@@ -1,6 +1,7 @@
 const { verifyToken } = require('./jwt');
 
 const authenticateUser = async (req, res, next) => {
+  console.log('executed');
   const token = req.signedCookies.token;
   if (!token) {
     return res.status(401).json('Invalid Authentication');

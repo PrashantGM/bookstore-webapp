@@ -22,7 +22,8 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
-app.use(express.static('views'));
+// app.use(express.static('views'));
+app.use(express.static(__dirname + '/views'));
 app.set('view engine', 'hbs');
 
 hbs.registerPartials(__dirname + '/views/partials/');
@@ -32,6 +33,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/landing', (req, res) => {
+  console.log(req.signedCookies);
   res.render('./pages/landing');
 });
 app.get('/user/register', (req, res) => {
@@ -40,8 +42,9 @@ app.get('/user/register', (req, res) => {
 app.get('/user/login', (req, res) => {
   res.render('./pages/login');
 });
-app.use('/books', booksRoute);
+
 app.use('/user', usersRoute);
+app.use('/books', booksRoute);
 
 app.listen(PORT, HOST, () => {
   console.log(`Running on http://${HOST}:${PORT}`);

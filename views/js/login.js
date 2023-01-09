@@ -1,3 +1,7 @@
+const navDropdown = document.querySelector('.dropdown-content');
+
+navDropdown.style.display = 'none';
+
 const loginForm = document.getElementById('form-login');
 loginForm.addEventListener('submit', (e) => {
   e.preventDefault();
