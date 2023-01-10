@@ -3,14 +3,13 @@ const { attachCookiesToRes } = require('../middlewares/jwt');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
+//adds new user to db when user registers
 const registerUser = async (req, res) => {
   try {
     const { username, email, password } = req.body;
-    console.log('this was executed');
-    console.log(req.body);
+
     const salt = await bcrypt.genSalt(10);
     const users = await prisma.user.findUnique({ where: { email } });
-    console.log('users' + users);
 
     if (users) {
       throw new Error('This email already exists!');
@@ -76,13 +75,11 @@ const getSingleUser = async (req, res) => {
 };
 
 const checkLoggedIn = async (req, res) => {
-  // console.log(req.signedCookies);
   const token = req.signedCookies.token;
   if (!token) {
     return res.status(401).json({ success: false, msg: 'You must login' });
   }
   var payload = Buffer.from(token.split('.')[1], 'base64').toString();
-  console.log(payload);
   res.status(200).json({ success: true, payload });
 };
 
@@ -90,8 +87,6 @@ const logout = async (req, res) => {
   res.cookie('token', '', {
     httpOnly: true,
     expires: new Date(Date.now()),
-    // secure: process.env.NODE_ENV === 'production',
-    // signed: true,
   });
   res.status(200).json({ msg: 'user logged out!' });
 };
@@ -109,6 +104,7 @@ const addBooksToReadingList = async (req, res) => {
         reading_list: { connect: [{ id }] },
       },
     });
+    console.log(book);
     res.status(200).json(bookToUser);
   } catch (error) {
     res.status(500).json(error);

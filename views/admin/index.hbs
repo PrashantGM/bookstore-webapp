@@ -49,7 +49,7 @@
         </table>
         <div class='modalAddBook'>
           <div class='formPopup' id='popupForm' style='display:none'>
-            <form
+            <p
               enctype='multipart/form-data'
               method='post'
               class='formContainer'
@@ -62,6 +62,7 @@
                 <input
                   type='text'
                   id='title'
+                  class="field"
                   placeholder='Name of Book'
                   name='title'
                   required
@@ -74,12 +75,17 @@
                 <input
                   type='file'
                   id='bookImg'
+                  class="field"
                   name='image'
                   accept='image/png, image/jpeg'
                   class='hidden'
                 />
-                <img id='img-display' width='80px' src='' alt='' />
-              </p>
+                     <img id='img-display' width='80px' src='' alt='' />
+              </p>   
+             
+                <label>Image Storage</label>              
+             <input type="checkbox" id="cloudinary" name="cloudinary">
+                <label for="cloudinary">Cloud</label>
               <p>
                 <label for='title'>
                   Genre
@@ -87,6 +93,7 @@
                 <input
                   type='text'
                   id='genre'
+                  class="field"
                   placeholder='Eg; action,sci-fi,etc.'
                   name='genre'
                   required
@@ -100,6 +107,7 @@
                   <textarea
                     name='description'
                     id='description'
+
                     placeholder='Short Overview Of Book'
                     cols='24'
                     rows='6'
@@ -111,6 +119,7 @@
                 <input
                   type='text'
                   id='price'
+                  class="field"
                   placeholder='in NRs.'
                   name='price'
                   required
@@ -123,6 +132,7 @@
                 <input
                   type='text'
                   id='price'
+                  class="field"
                   placeholder='Author&#39s Name'
                   name='author'
                   required
@@ -135,16 +145,17 @@
                 <input
                   type='text'
                   id='publication_date'
+                  class="field"
                   placeholder='YYYY/MM/DD'
                   name='publication_date'
                 />
               </p>
-              <button type='submit' class='btn' id='btn-save'>Save</button>
+              <button type='submit' class='btn' id='btn-save'>Add</button>
               <button
                 type='button'
                 class='btn cancel'
                 onclick='closeForm()'
-              >Close</button>
+              >Back</button>
             </form>
           </div>
         </div>

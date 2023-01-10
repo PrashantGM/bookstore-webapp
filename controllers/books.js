@@ -6,14 +6,32 @@ const cloudinary = require('../middlewares/cloudinary');
 const addBook = async (req, res) => {
   try {
     //validation to be done later
-    const { title, genre, description, price, author, publication_date } =
-      req.body;
-    const result = await cloudinary.uploader.upload(req.file.path, {
-      public_id: `bookstore/books/${title}`,
-      width: 400,
-      height: 300,
-      crop: 'fill',
-    });
+    const {
+      title,
+      cloud,
+      genre,
+      description,
+      price,
+      author,
+      publication_date,
+    } = req.body;
+
+    let result = {};
+    //checks if user selected save images to cloud option when adding books
+    if (cloud === 'cloudinary') {
+      result = await cloudinary.uploader.upload(req.file.path, {
+        public_id: `bookstore/books/${title}`,
+        width: 400,
+        height: 300,
+        crop: 'fill',
+      });
+      console.log('result');
+      await fs.unlink(req.file.path);
+    } else {
+      //removing extra file path when saving img to db
+      const shortenedPath = req.file.path.replace('views/uploads/', '');
+      result.secure_url = shortenedPath;
+    }
     const genreArr = genre.split(',');
     const intPrice = Number(price);
     const parsedDate = new Date(publication_date);
@@ -28,7 +46,7 @@ const addBook = async (req, res) => {
         publication_date: parsedDate,
       },
     });
-    await fs.unlink(req.file.path);
+
     res.status(201).json({ msg: 'Successfully added!', data: book });
   } catch (error) {
     res.status(500).json({ msg: error });
@@ -37,21 +55,22 @@ const addBook = async (req, res) => {
 
 const getAllBooks = async (req, res) => {
   try {
-    const book = await prisma.book.findMany({
-      // where: {
-      // genre: { hasSome: ['Action', 'Sci-fi', 'Supernatural'] },
-      // },
-    });
-    console.log('book');
+    const book = await prisma.book.findMany({});
+
     const bookWithParsedDate = book.map((b) => {
       const date = new Date(b.publication_date);
       let month = date.getUTCMonth() + 1;
       let day = date.getUTCDate();
       let year = date.getUTCFullYear();
       const newDate = year + '/' + month + '/' + day;
+      let imageURI = b.image;
+      if (!imageURI.startsWith('https')) {
+        imageURI = 'http://localhost:8000/uploads/' + imageURI;
+      }
+
       return {
         id: b.id,
-        image: b.image,
+        image: imageURI,
         genre: b.genre,
         title: b.title,
         description: b.description,
@@ -135,19 +154,44 @@ const deleteBook = async (req, res) => {
 
 const getBooksForUser = async (req, res) => {
   try {
-    const page = Number(req.query.page) || 1;
+    let genreD = [];
+    const genreData = req.query.genre;
+    let page = Number(req.query.page) || 1;
+    if (genreData == '' || genreData == 'undefined') {
+      genreD = [
+        'Action',
+        'Fantasy',
+        'Educational',
+        'Pyschology',
+        'Philosophy',
+        'Non-Fiction',
+      ];
+    } else {
+      page = 1;
+      const uppercasedGenre =
+        genreData.charAt(0).toUpperCase() + genreData.slice(1);
+      genreD.push(uppercasedGenre);
+    }
 
     const limit = 6;
     const skipValue = (page - 1) * limit;
-
     const books = await prisma.book.findMany({
       skip: skipValue,
       take: limit,
-
+      where: {
+        genre: { hasSome: genreD },
+      },
       orderBy: {
         title: 'asc',
       },
     });
+    const parsedBooks = books.map((b) => {
+      if (!b.image.startsWith('https')) {
+        b.image = 'http://localhost:8000/uploads/' + b.image;
+      }
+      return { ...b };
+    });
+
     res.status(200).json(books);
   } catch (error) {
     res.status(500).json({ msg: error });

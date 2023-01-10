@@ -1,13 +1,13 @@
 let page = 1;
 let bookData = [];
 let userID = 1;
-
+let genre = '';
 const container = document.querySelector('.container');
 const section = document.querySelector('.section');
-async function getBooksFromServer(page, readingList) {
+async function getBooksFromServer(page, readingList, genre) {
   const btnProfile = document.querySelector('.btn-profile');
   const navDropdown = document.querySelector('.dropdown-content');
-
+  console.log(genre);
   // navDropdown.style.display = 'none';
   let parsedUserData = {};
   try {
@@ -47,14 +47,17 @@ async function getBooksFromServer(page, readingList) {
       window.location.href = 'http://localhost:8000/user/login';
     });
   }
-
+  console.log('this ran');
   if (!readingList) {
-    const books = await fetch(`http://localhost:8000/books?page=${page}`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      method: 'GET',
-    });
+    const books = await fetch(
+      `http://localhost:8000/books?genre=${genre}&page=${page}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'GET',
+      }
+    );
     const result = await books.json();
 
     bookData = result;
@@ -89,6 +92,7 @@ async function getBooksFromServer(page, readingList) {
     let imgBook = document.createElement('img');
     imgBook.id = 'img-book';
     imgBook.width = '20';
+    imgBook.height = '200';
     imgBook.src = book.image;
     imgBook.alt = 'img-book';
     divImg.appendChild(imgBook);
@@ -107,29 +111,34 @@ async function getBooksFromServer(page, readingList) {
     pGenre.innerHTML = book.genre;
     divGR.appendChild(pGenre);
 
-    let imgRead = document.createElement('img');
-    imgRead.title = 'Add to Reading List';
-    // imgRead.onclick =
-    //   'getCardDetails({ id: ${book.id}, title: ${book.title} })';
-    imgRead.addEventListener('click', (e) => {
-      // e.preventDefault();
-      console.log('clicked');
-      console.log(book);
-      console.log(book.id);
-      fetch(`http://localhost:8000/user/${1}`, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        method: 'PATCH',
-        body: JSON.stringify({ id: book.id, title: book.title }),
-      })
-        .then((res) => res.json())
-        .then((data) => console.log(data));
-    });
-    imgRead.id = 'img-read';
-    imgRead.src = '../imgs/book.png';
-    imgRead.width = '30';
-    divGR.appendChild(imgRead);
+    if (!readingList) {
+      let imgRead = document.createElement('img');
+      imgRead.title = 'Add to Reading List';
+      // imgRead.onclick =
+      //   'getCardDetails({ id: ${book.id}, title: ${book.title} })';
+      imgRead.addEventListener('click', (e) => {
+        // e.preventDefault();
+        if (!parsedUserData.username) {
+          window.location.href = 'http://localhost:8000/user/login';
+        }
+        console.log('clicked');
+        console.log(book);
+        console.log(book.id);
+        fetch(`http://localhost:8000/user/${parsedUserData.id}`, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          method: 'PATCH',
+          body: JSON.stringify({ id: book.id, title: book.title }),
+        })
+          .then((res) => res.json())
+          .then((data) => console.log(data));
+      });
+      imgRead.id = 'img-read';
+      imgRead.src = '../imgs/book.png';
+      imgRead.width = '30';
+      divGR.appendChild(imgRead);
+    }
 
     let pPrice = document.createElement('p');
     pPrice.className = 'el-novel p-price';
@@ -143,13 +152,13 @@ async function getBooksFromServer(page, readingList) {
   });
 }
 
-async function load(page) {
-  await getBooksFromServer(page, false);
+async function load(page, readingList, genre) {
+  await getBooksFromServer(page, readingList, genre);
   await pagination();
   viewLoggedIn();
   // await addReadingList();
 }
-load(page);
+load(page, false, '');
 async function pagination() {
   let divControls = document.createElement('div');
   divControls.className = 'page-controls';
@@ -223,6 +232,12 @@ async function viewLoggedIn() {
   } catch (error) {
     // console.log(error);
   }
+}
+
+function getBooksByGenre(genre) {
+  document.querySelectorAll('.div-novel').forEach((e) => e.remove());
+  document.querySelector('.page-controls').remove();
+  load(page, false, genre);
 }
 
 function viewUserProfile() {

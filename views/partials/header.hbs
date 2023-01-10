@@ -1,17 +1,40 @@
 <header class='header'>
-  <a href='#'>
+  <a href='/'>
     <h2>BookStore</h2>
   </a>
+
   <nav class='main-nav'>
     <ul class='main-nav-list'>
       <li><a class='main-nav-link' href='/'>Home</a></li>
-      <li><a class='main-nav-link' href='#'>Genre</a></li>
+      <li class='li-genre main-nav-link' href='#'>Genre
+        <i class='fa fa-caret-down'></i>
+        <div class='dropdown-genre'>
+          <a
+            class='main-nav-link'
+            id='nav-reading'
+            onclick='getBooksByGenre("Fantasy")'
+          >Fantasy</a>
+          <a
+            class='main-nav-link'
+            id='nav-reading'
+            onclick='getBooksByGenre("Action")'
+          >Action</a>
+          <a
+            class='main-nav-link'
+            id='nav-reading'
+            onclick='getBooksByGenre("Non-Fiction")'
+          >Non-Fiction</a>
+          <a
+            class='main-nav-link'
+            id='nav-reading'
+            onclick='getBooksByGenre("Educational")'
+          >Educational</a>
+
+        </div></li>
       <li><a class='main-nav-link' href='#'>Contact Us</a></li>
       <li class='li-user main-nav-link'>
         <button class='btn-profile'>
-          {{! <i class='fa fa-user-circle'></i> }}
           Login
-          {{! <i class='fa fa-caret-down'></i> }}
         </button>
         <div class='dropdown-content'>
           <a

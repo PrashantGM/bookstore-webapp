@@ -1,13 +1,14 @@
 //this opens new form when add new book button is clicked
-const BOOK_URL = 'http://localhost:8000/user/admin/books';
+const BOOK_URL = 'http://localhost:8000/books/admin';
 function openForm(actionType, id) {
   const form = document.getElementById('popupForm');
   form.style.display = 'block';
-  const trueForm = document.querySelector('.formContainer');
-
+  // const trueForm = document.querySelector('.formContainer');
+  const btnAdd = document.querySelector('#btn-save');
   if (actionType === 'add') {
-    trueForm.addEventListener('submit', function (e) {
-      e.preventDefault();
+    btnAdd.addEventListener('click', function (e) {
+      // e.preventDefault();
+      console.log('i iii');
       const formData = new FormData();
       formData.append(
         'title',
@@ -17,6 +18,11 @@ function openForm(actionType, id) {
         'image',
         document.querySelector('input[name="image"]').files[0]
       );
+      const cloudCheck = document.querySelector('input[name="cloudinary"]');
+      if (cloudCheck.ariaChecked) {
+        cloudCheck.value = 'cloudinary';
+      }
+      formData.append('cloud', cloudCheck.value);
 
       formData.append(
         'genre',
@@ -43,8 +49,8 @@ function openForm(actionType, id) {
         method: 'POST',
         body: formData,
       })
-        .then(function (res) {
-          console.log(res);
+        .then(function () {
+          closeForm();
         })
         .catch(function (err) {
           console.log(err);
@@ -79,7 +85,7 @@ function openForm(actionType, id) {
       .catch(function (err) {
         console.log(err);
       });
-    trueForm.addEventListener('submit', function (e) {
+    btnAdd.addEventListener('click', function (e) {
       e.preventDefault();
       const title = document.querySelector('input[name="title"]').value;
       const image = document.querySelector('#img-display').src;
