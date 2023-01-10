@@ -12,7 +12,7 @@
    Note: You should be on same project directory on the terminal.
 3. Create .env file on project's root directory and include following .env variables.  
    PORT= <port your app is listening to>  
-   CLOUD_NAME= <your cloudinary a/c name>  
+   CLOUD_NAME= <your cloudinary account name>  
    CLOUD_API_KEY= <your cloudinary api key>  
    CLOUD_API_SECRET= <your cloudinary api secret>  
    JWT_SECRET= <secret for signing jwt token>  
