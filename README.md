@@ -11,9 +11,9 @@
 2. After download, open project folder in your favorite text editor and run npm install on its terminal.
    Note: You should be on same project directory on the terminal.
 3. Create .env file on project's root directory and include following .env variables.  
-   PORT= <port no app that app is listening to>  
+   PORT= <port your app is listening to>  
    CLOUD_NAME= <your cloudinary a/c name>  
-   CLOUD_API_KEY= <you cloudinary api key>  
+   CLOUD_API_KEY= <your cloudinary api key>  
    CLOUD_API_SECRET= <your cloudinary api secret>  
    JWT_SECRET= <secret for signing jwt token>  
    JWT_LIFE_TIME= <life time of jwt token eg;1d>
