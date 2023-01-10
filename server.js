@@ -11,6 +11,8 @@ const {
   authenticateUser,
   authorizePermissions,
 } = require('./middlewares/auth');
+const notFound = require('./middlewares/not-found');
+
 const PORT = process.env.PORT;
 const HOST = '127.0.0.1'; //dev
 
@@ -45,6 +47,8 @@ app.get('/user/login', (req, res) => {
 
 app.use('/user', usersRoute);
 app.use('/books', booksRoute);
+
+app.use(notFound);
 
 app.listen(PORT, HOST, () => {
   console.log(`Running on http://${HOST}:${PORT}`);
