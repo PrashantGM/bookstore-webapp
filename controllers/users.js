@@ -48,7 +48,7 @@ const loginUser = async (req, res) => {
     }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json('Incorrect Credentials');
+      return res.status(401).json({ msg: 'Incorrect Credentials' });
       // throw new Error('Incorrect Credentials');
     }
     const tokenUser = {
@@ -58,9 +58,9 @@ const loginUser = async (req, res) => {
       role: user.role,
     };
     attachCookiesToRes({ res, user: tokenUser });
-    res.status(200).json({ data: tokenUser });
+    res.status(200).json({ msg: 'Login Success!', data: tokenUser });
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json('error');
   }
 };
 
@@ -75,12 +75,16 @@ const getSingleUser = async (req, res) => {
 };
 
 const checkLoggedIn = async (req, res) => {
-  const token = req.signedCookies.token;
-  if (!token) {
-    return res.status(401).json({ success: false, msg: 'You must login' });
+  try {
+    const token = req.signedCookies.token;
+    if (!token) {
+      return res.status(401).json({ success: false, msg: 'You must login' });
+    }
+    var payload = Buffer.from(token.split('.')[1], 'base64').toString();
+    res.status(200).json({ success: true, payload });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error });
   }
-  var payload = Buffer.from(token.split('.')[1], 'base64').toString();
-  res.status(200).json({ success: true, payload });
 };
 
 const logout = async (req, res) => {
@@ -96,6 +100,21 @@ const addBooksToReadingList = async (req, res) => {
   try {
     const { id } = req.body;
     const userId = Number(req.params.id);
+    const readingList = await prisma.user.findMany({
+      where: {
+        id: userId,
+        reading_list: {
+          some: {
+            id,
+          },
+        },
+      },
+    });
+    if (typeof readingList[0] === 'object' && readingList[0] !== null) {
+      return res
+        .status(409)
+        .json({ sucess: false, msg: 'Book already exists in Reading List!' });
+    }
     const bookToUser = await prisma.user.update({
       where: {
         id: userId,
@@ -104,9 +123,11 @@ const addBooksToReadingList = async (req, res) => {
         reading_list: { connect: [{ id }] },
       },
     });
-    console.log(book);
-    res.status(200).json(bookToUser);
+    res
+      .status(200)
+      .json({ success: true, bookToUser, msg: 'Added to Reading List' });
   } catch (error) {
+    console.log(error);
     res.status(500).json(error);
   }
 };
@@ -115,16 +136,52 @@ const addBooksToReadingList = async (req, res) => {
 const viewReadingList = async (req, res) => {
   try {
     const userId = Number(req.params.id);
+    let page = Number(req.query.page) || 1;
+    const limit = 6;
+    const skipValue = (page - 1) * limit;
     const readingList = await prisma.user.findMany({
       where: {
         id: userId,
       },
-      include: { reading_list: true },
+      select: {
+        reading_list: {
+          skip: skipValue,
+          take: limit,
+          orderBy: {
+            title: 'asc',
+          },
+        },
+      },
     });
-    res.status(200).json(readingList);
+    const reads = readingList[0].reading_list;
+    res.status(200).json({
+      success: true,
+      data: { reads, nbHits: reads.length },
+    });
   } catch (error) {
-    console.log(error);
-    res.status(500).json(error);
+    res.status(500).json({ success: false, msg: error });
+  }
+};
+
+const deleteReadingList = async (req, res) => {
+  try {
+    const { bookId, userId } = req.body;
+    const updatePost = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        reading_list: {
+          disconnect: [{ id: bookId }],
+        },
+      },
+      select: {
+        reading_list: true,
+      },
+    });
+    return res.status(200).json({ success: true, updatePost });
+  } catch (error) {
+    return res.status(500).json({ sucess: false, msg: error });
   }
 };
 
@@ -136,4 +193,5 @@ module.exports = {
   addBooksToReadingList,
   viewReadingList,
   checkLoggedIn,
+  deleteReadingList,
 };
