@@ -47,7 +47,9 @@ const addBook = async (req, res) => {
       },
     });
 
-    res.status(201).json({ msg: 'Successfully added!', data: book });
+    res
+      .status(201)
+      .json({ success: true, msg: 'Successfully added!', data: book });
   } catch (error) {
     res.status(500).json({ msg: error });
   }

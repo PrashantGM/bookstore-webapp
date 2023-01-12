@@ -65,6 +65,7 @@
                   class="field"
                   placeholder='Name of Book'
                   name='title'
+                  maxlength="60"
                   required
                 />
               </p>
@@ -79,6 +80,7 @@
                   name='image'
                   accept='image/png, image/jpeg'
                   class='hidden'
+                  required
                 />
                      <img id='img-display' width='80px' src='' alt='' />
               </p>   
@@ -111,6 +113,7 @@
                     placeholder='Short Overview Of Book'
                     cols='24'
                     rows='6'
+                    maxlength="1000"
                   ></textarea>
                 </p>
                 <label id='lbl-price' for='text'>

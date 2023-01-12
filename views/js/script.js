@@ -1,12 +1,10 @@
-// import toast from './toast';
-
 //this opens new form when add new book button is clicked
 const BOOK_URL = 'http://localhost:8000/books/admin';
 function openForm(actionType, id) {
   const form = document.getElementById('popupForm');
   form.style.display = 'block';
   const trueForm = document.querySelector('.formContainer');
-  const btnAdd = document.querySelector('#btn-save');
+
   if (actionType === 'add') {
     trueForm.addEventListener('submit', function (e) {
       e.preventDefault();
@@ -152,60 +150,12 @@ function deleteBook(id) {
   fetch(`${BOOK_URL}/${id}`, {
     method: 'DELETE',
   })
-    .then((res) => res.json())
-    .then(function (result) {
-      const tblBooks = document.getElementById('tb-books');
-      (function initToast() {
-        tblBooks.insertAdjacentHTML(
-          'afterbegin',
-          `<div class="toast-container"></div>
-  <style>
-  
-.toast-container {
-  position: absolute;
-  left: 50%;
-  bottom:10%;
-  transform:translate(-50%);
-  box-shadow: 10px 5px 5px lightblue;
-}
-
-.toast {
-  font-size: 0.8rem;
-  padding: 0.6em;
-  background-color: orange;
-  animation: toastIt 2000ms;
-}
-
-@keyframes toastIt {
-  0%,
-  100% {
-    opacity: 0;
-  }
-  20%,80%{
-    opacity: 1;
-  }
-}
-  </style>
-  `
-        );
-        toastContainer = document.querySelector('.toast-container');
-      })();
+    .then(() => {
       window.location.href = BOOK_URL;
-      if (result.success === true) {
-        generateToast({
-          message: result,
-          background: 'rgb(194 232 247)',
-          color: 'darkgreen',
-          length: '2000ms',
-        });
-      }
     })
     .catch(function (err) {
       console.log(err);
     });
-  // } else {
-  //   txt = 'Cancelled the operation';
-  // }
 }
 
 window.onclick = function (event) {

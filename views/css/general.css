@@ -150,6 +150,7 @@ a {
 #form-login {
   background-color: rgb(227, 240, 245);
   padding: 40px;
+  position: relative;
 }
 
 #email,
