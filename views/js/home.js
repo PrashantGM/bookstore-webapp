@@ -1,54 +1,59 @@
 let page = 1;
 let bookData = [];
-let userID = 1;
 let genre = '';
 const container = document.querySelector('.container');
 const section = document.querySelector('.section');
+
+//gets books from server and loads on the page
 async function getBooksFromServer(page, readingList, genre) {
   const btnProfile = document.querySelector('.btn-profile');
   const navDropdown = document.querySelector('.dropdown-content');
-  console.log(genre);
-  // navDropdown.style.display = 'none';
+
   let parsedUserData = {};
+
+  //first check if user is logged in
+  const isLoggedIn = await viewLoggedIn();
   try {
-    const userData = await viewLoggedIn();
-
-    parsedUserData = JSON.parse(userData);
-    console.log(parsedUserData);
-
-    if (parsedUserData) {
-      const navItem = document.querySelector('.li-user');
+    //if user is logged in,
+    if (isLoggedIn.success) {
+      parsedUserData = JSON.parse(isLoggedIn.payload);
+      //display name of user on nav menu
       btnProfile.textContent = parsedUserData.username;
+
+      //adding user profile icon
       const userIcon = document.createElement('i');
       userIcon.className = 'fa fa-user-circle';
       btnProfile.appendChild(userIcon);
-      console.log(parsedUserData.username);
+
+      //adding down icon
       const downIcon = document.createElement('i');
       downIcon.className = 'fa fa-caret-down';
       btnProfile.appendChild(downIcon);
 
+      //do not display dashboard option on dropdown menu by default
       const navlinkDash = document.querySelector('#nav-dashboard');
       navlinkDash.style.display = 'none';
 
+      //if logged in user is admin, show dashboard option
       if (parsedUserData.role === 'ADMIN') {
-        console.log('i ran here');
         navlinkDash.style.display = 'block';
       }
+    } else {
+      //if user isn't logged in, don't display dropdown menu. Displays login button by default.
+      navDropdown.style.display = 'none';
+      btnProfile.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = 'http://localhost:8000/user/login';
+      });
     }
   } catch (error) {
-    // console.log(error);
+    //catch and log exception error to console
+    console.log(error);
   }
 
-  if (!parsedUserData.username) {
-    console.log('here');
-    navDropdown.style.display = 'none';
-    btnProfile.addEventListener('click', (e) => {
-      e.preventDefault();
-      window.location.href = 'http://localhost:8000/user/login';
-    });
-  }
-  console.log('this ran');
+  //check if readingList paramater has been passed when clicked reading list
   if (!readingList) {
+    // display all books or books per genre depending on value passed
     const books = await fetch(
       `http://localhost:8000/books?genre=${genre}&page=${page}`,
       {
@@ -59,21 +64,29 @@ async function getBooksFromServer(page, readingList, genre) {
       }
     );
     const result = await books.json();
-
     bookData = result;
   } else {
-    const books = await fetch(`http://localhost:8000/user/reads/${userID}`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      method: 'GET',
-    });
-    const result = await books.json();
-
-    const readingLists = result[0].reading_list;
-    bookData = readingLists;
+    //reading list has been clicked so fetch reading list for user
+    try {
+      const books = await fetch(
+        `http://localhost:8000/user/reads/${parsedUserData.id}?page=${page}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          method: 'GET',
+        }
+      );
+      const result = await books.json();
+      const readingLists = result.data.reads;
+      bookData = readingLists;
+      //create and apply pagination controls below books displayed
+      await pagination(true);
+    } catch (error) {
+      console.log(error);
+    }
   }
-
+  //for each book in bookData array, display its data by creating corresponding elements
   bookData.forEach((book) => {
     const divNovel = document.createElement('div');
     divNovel.className = 'div-novel';
@@ -111,28 +124,88 @@ async function getBooksFromServer(page, readingList, genre) {
     pGenre.innerHTML = book.genre;
     divGR.appendChild(pGenre);
 
+    //if reading has not been clicked
     if (!readingList) {
+      //display add to reading list - image button
       let imgRead = document.createElement('img');
       imgRead.title = 'Add to Reading List';
-      // imgRead.onclick =
-      //   'getCardDetails({ id: ${book.id}, title: ${book.title} })';
-      imgRead.addEventListener('click', (e) => {
-        // e.preventDefault();
-        if (!parsedUserData.username) {
+      imgRead.addEventListener('click', async (e) => {
+        e.preventDefault();
+
+        //if user isn't logged in, redirect user to login page
+        if (!isLoggedIn.success) {
           window.location.href = 'http://localhost:8000/user/login';
         }
-        console.log('clicked');
-        console.log(book);
-        console.log(book.id);
-        fetch(`http://localhost:8000/user/${parsedUserData.id}`, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          method: 'PATCH',
-          body: JSON.stringify({ id: book.id, title: book.title }),
-        })
-          .then((res) => res.json())
-          .then((data) => console.log(data));
+        // fetch user's reading list from server
+        try {
+          const response = await fetch(
+            `http://localhost:8000/user/${parsedUserData.id}`,
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              method: 'PATCH',
+              body: JSON.stringify({ id: book.id, title: book.title }),
+            }
+          );
+          const result = await response.json();
+          //initializing toast container
+          (function initToast() {
+            divNovel.insertAdjacentHTML(
+              'afterbegin',
+              `<div class="toast-container"></div>
+            <style>
+            
+          .toast-container {
+            position: absolute;
+            left: 50%;
+            bottom:50%;
+            transform:translate(-50%);
+            box-shadow: 1px 2px 3px 4px rgba(20,20,20,0.4);
+          }
+
+          .toast {
+            font-size: 1rem;        
+            padding: 0.8em;
+            animation: toastIt 2000ms;
+          }
+
+          @keyframes toastIt {
+            0%,
+            100% {
+              opacity: 0;
+            }
+            20%,80%{
+              opacity: 1;
+            }
+          }
+          </style>
+            `
+            );
+            toastContainer = document.querySelector('.toast-container');
+          })();
+
+          //upon successfully addition of reading list to user's profile
+          if (result.success === true) {
+            //display success toast message
+            generateToast({
+              message: `${book.title} added to Reading List`,
+              background: '#eaf7fb',
+              color: 'green',
+              length: '2000ms',
+            });
+          } else {
+            //display failure toast message
+            generateToast({
+              message: result.msg,
+              background: '#eaf7fb',
+              color: 'red',
+              length: '2000ms',
+            });
+          }
+        } catch (error) {
+          console.log(error);
+        }
       });
       imgRead.id = 'img-read';
       imgRead.src = '../imgs/book.png';
@@ -144,22 +217,20 @@ async function getBooksFromServer(page, readingList, genre) {
     pPrice.className = 'el-novel p-price';
     pPrice.innerHTML = `Rs. ${book.price}`;
     divNovel.appendChild(pPrice);
-
-    // let pDesc = document.createElement('p');
-    // pDesc.className = 'el-novel p-desc';
-    // pDesc.innerHTML = book.description;
-    // divNovel.appendChild(pDesc);
   });
 }
 
 async function load(page, readingList, genre) {
   await getBooksFromServer(page, readingList, genre);
-  await pagination();
+  if (!readingList) {
+    await pagination();
+  }
   viewLoggedIn();
-  // await addReadingList();
 }
 load(page, false, '');
-async function pagination() {
+
+//function for displaying controls for pagination
+async function pagination(readingList) {
   let divControls = document.createElement('div');
   divControls.className = 'page-controls';
 
@@ -191,9 +262,10 @@ async function pagination() {
       if (page < 1) {
         page = 1;
       }
+      console.log(page, readingList);
       document.querySelectorAll('.div-novel').forEach((e) => e.remove());
       document.querySelector('.page-controls').remove();
-      load(page);
+      load(page, readingList);
     });
   }
 
@@ -203,20 +275,14 @@ async function pagination() {
       e.preventDefault();
       document.querySelectorAll('.div-novel').forEach((e) => e.remove());
       page += 1;
+      console.log(page, readingList);
       document.querySelector('.page-controls').remove();
-      load(page);
-      // getBooksFromServer(page);
+      load(page, readingList);
     });
   }
 }
 
-// async function addReadingList() {
-//   document.getElementById('img-read').addEventListener('click', (e) => {
-//     e.preventDefault();
-//     console.log('clicked');
-//     console.log(e);
-//   });
-// }
+//function that checks with server if user is logged or not
 async function viewLoggedIn() {
   try {
     const payload = await fetch('http://localhost:8000/user/stat', {
@@ -226,25 +292,19 @@ async function viewLoggedIn() {
       method: 'GET',
     });
     const userData = await payload.json();
-    console.log(userData.payload);
-
-    return userData.payload;
+    return userData;
   } catch (error) {
     // console.log(error);
   }
 }
-
+//this function is invoked when user selects genre
 function getBooksByGenre(genre) {
   document.querySelectorAll('.div-novel').forEach((e) => e.remove());
   document.querySelector('.page-controls').remove();
   load(page, false, genre);
 }
 
-function viewUserProfile() {
-  const navUser = document.getElementById('li-user');
-  // navUser.remov;
-}
-
+//this function is invoked when user clicks reading list
 function viewReadingList() {
   document.querySelectorAll('.div-novel').forEach((e) => e.remove());
 
@@ -252,6 +312,7 @@ function viewReadingList() {
   getBooksFromServer(page, true);
 }
 
+//logout functionality
 function logout() {
   fetch('http://localhost:8000/user/logout', {
     headers: {
@@ -261,4 +322,27 @@ function logout() {
   }).then(() => {
     window.location.replace('http://localhost:8000');
   });
+}
+
+//initalizing toast container
+let toastContainer;
+
+//generates toast based on value passed when called
+function generateToast({
+  message,
+  background = '#00214d',
+  color = '#fffffe',
+  length = '2000ms',
+}) {
+  toastContainer.insertAdjacentHTML(
+    'beforeend',
+    `<p class="toast" 
+    style="background-color: ${background};
+    color: ${color};
+    animation-duration: ${length}">
+    ${message}
+  </p>`
+  );
+  const toast = toastContainer.lastElementChild;
+  toast.addEventListener('animationend', () => toast.remove());
 }
