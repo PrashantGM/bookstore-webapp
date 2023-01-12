@@ -1,14 +1,16 @@
+// import toast from './toast';
+
 //this opens new form when add new book button is clicked
 const BOOK_URL = 'http://localhost:8000/books/admin';
 function openForm(actionType, id) {
   const form = document.getElementById('popupForm');
   form.style.display = 'block';
-  // const trueForm = document.querySelector('.formContainer');
+  const trueForm = document.querySelector('.formContainer');
   const btnAdd = document.querySelector('#btn-save');
   if (actionType === 'add') {
-    btnAdd.addEventListener('click', function (e) {
-      // e.preventDefault();
-      console.log('i iii');
+    trueForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+
       const formData = new FormData();
       formData.append(
         'title',
@@ -49,7 +51,8 @@ function openForm(actionType, id) {
         method: 'POST',
         body: formData,
       })
-        .then(function () {
+        .then((res) => res.json())
+        .then((result) => {
           closeForm();
         })
         .catch(function (err) {
@@ -80,16 +83,15 @@ function openForm(actionType, id) {
         document.querySelector('input[name="author"]').value = author;
         document.querySelector('input[name="publication_date"]').value =
           parsedDate;
-        console.log('I ran');
       })
       .catch(function (err) {
         console.log(err);
       });
-    btnAdd.addEventListener('click', function (e) {
+    trueForm.addEventListener('submit', function (e) {
       e.preventDefault();
       const title = document.querySelector('input[name="title"]').value;
       const image = document.querySelector('#img-display').src;
-      console.log(image);
+
       const genre = document.querySelector('input[name="genre"]').value;
       const description = document.querySelector(
         'textarea[name="description"]'
@@ -118,7 +120,7 @@ function openForm(actionType, id) {
         body: JSON.stringify(data),
       })
         .then(function (res) {
-          console.log(res);
+          closeForm();
         })
         .catch(function (err) {
           console.log(err);
@@ -150,8 +152,53 @@ function deleteBook(id) {
   fetch(`${BOOK_URL}/${id}`, {
     method: 'DELETE',
   })
-    .then(function (res) {
+    .then((res) => res.json())
+    .then(function (result) {
+      const tblBooks = document.getElementById('tb-books');
+      (function initToast() {
+        tblBooks.insertAdjacentHTML(
+          'afterbegin',
+          `<div class="toast-container"></div>
+  <style>
+  
+.toast-container {
+  position: absolute;
+  left: 50%;
+  bottom:10%;
+  transform:translate(-50%);
+  box-shadow: 10px 5px 5px lightblue;
+}
+
+.toast {
+  font-size: 0.8rem;
+  padding: 0.6em;
+  background-color: orange;
+  animation: toastIt 2000ms;
+}
+
+@keyframes toastIt {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  20%,80%{
+    opacity: 1;
+  }
+}
+  </style>
+  `
+        );
+        toastContainer = document.querySelector('.toast-container');
+      })();
       window.location.href = BOOK_URL;
+      if (result.success === true) {
+        generateToast({
+          message: result,
+          background: 'rgb(194 232 247)',
+          color: 'darkgreen',
+          length: '2000ms',
+        });
+      }
     })
     .catch(function (err) {
       console.log(err);
@@ -189,3 +236,24 @@ window.onclick = function (event) {
     event.target.style.display = 'none';
   }
 };
+
+let toastContainer;
+
+function generateToast({
+  message,
+  background = '#00214d',
+  color = '#fffffe',
+  length = '2000ms',
+}) {
+  toastContainer.insertAdjacentHTML(
+    'beforeend',
+    `<p class="toast" 
+    style="background-color: ${background};
+    color: ${color};
+    animation-duration: ${length}">
+    ${message}
+  </p>`
+  );
+  const toast = toastContainer.lastElementChild;
+  toast.addEventListener('animationend', () => toast.remove());
+}
