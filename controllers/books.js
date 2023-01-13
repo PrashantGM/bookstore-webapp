@@ -194,7 +194,7 @@ const getBooksForUser = async (req, res) => {
       return { ...b };
     });
 
-    res.status(200).json(books);
+    res.status(200).json(parsedBooks);
   } catch (error) {
     res.status(500).json({ msg: error });
   }

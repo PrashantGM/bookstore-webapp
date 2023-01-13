@@ -153,7 +153,14 @@ const viewReadingList = async (req, res) => {
         },
       },
     });
-    const reads = readingList[0].reading_list;
+    const unparsedReads = readingList[0].reading_list;
+    const reads = unparsedReads.map((b) => {
+      if (!b.image.startsWith('https')) {
+        b.image = 'http://localhost:8000/uploads/' + b.image;
+      }
+      return { ...b };
+    });
+    console.log(reads);
     res.status(200).json({
       success: true,
       data: { reads, nbHits: reads.length },
