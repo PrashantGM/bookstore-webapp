@@ -1,4 +1,4 @@
-const navDropdown = document.querySelector('.dropdown-content');
+const navDropdown = document.querySelector('#dropdown-profile');
 
 navDropdown.style.display = 'none';
 

@@ -1,34 +1,28 @@
 onload();
 const btnProfile = document.querySelector('.btn-profile');
-console.log(btnProfile);
 async function onload() {
   const btnProfile = document.querySelector('.btn-profile');
-  const navDropdown = document.querySelector('.dropdown-content');
-  console.log(navDropdown);
-  // navDropdown.style.display = block;
-
+  console.log('btnprofile', btnProfile);
   try {
     const userData = await viewLoggedIn();
-
     const parsedUserData = JSON.parse(userData);
-    console.log(parsedUserData);
-    console.log(parsedUserData.username);
+
     if (parsedUserData) {
-      // const navItem = document.querySelector('.li-user');
+      document.querySelector('.li-home').style.display = 'none';
+      document.querySelector('.li-genre').style.display = 'none';
+      document.querySelector('.li-about').style.display = 'none';
+
       btnProfile.textContent = parsedUserData.username;
       const userIcon = document.createElement('i');
       userIcon.className = 'fa fa-user-circle';
       btnProfile.appendChild(userIcon);
-      console.log(userIcon);
-      console.log('here');
 
-      console.log(parsedUserData.username);
       const downIcon = document.createElement('i');
       downIcon.className = 'fa fa-caret-down';
       btnProfile.appendChild(downIcon);
 
-      const navlinkDash = document.querySelector('#nav-dashboard');
-      navlinkDash.style.display = 'none';
+      document.querySelector('#navRead').style.display = 'none';
+      document.querySelector('#nav-dashboard').style.display = 'none';
     } else {
       btnProfile.addEventListener('click', (e) => {
         e.preventDefault();
@@ -36,7 +30,7 @@ async function onload() {
       });
     }
   } catch (error) {
-    // console.log(error);
+    console.log(error);
   }
 }
 async function viewLoggedIn() {
@@ -52,7 +46,7 @@ async function viewLoggedIn() {
 
     return userData.payload;
   } catch (error) {
-    // console.log(error);
+    console.log(error);
   }
 }
 function logout() {

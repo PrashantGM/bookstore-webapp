@@ -4,7 +4,7 @@ function openForm(actionType, id) {
   const form = document.getElementById('popupForm');
   form.style.display = 'block';
   const trueForm = document.querySelector('.formContainer');
-
+  document.querySelector('#btn-add').style.display = 'none';
   if (actionType === 'add') {
     trueForm.addEventListener('submit', function (e) {
       e.preventDefault();
@@ -134,7 +134,7 @@ function closeForm() {
   document.getElementById('popupForm').style.display = 'none';
   document.getElementById('tb-books').style.display = 'block';
   document.getElementById('btn-addBook').style.display = 'block';
-  window.location.href = BOOK_URL;
+  window.location.replace = BOOK_URL;
 }
 function addBook() {
   openForm('add', '');
@@ -158,12 +158,12 @@ function deleteBook(id) {
     });
 }
 
-window.onclick = function (event) {
-  let modal = document.getElementById('modalAddBook');
-  if (event.target == modal) {
-    closeForm();
-  }
-};
+// window.onclick = function (event) {
+//   let modal = document.getElementById('modalAddBook');
+//   if (event.target == modal) {
+//     closeForm();
+//   }
+// };
 //poulate the modal form
 let modalBtns = [...document.querySelectorAll('#btn-addBook')];
 modalBtns.forEach(function (btn) {
@@ -181,11 +181,11 @@ closeBtns.forEach(function (btn) {
     modal.style.display = 'none';
   };
 });
-window.onclick = function (event) {
-  if (event.target.className === 'modal') {
-    event.target.style.display = 'none';
-  }
-};
+// window.onclick = function (event) {
+//   if (event.target.className === 'modal') {
+//     event.target.style.display = 'none';
+//   }
+// };
 
 let toastContainer;
 

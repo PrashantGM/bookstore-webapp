@@ -7,11 +7,11 @@ const section = document.querySelector('.section');
 //gets books from server and loads on the page
 async function getBooksFromServer(page, readingList, genre) {
   const btnProfile = document.querySelector('.btn-profile');
-  const navDropdown = document.querySelector('.dropdown-content');
+  const navDropdown = document.querySelector('#dropdown-profile');
 
   let parsedUserData = {};
 
-  //first check if user is logged in
+  //first check if user is logged
   const isLoggedIn = await viewLoggedIn();
   try {
     //if user is logged in,
@@ -19,6 +19,7 @@ async function getBooksFromServer(page, readingList, genre) {
       parsedUserData = JSON.parse(isLoggedIn.payload);
       //display name of user on nav menu
       btnProfile.textContent = parsedUserData.username;
+      btnProfile.fontFamily = "Times New Roman', Times, serif";
 
       //adding user profile icon
       const userIcon = document.createElement('i');
@@ -294,7 +295,7 @@ async function viewLoggedIn() {
     const userData = await payload.json();
     return userData;
   } catch (error) {
-    // console.log(error);
+    console.log(error);
   }
 }
 //this function is invoked when user selects genre

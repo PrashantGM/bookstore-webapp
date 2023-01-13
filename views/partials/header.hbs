@@ -5,46 +5,43 @@
 
   <nav class='main-nav'>
     <ul class='main-nav-list'>
-      <li><a class='main-nav-link' href='/'>Home</a></li>
-      <li class='li-genre main-nav-link' href='#'>Genre
+      <li><a class='li-home main-nav-link' href='/'>Home</a></li>
+      <li class='li-genre main-nav-link' href='#'>
+        <span>Genre</span>
         <i class='fa fa-caret-down'></i>
-        <div class='dropdown-genre'>
+        <div class='dropdown'>
           <a
-            class='main-nav-link'
+            class='nav-link'
             id='nav-reading'
             onclick='getBooksByGenre("Fantasy")'
           >Fantasy</a>
           <a
-            class='main-nav-link'
+            class='nav-link'
             id='nav-reading'
             onclick='getBooksByGenre("Action")'
           >Action</a>
           <a
-            class='main-nav-link'
+            class='nav-link'
             id='nav-reading'
             onclick='getBooksByGenre("Non-Fiction")'
           >Non-Fiction</a>
           <a
-            class='main-nav-link'
+            class='nav-link'
             id='nav-reading'
             onclick='getBooksByGenre("Educational")'
           >Educational</a>
 
         </div></li>
-      <li><a class='main-nav-link' href='#'>Contact Us</a></li>
+      <li class='li-about'><a class='main-nav-link' href='#'>About Us</a></li>
       <li class='li-user main-nav-link'>
         <button class='btn-profile'>
           Login
         </button>
-        <div class='dropdown-content'>
+        <div class='dropdown' id='dropdown-profile'>
+          <a class='nav-link' id='navRead' onclick='viewReadingList()'>Reading
+            List</a>
           <a
-            class='main-nav-link'
-            id='nav-reading'
-            onclick='viewReadingList()'
-          >Reading List</a>
-
-          <a
-            class='main-nav-link'
+            class='nav-link'
             id='nav-dashboard'
             href='books/admin'
           >Dashboard</a>
