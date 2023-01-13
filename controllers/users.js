@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 const registerUser = async (req, res) => {
   try {
     const { username, email, password } = req.body;
-
+    console.log(req.body);
     const salt = await bcrypt.genSalt(10);
     const users = await prisma.user.findUnique({ where: { email } });
 
@@ -24,6 +24,7 @@ const registerUser = async (req, res) => {
     });
     const tokenUser = { email: user.email, id: user.id, role: user.role };
     attachCookiesToRes({ res, user: tokenUser });
+    console.log(tokenUser);
     res.status(201).json({ data: tokenUser });
   } catch (error) {
     res.status(500).json(error);

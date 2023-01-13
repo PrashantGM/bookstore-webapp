@@ -25,7 +25,7 @@ const addBook = async (req, res) => {
         height: 300,
         crop: 'fill',
       });
-      console.log('result');
+
       await fs.unlink(req.file.path);
     } else {
       //removing extra file path when saving img to db
@@ -57,7 +57,11 @@ const addBook = async (req, res) => {
 
 const getAllBooks = async (req, res) => {
   try {
-    const book = await prisma.book.findMany({});
+    const book = await prisma.book.findMany({
+      orderBy: {
+        updated_at: 'desc',
+      },
+    });
 
     const bookWithParsedDate = book.map((b) => {
       const date = new Date(b.publication_date);
@@ -94,16 +98,22 @@ const getAllBooks = async (req, res) => {
 const getBookById = async (req, res) => {
   try {
     const id = Number(req.params.id);
-
+    console.log(id);
     const book = await prisma.book.findUnique({ where: { id } });
     const date = new Date(book.publication_date);
     let month = date.getUTCMonth() + 1;
     let day = date.getUTCDate();
     let year = date.getUTCFullYear();
     const parsedDate = year + '/' + month + '/' + day;
-    res
-      .status(200)
-      .json({ msg: 'Successfully fetched!', data: { ...book, parsedDate } });
+    const imageURI = book.image;
+    if (!imageURI.startsWith('https')) {
+      imageURI = 'http://localhost:8000/uploads/' + imageURI;
+    }
+    console.log(book);
+    res.status(200).json({
+      msg: 'Successfully fetched!',
+      data: { ...book, parsedDate, imageURI },
+    });
   } catch (error) {
     res.status(500).json({ msg: error });
   }
@@ -121,9 +131,11 @@ const updateBook = async (req, res) => {
       author,
       publication_date,
     } = req.body;
+    console.log(req.body);
     const genreArr = genre.split(',');
     const intPrice = Number(price);
     const parsedDate = new Date(publication_date);
+
     const book = await prisma.book.update({
       where: { id },
       data: {
@@ -136,6 +148,7 @@ const updateBook = async (req, res) => {
         publication_date: parsedDate,
       },
     });
+    console.log(book);
     res.status(200).json({ msg: 'Successfully updated!', data: book });
   } catch (error) {
     res.status(500).json(error);

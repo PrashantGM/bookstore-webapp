@@ -17,6 +17,8 @@ model Book{
   price Int
   author String
   publication_date DateTime @db.Date
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
   user User[] 
 
   @@map(name:"books")
@@ -28,6 +30,8 @@ model User{
   username String?
   password String
   role Role? @default(USER)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
   reading_list Book[] 
   @@map(name:"users")
 }
