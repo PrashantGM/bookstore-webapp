@@ -19,42 +19,7 @@ function openForm(actionType, id) {
   if (actionType === 'add') {
     trueForm.addEventListener('submit', function (e) {
       e.preventDefault();
-
-      const formData = new FormData();
-      formData.append(
-        'title',
-        document.querySelector('input[name="title"]').value
-      );
-
-      formData.append('image', imgBook.files[0]);
-
-      const cloudCheck = document.querySelector('input[name="cloudinary"]');
-      if (cloudCheck.ariaChecked) {
-        cloudCheck.value = 'cloudinary';
-      }
-      formData.append('cloud', cloudCheck.value);
-
-      formData.append(
-        'genre',
-        document.querySelector('input[name="genre"]').value
-      );
-      formData.append(
-        'description',
-        document.querySelector('textarea[name="description"]').value
-      );
-      formData.append(
-        'price',
-        document.querySelector('input[name="price"]').value
-      );
-      formData.append(
-        'author',
-        document.querySelector('input[name="author"]').value
-      );
-      formData.append(
-        'publication_date',
-        document.querySelector('input[name="publication_date"]').value
-      );
-
+      const formData = appendDataToForm(actionType);
       fetch(BOOK_URL, {
         method: 'POST',
         body: formData,
@@ -97,55 +62,13 @@ function openForm(actionType, id) {
         document.querySelector('input[name="author"]').value = author;
         document.querySelector('input[name="publication_date"]').value =
           parsedDate;
-        console.log('ran');
       })
       .catch(function (err) {
         console.log(err);
       });
     trueForm.addEventListener('submit', function (e) {
       e.preventDefault();
-      const formUpdatedData = new FormData();
-      formUpdatedData.append(
-        'title',
-        document.querySelector('input[name="title"]').value
-      );
-
-      if (imgBook.files[0]) {
-        formUpdatedData.append('image', imgBook.files[0]);
-      } else {
-        formUpdatedData.append(
-          'image',
-          document.querySelector('#img-display').src
-        );
-      }
-
-      const cloudCheck = document.querySelector('input[name="cloudinary"]');
-      if (cloudCheck.ariaChecked) {
-        cloudCheck.value = 'cloudinary';
-      }
-      formUpdatedData.append('cloud', cloudCheck.value);
-
-      formUpdatedData.append(
-        'genre',
-        document.querySelector('input[name="genre"]').value
-      );
-      formUpdatedData.append(
-        'description',
-        document.querySelector('textarea[name="description"]').value
-      );
-      formUpdatedData.append(
-        'price',
-        document.querySelector('input[name="price"]').value
-      );
-      formUpdatedData.append(
-        'author',
-        document.querySelector('input[name="author"]').value
-      );
-      formUpdatedData.append(
-        'publication_date',
-        document.querySelector('input[name="publication_date"]').value
-      );
-
+      const formUpdatedData = appendDataToForm();
       fetch(`/books/admin/${id}`, {
         method: 'PUT',
         body: formUpdatedData,
@@ -172,6 +95,43 @@ function closeForm() {
 function addBook() {
   openForm('add', '');
 }
+
+function appendDataToForm() {
+  const formData = new FormData();
+  formData.append('title', document.querySelector('input[name="title"]').value);
+
+  const imgBook = document.querySelector('input[name="image"]');
+  console.log(imgBook);
+  if (imgBook.files[0]) {
+    formData.append('image', imgBook.files[0]);
+  } else {
+    formData.append('image', document.querySelector('#img-display').src);
+  }
+
+  const cloudCheck = document.querySelector('input[name="cloudinary"]');
+
+  if (cloudCheck.ariaChecked) {
+    cloudCheck.value = 'cloudinary';
+  }
+  formData.append('cloud', cloudCheck.value);
+
+  formData.append('genre', document.querySelector('input[name="genre"]').value);
+  formData.append(
+    'description',
+    document.querySelector('textarea[name="description"]').value
+  );
+  formData.append('price', document.querySelector('input[name="price"]').value);
+  formData.append(
+    'author',
+    document.querySelector('input[name="author"]').value
+  );
+  formData.append(
+    'publication_date',
+    document.querySelector('input[name="publication_date"]').value
+  );
+  return formData;
+}
+
 //updates corresponding book
 function updateBook(id) {
   openForm('update', id);
