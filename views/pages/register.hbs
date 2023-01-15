@@ -17,19 +17,19 @@
         </h3>
         <div class='f-space-between'>
           <label for='username'>Username</label>
-          <input type='text' id='username' name='username' />
+          <input type='text' id='username' name='username' required/>
         </div>
         <div class='f-space-between m-t-10'>
           <label for='email'>Email</label>
-          <input type='email' id='email' name='email' />
+          <input type='email' id='email' name='email' required />
         </div>
         <br />
         <div class='f-space-between'>
           <label for='password'>Password</label>
-          <input type='password' id='password' name='password' />
+          <input type='password' id='password' name='password' minlength="8" required/>
         </div>
         <div class='f-center'>
-          <input type='submit' id='btn-login' value='Register' />
+          <input type='submit' id='btn-register' value='Register' />
         </div>
         <p class="m-10 p-10">Existing account? <a href="/user/login" id="a-login"> Login </a></p>
       </form>

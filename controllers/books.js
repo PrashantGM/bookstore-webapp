@@ -15,7 +15,9 @@ const addBook = async (req, res) => {
       author,
       publication_date,
     } = req.body;
-
+    console.log(req.body);
+    console.log(req.file);
+    console.log(req.file.path);
     let result = {};
     //checks if user selected save images to cloud option when adding books
     if (cloud === 'cloudinary') {
@@ -98,18 +100,18 @@ const getAllBooks = async (req, res) => {
 const getBookById = async (req, res) => {
   try {
     const id = Number(req.params.id);
-    console.log(id);
     const book = await prisma.book.findUnique({ where: { id } });
     const date = new Date(book.publication_date);
     let month = date.getUTCMonth() + 1;
     let day = date.getUTCDate();
     let year = date.getUTCFullYear();
     const parsedDate = year + '/' + month + '/' + day;
-    const imageURI = book.image;
+    let imageURI = book.image;
+
     if (!imageURI.startsWith('https')) {
       imageURI = 'http://localhost:8000/uploads/' + imageURI;
     }
-    console.log(book);
+    console.log(imageURI);
     res.status(200).json({
       msg: 'Successfully fetched!',
       data: { ...book, parsedDate, imageURI },
@@ -124,14 +126,36 @@ const updateBook = async (req, res) => {
     const id = Number(req.params.id);
     const {
       title,
-      image,
       genre,
+      image,
+      cloud,
       description,
       price,
       author,
       publication_date,
     } = req.body;
-    console.log(req.body);
+    let finalImage = '';
+
+    if (typeof image === 'string') {
+      if (image.startsWith('https://')) {
+        finalImage = image;
+      } else {
+        finalImage = image.replace('http://localhost:8000/uploads/', '');
+        console.log('locally saved finalimage', finalImage);
+      }
+    } else {
+      finalImage = req.file.filename;
+    }
+
+    if (cloud === 'cloudinary') {
+      result = await cloudinary.uploader.upload(req.file.path, {
+        public_id: `bookstore/books/${title}`,
+        width: 400,
+        height: 300,
+        crop: 'fill',
+      });
+      await fs.unlink(req.file.path);
+    }
     const genreArr = genre.split(',');
     const intPrice = Number(price);
     const parsedDate = new Date(publication_date);
@@ -140,7 +164,7 @@ const updateBook = async (req, res) => {
       where: { id },
       data: {
         title,
-        image,
+        image: finalImage,
         genre: genreArr,
         description,
         price: intPrice,
@@ -148,7 +172,6 @@ const updateBook = async (req, res) => {
         publication_date: parsedDate,
       },
     });
-    console.log(book);
     res.status(200).json({ msg: 'Successfully updated!', data: book });
   } catch (error) {
     res.status(500).json(error);

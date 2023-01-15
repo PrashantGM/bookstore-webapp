@@ -22,7 +22,12 @@ router
 router
   .route('/admin/:id')
   .get(authenticateUser, authorizePermissions, getBookById)
-  .put(authenticateUser, authorizePermissions, updateBook)
+  .put(
+    authenticateUser,
+    authorizePermissions,
+    upload.single('image'),
+    updateBook
+  )
   .delete(authenticateUser, authorizePermissions, deleteBook);
 router.route('/').get(getBooksForUser);
 module.exports = router;

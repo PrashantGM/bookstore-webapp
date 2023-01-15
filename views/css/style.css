@@ -1,7 +1,9 @@
+* {
+  font-family: 'Times New Roman', Times, serif;
+}
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Times New Roman', Times, serif;
 }
 #base {
   display: flex;
@@ -62,26 +64,12 @@ td {
   padding: 10px;
 }
 
-.field {
+/* .field {
   border: none;
   background-color: rgb(223, 235, 246);
   width: 200px;
   height: 35px;
-}
-#cloudinary {
-  background-color: rgb(223, 235, 246);
-  margin-left: 40px;
-  margin-bottom: 10px;
-}
-
-textarea {
-  border: none;
-  background-color: rgb(223, 235, 246);
-}
-label {
-  margin-right: 10px;
-  font-size: 14px;
-}
+} */
 
 #popupform {
   background-color: azure;
@@ -89,22 +77,56 @@ label {
 
   border: 1px dashed black;
 }
-textarea {
+/* textarea {
   font-family: 'Times New Roman', Times, serif;
-}
-
-p {
-  display: flex;
-  justify-content: space-between;
-}
-#lbl-price {
-  margin-right: 80px;
-}
-
-/* tr {
-  display: flex;
-  justify-content: space-evenly;
 } */
+
+#h3-newbook {
+  text-align: center;
+  margin: 10px 0px 20px 0px;
+}
+.div-addbooks {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 30px;
+  margin: 10px 20px;
+  /* padding: 5px; */
+}
+
+.div-addbooks > label {
+  padding: 5px;
+  flex: 0 1 100px;
+}
+.div-addbooks > input,
+.div-addbooks > textarea {
+  padding: 5px;
+  flex: 1 0 auto;
+}
+
+#div-image {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  /* flex: 0 1 auto; */
+}
+#div-checkcloud {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1 0 auto;
+}
+
+.div-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+button {
+  padding: 10px;
+}
+
 td {
   overflow: hidden;
 }

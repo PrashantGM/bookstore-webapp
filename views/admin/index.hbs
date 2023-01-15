@@ -13,7 +13,7 @@
     {{>header}}
     <div id='base'>
       <div id='container'>
-        <h1>TAI BookStore</h1>
+        <h1>BookStore Dashboard</h1>
         <button id='btn-add' onclick='addBook()'>Add New Book</button>
         <div class="container-table">
         <table id='tb-books'>
@@ -57,7 +57,7 @@
               class='formContainer'
             >
               <h3 id='h3-newbook'>Add New Book</h3>
-              <p>
+              <div class="div-addbooks">
                 <label for='title'>
                   Book Title
                 </label>
@@ -70,11 +70,13 @@
                   maxlength="60"
                   required
                 />
-              </p>
-              <p>
+              </div>
+              <div class="div-addbooks">
                 <label for='image'>
                   Book Image
                 </label>
+                <div id="div-image">
+
                 <input
                   type='file'
                   id='bookImg'
@@ -82,15 +84,19 @@
                   name='image'
                   accept='image/png, image/jpeg'
                   class='hidden'
-                  required
-                />
+                  
+                />        
                      <img id='img-display' width='80px' src='' alt='' />
-              </p>   
-             
-                <label>Image Storage</label>              
+                </div>
+              </div>   
+             <div class="div-addbooks">
+                <label>Image Storage</label>     
+                <div id="div-checkcloud">
              <input type="checkbox" id="cloudinary" name="cloudinary">
                 <label for="cloudinary">Cloud</label>
-              <p>
+                </div>         
+             </div>
+              <div class="div-addbooks">
                 <label for='title'>
                   Genre
                 </label>
@@ -102,9 +108,8 @@
                   name='genre'
                   required
                 />
-              </p>
-              <p>
-                <p id='p-desc'>
+              </div>
+              <div class="div-addbooks">
                   <label for='description'>
                     Description
                   </label>
@@ -113,11 +118,12 @@
                     id='description'
 
                     placeholder='Short Overview Of Book'
-                    cols='24'
+                   
                     rows='6'
                     maxlength="1000"
                   ></textarea>
-                </p>
+                </div>
+                <div class="div-addbooks">
                 <label id='lbl-price' for='text'>
                   Price
                 </label>
@@ -129,8 +135,8 @@
                   name='price'
                   required
                 />
-              </p>
-              <p>
+              </div>
+              <div class="div-addbooks">
                 <label for='text'>
                   Author
                 </label>
@@ -142,8 +148,8 @@
                   name='author'
                   required
                 />
-              </p>
-              <p>
+              </div>
+              <div class="div-addbooks">
                 <label for='text'>
                   Publication Date
                 </label>
@@ -154,13 +160,16 @@
                   placeholder='YYYY/MM/DD'
                   name='publication_date'
                 />
-              </p>
+              </div>
+              <div class="div-buttons">
+
               <button type='submit' class='btn' id='btn-save'>Add</button>
               <button
                 type='button'
                 id='btn-cancel'
                 onclick='closeForm()'
               >Back</button>
+              </div>
             </form>
           </div>
         </div>
