@@ -15,9 +15,7 @@ const addBook = async (req, res) => {
       author,
       publication_date,
     } = req.body;
-    console.log(req.body);
-    console.log(req.file);
-    console.log(req.file.path);
+
     let result = {};
     //checks if user selected save images to cloud option when adding books
     if (cloud === 'cloudinary') {
@@ -31,10 +29,13 @@ const addBook = async (req, res) => {
       await fs.unlink(req.file.path);
     } else {
       //removing extra file path when saving img to db
-      const shortenedPath = req.file.path.replace('views/uploads/', '');
-      result.secure_url = shortenedPath;
+      result.secure_url = req.file.filename;
     }
-    const genreArr = genre.split(',');
+    const genreTemp = genre.split(',');
+    const genreArr = genreTemp.map((genre) => {
+      const trimmedGenre = genre.trim();
+      return trimmedGenre.charAt(0).toUpperCase() + trimmedGenre.slice(1);
+    });
     const intPrice = Number(price);
     const parsedDate = new Date(publication_date);
     const book = await prisma.book.create({
@@ -156,7 +157,11 @@ const updateBook = async (req, res) => {
       });
       await fs.unlink(req.file.path);
     }
-    const genreArr = genre.split(',');
+    const genreTemp = genre.split(',');
+    const genreArr = genreTemp.map((genre) => {
+      const trimmedGenre = genre.trim();
+      return trimmedGenre.charAt(0).toUpperCase() + trimmedGenre.slice(1);
+    });
     const intPrice = Number(price);
     const parsedDate = new Date(publication_date);
 
