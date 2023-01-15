@@ -5,6 +5,17 @@ function openForm(actionType, id) {
   form.style.display = 'block';
   const trueForm = document.querySelector('.formContainer');
   document.querySelector('#btn-add').style.display = 'none';
+  const imgBook = document.querySelector('input[name="image"]');
+  imgBook.onchange = () => {
+    let display = document.querySelector('#img-display');
+    if (imgBook.files && imgBook.files[0]) {
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        display.src = e.target.result;
+      };
+      reader.readAsDataURL(imgBook.files[0]);
+    }
+  };
   if (actionType === 'add') {
     trueForm.addEventListener('submit', function (e) {
       e.preventDefault();
@@ -14,10 +25,9 @@ function openForm(actionType, id) {
         'title',
         document.querySelector('input[name="title"]').value
       );
-      formData.append(
-        'image',
-        document.querySelector('input[name="image"]').files[0]
-      );
+
+      formData.append('image', imgBook.files[0]);
+
       const cloudCheck = document.querySelector('input[name="cloudinary"]');
       if (cloudCheck.ariaChecked) {
         cloudCheck.value = 'cloudinary';
@@ -50,7 +60,7 @@ function openForm(actionType, id) {
         body: formData,
       })
         .then((res) => res.json())
-        .then((result) => {
+        .then(() => {
           closeForm();
         })
         .catch(function (err) {
@@ -67,13 +77,19 @@ function openForm(actionType, id) {
     })
       .then((res) => res.json())
       .then((booksData) => {
-        const { title, image, genre, description, price, author, parsedDate } =
-          booksData.data;
+        const {
+          title,
+          imageURI,
+          genre,
+          description,
+          price,
+          author,
+          parsedDate,
+        } = booksData.data;
         document.querySelector('#h3-newbook').textContent = 'Edit Book';
         document.querySelector('#btn-save').textContent = 'Update';
         document.querySelector('input[name="title"]').value = title;
-        document.querySelector('input[name="image"]').style.display = 'none';
-        document.querySelector('#img-display').src = image;
+        document.querySelector('#img-display').src = imageURI;
         document.querySelector('input[name="genre"]').value = genre;
         document.querySelector('textarea[name="description"]').value =
           description;
@@ -81,41 +97,58 @@ function openForm(actionType, id) {
         document.querySelector('input[name="author"]').value = author;
         document.querySelector('input[name="publication_date"]').value =
           parsedDate;
+        console.log('ran');
       })
       .catch(function (err) {
         console.log(err);
       });
     trueForm.addEventListener('submit', function (e) {
       e.preventDefault();
-      const title = document.querySelector('input[name="title"]').value;
-      const image = document.querySelector('#img-display').src;
+      const formUpdatedData = new FormData();
+      formUpdatedData.append(
+        'title',
+        document.querySelector('input[name="title"]').value
+      );
 
-      const genre = document.querySelector('input[name="genre"]').value;
-      const description = document.querySelector(
-        'textarea[name="description"]'
-      ).value;
-      const price = document.querySelector('input[name="price"]').value;
-      const author = document.querySelector('input[name="author"]').value;
-      const date = document.querySelector(
-        'input[name="publication_date"]'
-      ).value;
-      const data = {
-        title,
-        image,
-        genre,
-        description,
-        price,
-        author,
-        publication_date: date,
-      };
+      if (imgBook.files[0]) {
+        formUpdatedData.append('image', imgBook.files[0]);
+      } else {
+        formUpdatedData.append(
+          'image',
+          document.querySelector('#img-display').src
+        );
+      }
+
+      const cloudCheck = document.querySelector('input[name="cloudinary"]');
+      if (cloudCheck.ariaChecked) {
+        cloudCheck.value = 'cloudinary';
+      }
+      formUpdatedData.append('cloud', cloudCheck.value);
+
+      formUpdatedData.append(
+        'genre',
+        document.querySelector('input[name="genre"]').value
+      );
+      formUpdatedData.append(
+        'description',
+        document.querySelector('textarea[name="description"]').value
+      );
+      formUpdatedData.append(
+        'price',
+        document.querySelector('input[name="price"]').value
+      );
+      formUpdatedData.append(
+        'author',
+        document.querySelector('input[name="author"]').value
+      );
+      formUpdatedData.append(
+        'publication_date',
+        document.querySelector('input[name="publication_date"]').value
+      );
 
       fetch(`/books/admin/${id}`, {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
         method: 'PUT',
-        body: JSON.stringify(data),
+        body: formUpdatedData,
       })
         .then(function (res) {
           closeForm();
@@ -126,15 +159,15 @@ function openForm(actionType, id) {
     });
   }
   document.getElementById('tb-books').style.display = 'none';
-  document.getElementById('btn-addBook').style.display = 'none';
+  document.getElementById('btn-add').style.display = 'none';
 }
 
 //closes the form after close button click
 function closeForm() {
   document.getElementById('popupForm').style.display = 'none';
   document.getElementById('tb-books').style.display = 'block';
-  document.getElementById('btn-addBook').style.display = 'block';
-  window.location.replace = BOOK_URL;
+  document.getElementById('btn-add').style.display = 'block';
+  window.location.reload();
 }
 function addBook() {
   openForm('add', '');
