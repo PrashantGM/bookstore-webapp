@@ -15,7 +15,9 @@ const addBook = async (req, res) => {
       author,
       publication_date,
     } = req.body;
-
+    console.log(req.body);
+    console.log(req.file);
+    console.log(req.file.path);
     let result = {};
     //checks if user selected save images to cloud option when adding books
     if (cloud === 'cloudinary') {
@@ -193,7 +195,6 @@ const getBooksForUser = async (req, res) => {
     let genreD = [];
     const genreData = req.query.genre;
     let page = Number(req.query.page) || 1;
-
     if (genreData == '' || genreData == 'undefined') {
       const genreResult = await prisma.book.findMany({
         distinct: ['genre'],
