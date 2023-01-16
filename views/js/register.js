@@ -27,8 +27,9 @@ registerForm.addEventListener('submit', function (e) {
     method: 'POST',
     body: JSON.stringify(data),
   })
-    .then((res) => res.json())
-    .then((data) => console.log(data))
+    .then((res) => {
+      window.location.replace('http://localhost:8000/user/login');
+    })
     .catch((error) => {
       console.log(error);
     });

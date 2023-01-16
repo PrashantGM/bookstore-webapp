@@ -21,12 +21,13 @@ body {
 .section {
   width: 50%;
   margin: 0 auto;
-  margin-top: 30px;
+  margin-top: 10px;
+  /* margin-bottom: 200px; */
 }
 
 .container {
   display: grid;
-  gap: 30px;
+  gap: 20px;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: 1fr 1fr;
   justify-items: center;
@@ -71,10 +72,10 @@ span {
 
 .div-novel {
   width: 290px;
-  height: 350px;
+  height: 320px;
   background-color: rgb(234, 244, 251);
   border: 1px solid rgb(178, 175, 175);
-  padding: 15px;
+  padding: 0px 15px 10px 15px;
   overflow: hidden;
 }
 
@@ -195,7 +196,7 @@ button {
   justify-content: space-around;
 }
 .logo-col {
-  padding: 10px;
+  padding: 5px;
   margin-top: 5px;
 }
 .m-5 {
@@ -206,6 +207,12 @@ button {
 }
 .m-10 {
   margin: 10px;
+}
+.m-20 {
+  margin: 20px;
+}
+.m-t-5 {
+  margin-top: 5px;
 }
 .m-t-10 {
   margin-top: 10px;
@@ -277,4 +284,102 @@ button {
 .dropdown a:hover {
   background-color: rgb(33, 81, 118);
   color: white;
+}
+
+/* book */
+.book-container {
+  width: 50%;
+  margin: auto;
+}
+
+.book-section {
+  margin-top: 10px;
+  background-color: rgb(243, 254, 254);
+}
+
+#book-path {
+  background-color: white;
+  color: #222;
+  font-style: italic;
+  padding-top: 10px;
+  width: 100%;
+}
+.path-content {
+  color: rgb(26, 93, 116);
+  font-size: 15px;
+}
+.book-details {
+  display: flex;
+  justify-content: flex-start;
+  gap: 20px;
+  padding: 40px;
+}
+#p-author,
+#p-genre {
+  margin: 5px;
+}
+#p-genre {
+  font-style: italic;
+  margin-bottom: 10px;
+}
+.btn-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+.details-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  gap: 5px;
+  margin-top: 20px;
+}
+
+#btn-addCart,
+#btn-order {
+  color: white;
+  padding: 5px;
+}
+
+#btn-addCart {
+  background-color: #b65f1ce3;
+}
+
+#btn-order {
+  background-color: rgb(26, 93, 116);
+}
+
+.book-desc {
+  padding: 5px;
+  margin-left: 30px;
+}
+#p-desc {
+  margin-top: 10px;
+  line-height: 18px;
+}
+
+.others {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+  font-size: 12px;
+  margin-left: 20px;
+}
+.all-others {
+  display: flex;
+  justify-content: space-evenly;
+  gap: 5px;
+}
+.book-others {
+  background-color: rgb(234, 244, 251);
+  padding: 10px;
+}
+
+.caption-others {
+  display: flex;
+  justify-content: flex-start;
+  margin: 30px 10px 2px 30px;
+  font-style: italic;
+  font-weight: bold;
 }

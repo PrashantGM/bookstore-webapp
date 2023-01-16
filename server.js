@@ -44,6 +44,9 @@ app.get('/user/register', (req, res) => {
 app.get('/user/login', (req, res) => {
   res.render('./pages/login');
 });
+app.get('/book', (req, res) => {
+  res.render('./pages/book');
+});
 
 app.use('/user', usersRoute);
 app.use('/books', booksRoute);

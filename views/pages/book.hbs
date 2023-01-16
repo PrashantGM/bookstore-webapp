@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book</title>
+  <link rel="stylesheet" href="../css/general.css">
+</head>
+<body>
+  {{>header}}
+    <div class="book-container">
+      <section class="book-section">
+      <p id="book-path"><span class="path-content">Books</span> > <span class="path-content">Genre</span> > <span class="path-content">7 Habits of Highly Successful People</span></p>
+        <div class="book-details">
+          <img src="../uploads/1673602994496-7habits.jpg" width="180" alt="" srcset="">
+          <div class="details-section">
+            <h3>7 Habits of Highly Successfully People</h3>          
+            <p id="p-author">Author: Steven Covey</p>
+            <p id="p-genre">Genre: Self-Help,Motivational</p>
+            <hr>
+            <h3 class="m-10">Rs. 2000</h3> 
+            <div class="m-10">
+              <label for="quantity">Quantity:</label>
+              <input type="number" id="quantity" name="quantity" value="1" min="1" max="5">
+            </div> 
+            <div>
+            <button class="button m-5 m-t-10" id="btn-order">Order Now</button>
+            <button class="button m-5 m-t-10" id="btn-addCart">Add to Cart</button> 
+            </div>
+          </div>
+        </div>
+        <div class="book-desc">
+          <p><strong>About Book</strong> </p>
+          <p id="p-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia, reprehenderit eligendi. Maxime voluptas rem similique ipsum itaque cum, pariatur exercitationem? Adipisci suscipit, deserunt impedit molestiae officiis at possimus porro vitae. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Incidunt rerum veritatis quam. Lorem ipsum dolor, sit amet consectetur adipisicing elit. </p>
+        </div>
+      </section>
+        <div class="caption-others">
+           <p>Similar Books That You Viewed</p>
+        </div>
+      <div class="others">
+          <div class="book-others">
+          <p><strong>Harry Potter</strong> </p>
+          <img src="../uploads/1673350107413-harry-potter.jpg" width="100px" alt="">
+          <p>By J.K. Rowling</p>
+          <p>Rs. 3000</p>
+          </div>
+            <div class="book-others">
+              <p><strong>Harry Potter</strong> </p>
+          <img src="../uploads/1673350107413-harry-potter.jpg" width="100px" alt="">
+          <p>By J.K. Rowling</p>
+          <p>Rs. 3000</p>
+          </div>
+            <div class="book-others">
+                <p><strong>Harry Potter</strong> </p>
+          <img src="../uploads/1673350107413-harry-potter.jpg" width="100px" alt="">
+          <p>By J.K. Rowling</p>
+          <p>Rs. 3000</p>
+          </div>
+          <div class="book-others">
+                <p><strong>Harry Potter</strong> </p>
+          <img src="../uploads/1673350107413-harry-potter.jpg" width="100px" alt="">
+          <p>By J.K. Rowling</p>
+          <p>Rs. 3000</p>
+          </div>      
+      </div>
+    </div>
+  {{>footer}}
+</body>
+</html>
