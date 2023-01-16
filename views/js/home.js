@@ -189,6 +189,13 @@ async function getBooksFromServer(page, readingList, genre) {
     pPrice.className = 'el-novel p-price';
     pPrice.innerHTML = `Rs. ${book.price}`;
     divNovel.appendChild(pPrice);
+
+    //when particular book card is clicked, open page for that book
+
+    divNovel.addEventListener('click', (e) => {
+      console.log(book.id);
+      window.location.assign(`http://localhost:8000/books/${book.id}`);
+    });
   });
 }
 

@@ -112,7 +112,7 @@ const getBookById = async (req, res) => {
     if (!imageURI.startsWith('https')) {
       imageURI = 'http://localhost:8000/uploads/' + imageURI;
     }
-    console.log(imageURI);
+
     res.status(200).json({
       msg: 'Successfully fetched!',
       data: { ...book, parsedDate, imageURI },
@@ -245,6 +245,31 @@ const getBooksForUser = async (req, res) => {
   }
 };
 
+const getSingleBookForUser = async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    const book = await prisma.book.findUnique({ where: { id } });
+    const date = new Date(book.publication_date);
+    let month = date.getUTCMonth() + 1;
+    let day = date.getUTCDate();
+    let year = date.getUTCFullYear();
+    const parsedDate = year + '/' + month + '/' + day;
+    let imageURI = book.image;
+
+    if (!imageURI.startsWith('https')) {
+      imageURI = 'http://localhost:8000/uploads/' + imageURI;
+    }
+    console.log(imageURI);
+    res.render('./pages/book', { data: { ...book, parsedDate, imageURI } });
+    // res.status(200).json({
+    //   msg: 'Successfully fetched!',
+    //   data: { ...book, parsedDate, imageURI },
+    // });
+  } catch (error) {
+    res.status(500).json({ msg: error });
+  }
+};
+
 module.exports = {
   addBook,
   getAllBooks,
@@ -252,4 +277,5 @@ module.exports = {
   updateBook,
   deleteBook,
   getBooksForUser,
+  getSingleBookForUser,
 };

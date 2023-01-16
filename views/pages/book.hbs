@@ -11,15 +11,17 @@
   {{>header}}
     <div class="book-container">
       <section class="book-section">
-      <p id="book-path"><span class="path-content">Books</span> > <span class="path-content">Genre</span> > <span class="path-content">7 Habits of Highly Successful People</span></p>
+      <p id="book-path"> <a href="/"><span class="path-content">Books</span></a> 
+       {{!-- > <span class="path-content">Genre</span>  --}}
+       > <span class="path-content">{{data.title}}</span></p>
         <div class="book-details">
-          <img src="../uploads/1673602994496-7habits.jpg" width="180" alt="" srcset="">
+          <img src="{{data.imageURI}}" width="200" alt="" srcset="">
           <div class="details-section">
-            <h3>7 Habits of Highly Successfully People</h3>          
-            <p id="p-author">Author: Steven Covey</p>
-            <p id="p-genre">Genre: Self-Help,Motivational</p>
+            <h3 class="m-l-5">{{data.title}}</h3>          
+            <p id="p-author">Author: {{data.author}}</p>
+            <p id="p-genre">Genre: {{data.genre}}</p>
             <hr>
-            <h3 class="m-10">Rs. 2000</h3> 
+            <h3 class="m-10">Rs. {{data.price}}</h3> 
             <div class="m-10">
               <label for="quantity">Quantity:</label>
               <input type="number" id="quantity" name="quantity" value="1" min="1" max="5">
@@ -32,7 +34,7 @@
         </div>
         <div class="book-desc">
           <p><strong>About Book</strong> </p>
-          <p id="p-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia, reprehenderit eligendi. Maxime voluptas rem similique ipsum itaque cum, pariatur exercitationem? Adipisci suscipit, deserunt impedit molestiae officiis at possimus porro vitae. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Incidunt rerum veritatis quam. Lorem ipsum dolor, sit amet consectetur adipisicing elit. </p>
+          <p id="p-desc">{{data.description}}</p>
         </div>
       </section>
         <div class="caption-others">

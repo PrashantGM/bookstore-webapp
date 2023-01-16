@@ -13,6 +13,7 @@ const {
   updateBook,
   deleteBook,
   getBooksForUser,
+  getSingleBookForUser,
 } = require('../controllers/books');
 
 router
@@ -30,4 +31,5 @@ router
   )
   .delete(authenticateUser, authorizePermissions, deleteBook);
 router.route('/').get(getBooksForUser);
+router.route('/:id').get(getSingleBookForUser);
 module.exports = router;

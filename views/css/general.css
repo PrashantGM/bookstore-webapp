@@ -78,6 +78,9 @@ span {
   padding: 0px 15px 10px 15px;
   overflow: hidden;
 }
+.div-novel:hover {
+  cursor: pointer;
+}
 
 #h1-title {
   text-align: center;
