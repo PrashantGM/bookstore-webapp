@@ -70,7 +70,7 @@ span {
 }
 
 .div-novel {
-  width: 300px;
+  width: 290px;
   height: 350px;
   background-color: rgb(234, 244, 251);
   border: 1px solid rgb(178, 175, 175);
@@ -135,7 +135,7 @@ button {
 
 /* login page */
 .container-2 {
-  margin: 150px auto;
+  margin: 140px auto;
   display: flex;
   justify-content: center;
   position: relative;
@@ -162,7 +162,7 @@ button {
 #form-register,
 #form-login {
   background-color: rgb(227, 240, 245);
-  padding: 40px;
+  padding: 30px;
   position: relative;
 }
 
@@ -171,7 +171,8 @@ button {
   margin-left: 5px;
 }
 
-#btn-login {
+#btn-login,
+#btn-register {
   padding: 5px;
   border: none;
   background-color: rgb(88, 150, 171);
