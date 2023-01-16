@@ -1,3 +1,5 @@
+import { toast } from './toast.js';
+
 let page = 1;
 let bookData = [];
 let genre = '';
@@ -151,45 +153,13 @@ async function getBooksFromServer(page, readingList, genre) {
           );
           const result = await response.json();
           //initializing toast container
-          (function initToast() {
-            divNovel.insertAdjacentHTML(
-              'afterbegin',
-              `<div class="toast-container"></div>
-            <style>
-            
-          .toast-container {
-            position: absolute;
-            left: 50%;
-            bottom:50%;
-            transform:translate(-50%);
-            box-shadow: 1px 2px 3px 4px rgba(20,20,20,0.4);
-          }
-
-          .toast {
-            font-size: 1rem;        
-            padding: 0.8em;
-            animation: toastIt 2000ms;
-          }
-
-          @keyframes toastIt {
-            0%,
-            100% {
-              opacity: 0;
-            }
-            20%,80%{
-              opacity: 1;
-            }
-          }
-          </style>
-            `
-            );
-            toastContainer = document.querySelector('.toast-container');
-          })();
+          toast.initToast(container);
 
           //upon successfully addition of reading list to user's profile
           if (result.success === true) {
             //display success toast message
-            generateToast({
+            console.log('on success');
+            toast.generateToast({
               message: `${book.title} added to Reading List`,
               background: '#eaf7fb',
               color: 'green',
@@ -197,7 +167,8 @@ async function getBooksFromServer(page, readingList, genre) {
             });
           } else {
             //display failure toast message
-            generateToast({
+            console.log('on failure before toast');
+            toast.generateToast({
               message: result.msg,
               background: '#eaf7fb',
               color: 'red',
@@ -231,7 +202,7 @@ async function load(page, readingList, genre) {
 load(page, false, '');
 
 //function for displaying controls for pagination
-async function pagination(readingList) {
+export async function pagination(readingList) {
   let divControls = document.createElement('div');
   divControls.className = 'page-controls';
 
@@ -299,14 +270,15 @@ async function viewLoggedIn() {
   }
 }
 //this function is invoked when user selects genre
-function getBooksByGenre(genre) {
+
+export function getBooksByGenre(genre) {
   document.querySelectorAll('.div-novel').forEach((e) => e.remove());
   document.querySelector('.page-controls').remove();
   load(page, false, genre);
 }
 
 //this function is invoked when user clicks reading list
-function viewReadingList() {
+export function viewReadingList() {
   document.querySelectorAll('.div-novel').forEach((e) => e.remove());
 
   document.querySelector('.page-controls').remove();
@@ -314,7 +286,7 @@ function viewReadingList() {
 }
 
 //logout functionality
-function logout() {
+export function logout() {
   fetch('http://localhost:8000/user/logout', {
     headers: {
       'Content-Type': 'application/json',
@@ -323,27 +295,4 @@ function logout() {
   }).then(() => {
     window.location.replace('http://localhost:8000');
   });
-}
-
-//initalizing toast container
-let toastContainer;
-
-//generates toast based on value passed when called
-function generateToast({
-  message,
-  background = '#00214d',
-  color = '#fffffe',
-  length = '2000ms',
-}) {
-  toastContainer.insertAdjacentHTML(
-    'beforeend',
-    `<p class="toast" 
-    style="background-color: ${background};
-    color: ${color};
-    animation-duration: ${length}">
-    ${message}
-  </p>`
-  );
-  const toast = toastContainer.lastElementChild;
-  toast.addEventListener('animationend', () => toast.remove());
 }

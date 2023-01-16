@@ -101,7 +101,6 @@ function appendDataToForm() {
   formData.append('title', document.querySelector('input[name="title"]').value);
 
   const imgBook = document.querySelector('input[name="image"]');
-  console.log(imgBook);
   if (imgBook.files[0]) {
     formData.append('image', imgBook.files[0]);
   } else {
@@ -174,29 +173,3 @@ closeBtns.forEach(function (btn) {
     modal.style.display = 'none';
   };
 });
-// window.onclick = function (event) {
-//   if (event.target.className === 'modal') {
-//     event.target.style.display = 'none';
-//   }
-// };
-
-let toastContainer;
-
-function generateToast({
-  message,
-  background = '#00214d',
-  color = '#fffffe',
-  length = '2000ms',
-}) {
-  toastContainer.insertAdjacentHTML(
-    'beforeend',
-    `<p class="toast" 
-    style="background-color: ${background};
-    color: ${color};
-    animation-duration: ${length}">
-    ${message}
-  </p>`
-  );
-  const toast = toastContainer.lastElementChild;
-  toast.addEventListener('animationend', () => toast.remove());
-}

@@ -16,6 +16,12 @@
     </section>
    {{>footer}}
     </div>
-    <script src='../js/home.js'></script>
+    <script type="module" defer>
+    import {getBooksByGenre,viewReadingList,logout } from "../js/home.js";
+    window.getBooksByGenre=getBooksByGenre;
+    window.viewReadingList = viewReadingList;
+    window.logout=logout;
+  </script>
+
   </body>
 </html>
