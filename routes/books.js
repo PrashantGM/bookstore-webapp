@@ -14,6 +14,7 @@ const {
   deleteBook,
   getBooksForUser,
   getSingleBookForUser,
+  getSimilarBooksForUser,
 } = require('../controllers/books');
 
 router
@@ -31,5 +32,6 @@ router
   )
   .delete(authenticateUser, authorizePermissions, deleteBook);
 router.route('/').get(getBooksForUser);
+router.route('/similar').get(getSimilarBooksForUser);
 router.route('/:id').get(getSingleBookForUser);
 module.exports = router;

@@ -40,33 +40,11 @@
         <div class="caption-others">
            <p>Similar Books That You Viewed</p>
         </div>
-      <div class="others">
-          <div class="book-others">
-          <p><strong>Harry Potter</strong> </p>
-          <img src="../uploads/1673350107413-harry-potter.jpg" width="100px" alt="">
-          <p>By J.K. Rowling</p>
-          <p>Rs. 3000</p>
-          </div>
-            <div class="book-others">
-              <p><strong>Harry Potter</strong> </p>
-          <img src="../uploads/1673350107413-harry-potter.jpg" width="100px" alt="">
-          <p>By J.K. Rowling</p>
-          <p>Rs. 3000</p>
-          </div>
-            <div class="book-others">
-                <p><strong>Harry Potter</strong> </p>
-          <img src="../uploads/1673350107413-harry-potter.jpg" width="100px" alt="">
-          <p>By J.K. Rowling</p>
-          <p>Rs. 3000</p>
-          </div>
-          <div class="book-others">
-                <p><strong>Harry Potter</strong> </p>
-          <img src="../uploads/1673350107413-harry-potter.jpg" width="100px" alt="">
-          <p>By J.K. Rowling</p>
-          <p>Rs. 3000</p>
-          </div>      
+      <div class="others" data-genre="{{data.genre}}" >
+          {{!--books get loaded from javascript --}}
       </div>
     </div>
   {{>footer}}
+  <script src="../js/book.js" defer></script>
 </body>
 </html>

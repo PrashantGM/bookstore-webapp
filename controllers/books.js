@@ -249,22 +249,48 @@ const getSingleBookForUser = async (req, res) => {
   try {
     const id = Number(req.params.id);
     const book = await prisma.book.findUnique({ where: { id } });
-    const date = new Date(book.publication_date);
-    let month = date.getUTCMonth() + 1;
-    let day = date.getUTCDate();
-    let year = date.getUTCFullYear();
-    const parsedDate = year + '/' + month + '/' + day;
     let imageURI = book.image;
 
     if (!imageURI.startsWith('https')) {
       imageURI = 'http://localhost:8000/uploads/' + imageURI;
     }
     console.log(imageURI);
-    res.render('./pages/book', { data: { ...book, parsedDate, imageURI } });
+    res.render('./pages/book', { data: { ...book, imageURI } });
     // res.status(200).json({
     //   msg: 'Successfully fetched!',
     //   data: { ...book, parsedDate, imageURI },
     // });
+  } catch (error) {
+    res.status(500).json({ msg: error });
+  }
+};
+
+const getSimilarBooksForUser = async (req, res) => {
+  try {
+    const genre = req.query.genre;
+    // const skip = Math.floor(Math.random() * 5 + 1);
+    // console.log(skip);
+    const genreD = genre.split(',');
+    console.log(genreD);
+    const books = await prisma.book.findMany({
+      take: 5,
+      where: {
+        genre: { hasSome: genreD },
+      },
+    });
+    console.log(books);
+
+    const parsedBooks = books.map((b) => {
+      if (!b.image.startsWith('https')) {
+        b.image = 'http://localhost:8000/uploads/' + b.image;
+      }
+      return { ...b };
+    });
+
+    res.status(200).json({
+      msg: 'Successfully fetched!',
+      data: parsedBooks,
+    });
   } catch (error) {
     res.status(500).json({ msg: error });
   }
@@ -278,4 +304,5 @@ module.exports = {
   deleteBook,
   getBooksForUser,
   getSingleBookForUser,
+  getSimilarBooksForUser,
 };

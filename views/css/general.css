@@ -72,7 +72,7 @@ span {
 
 .div-novel {
   width: 290px;
-  height: 320px;
+  height: 360px;
   background-color: rgb(234, 244, 251);
   border: 1px solid rgb(178, 175, 175);
   padding: 0px 15px 10px 15px;
@@ -366,7 +366,7 @@ button {
   display: flex;
   justify-content: flex-start;
   gap: 10px;
-  font-size: 12px;
+  font-size: 14px;
   margin-left: 20px;
 }
 .all-others {
@@ -377,12 +377,13 @@ button {
 .book-others {
   background-color: rgb(234, 244, 251);
   padding: 10px;
+  width: 150px;
 }
 
 .caption-others {
   display: flex;
   justify-content: flex-start;
-  margin: 30px 10px 2px 30px;
+  margin: 80px 10px 2px 30px;
   font-style: italic;
   font-weight: bold;
 }

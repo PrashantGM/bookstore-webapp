@@ -90,6 +90,7 @@ async function getBooksFromServer(page, readingList, genre) {
     }
   }
   //for each book in bookData array, display its data by creating corresponding elements
+  console.log(bookData);
   bookData.forEach((book) => {
     const divNovel = document.createElement('div');
     divNovel.className = 'div-novel';
@@ -108,7 +109,7 @@ async function getBooksFromServer(page, readingList, genre) {
     let imgBook = document.createElement('img');
     imgBook.id = 'img-book';
     imgBook.width = '20';
-    imgBook.height = '200';
+    imgBook.height = '240';
     imgBook.src = book.image;
     imgBook.alt = 'img-book';
     divImg.appendChild(imgBook);
