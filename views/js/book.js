@@ -1,6 +1,8 @@
+import { toast } from './toast.js';
+
 const similarSection = document.querySelector('.others');
 let currentGenre = similarSection.getAttribute('data-genre');
-
+let bookId = 0;
 fetch(`http://localhost:8000/books/similar?genre=${currentGenre}`, {
   headers: {
     'Content-Type': 'application/json',
@@ -11,8 +13,7 @@ fetch(`http://localhost:8000/books/similar?genre=${currentGenre}`, {
   .then((result) => {
     const books = result.data;
     books.forEach((book) => {
-      console.log(book.title);
-      console.log('book');
+      bookId = book.id;
       const bookOthers = document.createElement('div');
       bookOthers.className = 'book-others';
       similarSection.appendChild(bookOthers);
@@ -52,3 +53,62 @@ fetch(`http://localhost:8000/books/similar?genre=${currentGenre}`, {
   .catch((error) => {
     console.log(error);
   });
+
+const totalPrice = document.querySelector('#price-total');
+let price = Number(totalPrice.getAttribute('data-price'));
+let totalAmount = price * 1;
+const inputQuantity = document.querySelector('input[name="quantity"]');
+let quantity = Number(inputQuantity.value);
+
+inputQuantity.addEventListener('input', (e) => {
+  e.preventDefault();
+  totalAmount = price * quantity;
+  console.log('het');
+  console.log(totalAmount);
+  totalPrice.innerHTML = `Rs ${totalAmount}`;
+});
+
+const btnAddCart = document.querySelector('#btn-addCart');
+btnAddCart.addEventListener('click', async (e) => {
+  e.preventDefault();
+  console.log(totalAmount);
+  const isLoggedIn = await viewLoggedIn();
+  if (isLoggedIn.success) {
+    const parsedUserData = JSON.parse(isLoggedIn.payload);
+    const userId = parsedUserData.id;
+    const response = await fetch(`http://localhost:8000/order/${bookId}`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+      body: JSON.stringify({ quantity, totalAmount, userId }),
+    });
+    const parsedResponse = await response.json();
+    console.log(parsedResponse);
+    const bookSection = document.querySelector('.book-section');
+    toast.initToast(bookSection);
+    toast.generateToast({
+      message: parsedResponse.msg,
+      background: '#eaf7fb',
+      color: 'green',
+      length: '2000ms',
+    });
+  } else {
+    window.location.replace('http://localhost:8000/user/login');
+  }
+});
+
+async function viewLoggedIn() {
+  try {
+    const payload = await fetch('http://localhost:8000/user/stat', {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'GET',
+    });
+    const userData = await payload.json();
+    return userData;
+  } catch (error) {
+    console.log(error);
+  }
+}

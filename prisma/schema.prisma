@@ -14,14 +14,46 @@ model Book{
   genre String[]
   description String
   image String
-  price Int
+  price Float
   author String
   publication_date DateTime @db.Date
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  user User[] 
+  cart CartItem[] 
 
   @@map(name:"books")
+}
+
+model CartItem{
+  id Int @id @default(autoincrement())
+  quantity Int
+  total_amount Float 
+  books Book? @relation(fields: [book_id],references: [id])
+  book_id Int?
+  users User? @relation(fields: [user_id],references: [id])
+  user_id Int?  
+  order Order? @relation(fields: [order_id],references: [id])
+  order_id Int?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map(name:"cart_items")
+}
+
+model Order{
+  id Int @id @default(autoincrement())
+  subtotal Float
+  delivery_charge Float
+  delivery_address String
+  total Float
+  status Status? @default(PENDING)
+  client_secret String?
+  payment_intent_id String?
+  cart_items CartItem[]
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map(name:"orders")
 }
 
 model User{
@@ -32,7 +64,8 @@ model User{
   role Role? @default(USER)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  reading_list Book[] 
+  cart CartItem[] 
+
   @@map(name:"users")
 }
 
@@ -42,4 +75,12 @@ model User{
 enum Role{
   USER
   ADMIN
+}
+
+enum Status{
+  PENDING
+  FAILED
+  PAID
+  DELIVERED
+  CANCELED
 }

@@ -7,6 +7,8 @@ const hbs = require('hbs');
 
 const booksRoute = require('./routes/books');
 const usersRoute = require('./routes/users');
+const ordersRoute = require('./routes/orders');
+
 const {
   authenticateUser,
   authorizePermissions,
@@ -50,6 +52,7 @@ app.get('/book', (req, res) => {
 
 app.use('/user', usersRoute);
 app.use('/books', booksRoute);
+app.use('/order', ordersRoute);
 
 app.use(notFound);
 
