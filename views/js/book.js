@@ -80,12 +80,12 @@ btnAddCart.addEventListener('click', async (e) => {
   if (isLoggedIn.success) {
     const parsedUserData = JSON.parse(isLoggedIn.payload);
     const userId = parsedUserData.id;
-    const response = await fetch(`http://localhost:8000/order/${bookId}`, {
+    const response = await fetch(`http://localhost:8000/order/${userId}`, {
       headers: {
         'Content-Type': 'application/json',
       },
       method: 'POST',
-      body: JSON.stringify({ quantity, totalAmount, userId }),
+      body: JSON.stringify({ quantity, totalAmount, bookId }),
     });
     const parsedResponse = await response.json();
     console.log(parsedResponse);
