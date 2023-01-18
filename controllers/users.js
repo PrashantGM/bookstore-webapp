@@ -7,7 +7,6 @@ const prisma = new PrismaClient();
 const registerUser = async (req, res) => {
   try {
     const { username, email, password } = req.body;
-    console.log(req.body);
     const salt = await bcrypt.genSalt(10);
     const users = await prisma.user.findUnique({ where: { email } });
 
@@ -25,9 +24,12 @@ const registerUser = async (req, res) => {
     const tokenUser = { email: user.email, id: user.id, role: user.role };
     attachCookiesToRes({ res, user: tokenUser });
     console.log(tokenUser);
-    res.status(201).json({ data: tokenUser });
+    res
+      .status(201)
+      .json({ success: true, msg: 'Successfully registered', data: tokenUser });
   } catch (error) {
-    res.status(500).json(error);
+    console.log(error);
+    res.status(500).json({ success: false, msg: 'error' });
   }
 };
 
@@ -36,7 +38,9 @@ const loginUser = async (req, res) => {
     const { email, password } = req.body;
     console.log(email, password);
     if (!email || !password) {
-      return res.status(400).json('Please provide email and password');
+      return res
+        .status(400)
+        .json({ success: false, msg: 'Please provide email and password' });
     }
     const user = await prisma.user.findUnique({
       where: {
@@ -44,12 +48,16 @@ const loginUser = async (req, res) => {
       },
     });
     if (!user) {
-      return res.status(401).json('Incorrect Credentials');
+      return res
+        .status(401)
+        .json({ success: false, msg: 'Incorrect Credentials' });
       // throw new Error('Incorrect Credentials');
     }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ msg: 'Incorrect Credentials' });
+      return res
+        .status(401)
+        .json({ success: false, msg: 'Incorrect Credentials' });
       // throw new Error('Incorrect Credentials');
     }
     const tokenUser = {
@@ -59,9 +67,11 @@ const loginUser = async (req, res) => {
       role: user.role,
     };
     attachCookiesToRes({ res, user: tokenUser });
-    res.status(200).json({ msg: 'Login Success!', data: tokenUser });
+    res
+      .status(200)
+      .json({ success: true, msg: 'Successfully logged in', data: tokenUser });
   } catch (error) {
-    res.status(500).json('error');
+    res.status(500).json({ success: false, msg: 'error' });
   }
 };
 

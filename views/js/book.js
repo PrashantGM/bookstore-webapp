@@ -135,6 +135,7 @@ async function addtoCart() {
         });
         const parsedResponse = await response.json();
         const bookSection = document.querySelector('.book-section');
+        console.log(parsedResponse);
         toast.initToast(bookSection);
         toast.generateToast({
           message: parsedResponse.msg,
