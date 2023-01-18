@@ -379,6 +379,9 @@ button {
   padding: 10px;
   width: 150px;
 }
+.book-others:hover {
+  cursor: pointer;
+}
 
 .caption-others {
   display: flex;

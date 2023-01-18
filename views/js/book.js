@@ -48,6 +48,10 @@ fetch(`http://localhost:8000/books/similar?genre=${currentGenre}`, {
       price.className = 'm-t-5';
       price.innerHTML = `Rs. ${book.price}`;
       bookOthers.appendChild(price);
+
+      bookOthers.addEventListener('click', () => {
+        window.location.assign(`http://localhost:8000/books/${book.id}`);
+      });
     });
   })
   .catch((error) => {
