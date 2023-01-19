@@ -17,8 +17,6 @@ const addItemToCart = async (req, res) => {
         book_id: nBookId,
       },
     });
-    console.log('this ran');
-    console.log(existingCart[0]);
     if (existingCart[0]) {
       console.log('wait this?');
       const newQuantity = existingCart[0].quantity + nQuantity;
@@ -34,7 +32,6 @@ const addItemToCart = async (req, res) => {
         },
       });
     } else {
-      console.log('this was triggered');
       const response = await prisma.cartItem.create({
         data: {
           user_id: nUserId,
@@ -43,7 +40,6 @@ const addItemToCart = async (req, res) => {
           total_amount: nAmount,
         },
       });
-      console.log(response);
     }
 
     res.status(201).json({ msg: 'Successfully Added to Cart' });
@@ -58,8 +54,6 @@ const updateCartItem = async (req, res) => {
     const { quantity, amount, bookID } = req.body;
     const nUserId = Number(userId);
     const nBookId = Number(bookID);
-    console.log(req.params.id);
-    console.log(req.body);
 
     const result = await prisma.cartItem.updateMany({
       where: {
@@ -71,7 +65,6 @@ const updateCartItem = async (req, res) => {
         total_amount: amount,
       },
     });
-    console.log(result);
     res.status(201).json({ success: true, msg: 'Successfully updated' });
   } catch (error) {
     res.status(500).json({ success: false, msg: error });
@@ -84,8 +77,6 @@ const deleteCartItem = async (req, res) => {
     const { bookID } = req.body;
     const nUserId = Number(userId);
     const nBookId = Number(bookID);
-    console.log(req.params.id);
-    console.log(req.body);
 
     const result = await prisma.cartItem.deleteMany({
       where: {
@@ -93,14 +84,13 @@ const deleteCartItem = async (req, res) => {
         book_id: nBookId,
       },
     });
-    console.log(result);
     res.status(201).json({ success: true, msg: 'Successfully deleted' });
   } catch (error) {
     res.status(500).json({ success: false, msg: error });
   }
 };
 
-const viewCartItems = async (req, res) => {
+const viewCartItems = async (req, res, next) => {
   try {
     const { id: userId } = req.params;
     const nUserId = Number(userId);

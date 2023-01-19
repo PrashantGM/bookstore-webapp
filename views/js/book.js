@@ -25,11 +25,6 @@ async function loadNav() {
       parsedUserData = JSON.parse(isLoggedIn.payload);
 
       btnProfile.textContent = parsedUserData.username;
-      document.querySelector('.li-home').style.display = 'none';
-      document.querySelector('.li-genre').style.display = 'none';
-      document.querySelector('.li-about').style.display = 'none';
-
-      btnProfile.textContent = parsedUserData.username;
       const userIcon = document.createElement('i');
       userIcon.className = 'fa fa-user-circle';
       btnProfile.appendChild(userIcon);
@@ -38,8 +33,10 @@ async function loadNav() {
       downIcon.className = 'fa fa-caret-down';
       btnProfile.appendChild(downIcon);
 
-      document.querySelector('#navRead').style.display = 'none';
-      document.querySelector('#nav-dashboard').style.display = 'none';
+      // document.querySelector('#navRead').style.display = 'none';
+      const navlinkDash = document.querySelector('#nav-dashboard');
+      console.log('navlinkdash', navlinkDash);
+      navlinkDash.style.display = 'none';
     } else {
       btnProfile.addEventListener('click', (e) => {
         e.preventDefault();

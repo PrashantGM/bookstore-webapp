@@ -3,15 +3,15 @@ import { toast } from './toast.js';
 let page = 1;
 let bookData = [];
 let genre = '';
+let parsedUserData = {};
+
 const container = document.querySelector('.container');
 const section = document.querySelector('.section');
 
 //gets books from server and loads on the page
-async function getBooksFromServer(page, readingList, genre) {
+async function getBooksFromServer(page, genre) {
   const btnProfile = document.querySelector('.btn-profile');
   const navDropdown = document.querySelector('#dropdown-profile');
-
-  let parsedUserData = {};
 
   //first check if user is logged
   const isLoggedIn = await viewLoggedIn();
@@ -172,6 +172,10 @@ export async function pagination() {
       load(page);
     });
   }
+}
+
+export function viewCartItems() {
+  window.location.assign(`http://localhost:8000/order/${parsedUserData.id}`);
 }
 
 //function that checks with server if user is logged or not
