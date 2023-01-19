@@ -12,27 +12,40 @@
   {{>header}}
     <div id="cart-container">
         <h3 id="cart-header">Cart Items</h3>
+        <div class="cart-headings">
+         <h4 id="head-book">Book</h4>
+         <span></span>
+         <h4 id="head-price">Price</h4>
+         <h4 id="head-quantity">Quantity</h4>
+         <h4 id="head-subtotal">Subtotal</h4>
+         {{!-- <h4>Delete</h4> --}}
+        </div>
+        
         {{#each data}}
-        <div class="cart-item">
-          <div>
+        <div class="cart-main">
+
+
+        <div class="cart-item" data-userId="{{user_id}}" data-bookId="{{books.id}}">
+          {{!-- <div>
             <input type="checkbox" name="cart-item">
-          </div>
+          </div> --}}
             <div id="image-title">
               <img src="{{books.image}}" id="cart-img" width="60" alt="">
               <h4 id="cart-title">{{books.title}}</h4>
             </div>
             <div id="div-cart-price">
-             <p id="cart-price">{{total_amount}}</p> 
+              <p id="cart-price">{{books.price}}</p>
             </div>
             <div class="cart-button-container">
-              <div>
-                <button class="cart-button">-</button>
-                <span>{{quantity}}</span>
-                <button class="cart-button">+</button>
-              </div>
+                <button class="cart-button" id="btn-sub">-</button>
+                <span id="cart-quantity">{{quantity}}</span>
+                <button class="cart-button" id="btn-add">+</button>
+            </div>
+            <div id="div-cart-amount">
+             <p id="cart-amount">{{total_amount}}</p> 
+            </div>
+            </div>
                 <button id="cart-delete"><img src="../imgs/delete.png" width="15"  alt="" srcset=""></button>
-          
-              </div>
             </div>
         {{/each}}
         </div>

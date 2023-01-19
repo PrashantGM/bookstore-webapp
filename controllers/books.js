@@ -254,12 +254,8 @@ const getSingleBookForUser = async (req, res) => {
     if (!imageURI.startsWith('https')) {
       imageURI = 'http://localhost:8000/uploads/' + imageURI;
     }
-    console.log(imageURI);
+
     res.render('./pages/book', { data: { ...book, imageURI } });
-    // res.status(200).json({
-    //   msg: 'Successfully fetched!',
-    //   data: { ...book, parsedDate, imageURI },
-    // });
   } catch (error) {
     res.status(500).json({ msg: error });
   }
@@ -271,14 +267,13 @@ const getSimilarBooksForUser = async (req, res) => {
     // const skip = Math.floor(Math.random() * 5 + 1);
     // console.log(skip);
     const genreD = genre.split(',');
-    console.log(genreD);
+
     const books = await prisma.book.findMany({
       take: 5,
       where: {
         genre: { hasSome: genreD },
       },
     });
-    console.log(books);
 
     const parsedBooks = books.map((b) => {
       if (!b.image.startsWith('https')) {

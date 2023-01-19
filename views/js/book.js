@@ -3,6 +3,10 @@ import { toast } from './toast.js';
 let loggedIn = false;
 let parsedUserData;
 let bookId = 0;
+let currentBookID = Number(
+  document.querySelector('.book-details').getAttribute('data-bookId')
+);
+console.log('current bookId', currentBookID);
 async function onload() {
   await loadNav();
   await loadPage();
@@ -112,7 +116,7 @@ async function addtoCart() {
   let price = Number(totalPrice.getAttribute('data-price'));
   let totalAmount = price * 1;
   const inputQuantity = document.querySelector('input[name="quantity"]');
-  let quantity;
+  let quantity = 1;
   inputQuantity.addEventListener('input', (e) => {
     e.preventDefault();
     quantity = Number(inputQuantity.value);
@@ -124,6 +128,7 @@ async function addtoCart() {
   btnAddCart.addEventListener('click', async (e) => {
     e.preventDefault();
     try {
+      console.log('currentbookid', currentBookID);
       if (loggedIn) {
         const userId = parsedUserData.id;
         const response = await fetch(`http://localhost:8000/order/${userId}`, {
@@ -131,7 +136,11 @@ async function addtoCart() {
             'Content-Type': 'application/json',
           },
           method: 'POST',
-          body: JSON.stringify({ quantity, totalAmount, bookId }),
+          body: JSON.stringify({
+            quantity,
+            totalAmount,
+            bookId: currentBookID,
+          }),
         });
         const parsedResponse = await response.json();
         const bookSection = document.querySelector('.book-section');

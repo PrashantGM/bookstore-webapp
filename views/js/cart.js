@@ -1,14 +1,168 @@
-const cartItem = document.querySelector('.cart-item');
-const carContainer = document.querySelector('#cart-container');
+import { toast } from './toast.js';
 
-const cartPrice = document.querySelectorAll('#cart-price');
+const cartItem = document.querySelector('.cart-item');
+const userId = cartItem.getAttribute('data-userId');
+const cartContainer = document.querySelector('#cart-container');
+
 let total = 0;
-cartPrice.forEach((item) => {
-  total += Number(item.textContent);
-});
+
+const cartFinal = document.createElement('div');
+cartFinal.id = 'cart-final-container';
+cartContainer.appendChild(cartFinal);
 
 const cartTotal = document.createElement('p');
 cartTotal.id = 'cart-total';
 cartTotal.innerHTML = `Total:  Rs ${total}`;
 
-carContainer.appendChild(cartTotal);
+cartFinal.appendChild(cartTotal);
+
+const checkout = document.createElement('button');
+checkout.id = 'btn-checkout';
+checkout.innerHTML = 'Proceed to Checkout';
+cartFinal.appendChild(checkout);
+
+const cartItems = document.querySelectorAll('.cart-item');
+cartItems.forEach((cartItem) => {
+  const btnAdd = cartItem.querySelector('#btn-add');
+  console.log('after all');
+  console.log(btnAdd);
+  const btnSub = cartItem.querySelector('#btn-sub');
+
+  const cartPrice = cartItem.querySelector('#cart-price');
+  let price = Number(cartPrice.textContent);
+
+  const cartQuantity = cartItem.querySelector('#cart-quantity');
+  let quantity = Number(cartQuantity.textContent);
+
+  const cartAmount = cartItem.querySelector('#cart-amount');
+  let amount = Number(cartAmount.textContent);
+  total += amount;
+  const bookId = cartItem.getAttribute('data-bookId');
+  toast.initToast(cartItem);
+  btnSub.addEventListener('click', async (e) => {
+    e.preventDefault();
+
+    if (Number(quantity) > 1) {
+      try {
+        quantity = quantity - 1;
+        amount = quantity * price;
+
+        const response = await fetch(`http://localhost:8000/order/${userId}`, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          method: 'PUT',
+          body: JSON.stringify({ bookID: bookId, quantity, amount }),
+        });
+        const result = await response.json();
+        if (result.success) {
+          toast.generateToast({
+            message: 'Reduced',
+            background: '#eaf7fb',
+            color: 'green',
+            length: '2000ms',
+          });
+          cartQuantity.innerHTML = quantity;
+          cartAmount.innerHTML = amount;
+          await setCartTotal(price, 'sub');
+        } else {
+          toast.generateToast({
+            message: 'Error! Please try again',
+            background: '#eaf7fb',
+            color: 'red',
+            length: '2000ms',
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      toast.generateToast({
+        message: 'Quantity needs to be at least 1!',
+        background: '#eaf7fb',
+        color: 'red',
+        length: '2000ms',
+      });
+    }
+  });
+  btnAdd.addEventListener('click', async (e) => {
+    e.preventDefault();
+
+    try {
+      quantity = quantity + 1;
+      amount = quantity * price;
+      const response = await fetch(`http://localhost:8000/order/${userId}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'PUT',
+        body: JSON.stringify({ bookID: bookId, quantity, amount }),
+      });
+      const result = await response.json();
+      if (result.success) {
+        toast.generateToast({
+          message: 'Added',
+          background: '#eaf7fb',
+          color: 'green',
+          length: '2000ms',
+        });
+        cartQuantity.innerHTML = quantity;
+        cartAmount.innerHTML = amount;
+        await setCartTotal(price, 'add');
+      } else {
+        toast.generateToast({
+          message: 'Error! Please try again',
+          background: '#eaf7fb',
+          color: 'red',
+          length: '2000ms',
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  });
+  const cartDelete = cartItem.nextElementSibling;
+  cartDelete.addEventListener('click', async (e) => {
+    e.preventDefault();
+    const response = await fetch(`http://localhost:8000/order/${userId}`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'DELETE',
+      body: JSON.stringify({ bookID: bookId }),
+    });
+    const result = await response.json();
+    if (result.success) {
+      toast.generateToast({
+        message: 'Removed item from cart',
+        background: '#eaf7fb',
+        color: 'green',
+        length: '2000ms',
+      });
+      cartQuantity.innerHTML = quantity;
+      cartAmount.innerHTML = amount;
+      await setCartTotal(amount, 'delete');
+      cartItem.remove();
+      cartDelete.remove();
+    } else {
+      toast.generateToast({
+        message: 'Error! Please try again',
+        background: '#eaf7fb',
+        color: 'red',
+        length: '2000ms',
+      });
+    }
+  });
+});
+async function setCartTotal(money, op) {
+  if (op === 'add') {
+    total = total + money;
+    console.log('total', total);
+    cartTotal.innerHTML = `Total:  Rs ${total}`;
+  } else {
+    total = total - money;
+    console.log('total', total);
+    cartTotal.innerHTML = `Total:  Rs ${total}`;
+  }
+}
+cartTotal.innerHTML = `Total:  Rs ${total}`;

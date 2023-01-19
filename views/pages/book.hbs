@@ -15,7 +15,7 @@
       <p id="book-path"> <a href="/"><span class="path-content">Books</span></a> 
        {{!-- > <span class="path-content">Genre</span>  --}}
        > <span class="path-content">{{data.title}}</span></p>
-        <div class="book-details">
+        <div class="book-details" data-bookId="{{data.id}}">
           <img src="{{data.imageURI}}" width="200" alt="" srcset="">
           <div class="details-section">
             <h3 id="book-title">{{data.title}}</h3>          

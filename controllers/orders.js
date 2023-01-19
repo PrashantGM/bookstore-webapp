@@ -9,18 +9,20 @@ const addItemToCart = async (req, res) => {
     const nAmount = Number(totalAmount);
     const nQuantity = Number(quantity);
     const nBookId = Number(bookId);
+    console.log(nBookId);
+    console.log(req.body, req.params.id);
     const existingCart = await prisma.cartItem.findMany({
       where: {
         user_id: nUserId,
         book_id: nBookId,
       },
     });
-    console.log(typeof existingCart[0].quantity);
-    console.log(existingCart);
-    const newQuantity = existingCart[0].quantity + nQuantity;
-    const newAmount = existingCart[0].total_amount + nAmount;
-
-    if (existingCart) {
+    console.log('this ran');
+    console.log(existingCart[0]);
+    if (existingCart[0]) {
+      console.log('wait this?');
+      const newQuantity = existingCart[0].quantity + nQuantity;
+      const newAmount = existingCart[0].total_amount + nAmount;
       await prisma.cartItem.updateMany({
         where: {
           user_id: nUserId,
@@ -32,7 +34,8 @@ const addItemToCart = async (req, res) => {
         },
       });
     } else {
-      await prisma.cartItem.create({
+      console.log('this was triggered');
+      const response = await prisma.cartItem.create({
         data: {
           user_id: nUserId,
           book_id: nBookId,
@@ -40,6 +43,7 @@ const addItemToCart = async (req, res) => {
           total_amount: nAmount,
         },
       });
+      console.log(response);
     }
 
     res.status(201).json({ msg: 'Successfully Added to Cart' });
@@ -48,10 +52,59 @@ const addItemToCart = async (req, res) => {
   }
 };
 
+const updateCartItem = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const { quantity, amount, bookID } = req.body;
+    const nUserId = Number(userId);
+    const nBookId = Number(bookID);
+    console.log(req.params.id);
+    console.log(req.body);
+
+    const result = await prisma.cartItem.updateMany({
+      where: {
+        user_id: nUserId,
+        book_id: nBookId,
+      },
+      data: {
+        quantity: quantity,
+        total_amount: amount,
+      },
+    });
+    console.log(result);
+    res.status(201).json({ success: true, msg: 'Successfully updated' });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error });
+  }
+};
+
+const deleteCartItem = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const { bookID } = req.body;
+    const nUserId = Number(userId);
+    const nBookId = Number(bookID);
+    console.log(req.params.id);
+    console.log(req.body);
+
+    const result = await prisma.cartItem.deleteMany({
+      where: {
+        user_id: nUserId,
+        book_id: nBookId,
+      },
+    });
+    console.log(result);
+    res.status(201).json({ success: true, msg: 'Successfully deleted' });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error });
+  }
+};
+
 const viewCartItems = async (req, res) => {
   try {
     const { id: userId } = req.params;
     const nUserId = Number(userId);
+    console.log(nUserId);
     const cartItems = await prisma.user.findMany({
       where: {
         id: nUserId,
@@ -65,7 +118,7 @@ const viewCartItems = async (req, res) => {
       },
     });
     const books = cartItems[0].cart;
-    console.log(books);
+
     const parsedBooks = books.map((b) => {
       if (!b.books.image.startsWith('https')) {
         b.books.image = 'http://localhost:8000/uploads/' + b.books.image;
@@ -73,13 +126,8 @@ const viewCartItems = async (req, res) => {
 
       return { ...b };
     });
-    console.log(parsedBooks);
 
     res.render('./pages/cart', { data: parsedBooks });
-    // res.status(201).json({
-    //   msg: 'Successfully fetched reading list',
-    //   data: parsedBooks,
-    // });
   } catch (error) {
     res.status(500).json({ msg: error });
   }
@@ -87,5 +135,7 @@ const viewCartItems = async (req, res) => {
 
 module.exports = {
   addItemToCart,
+  updateCartItem,
   viewCartItems,
+  deleteCartItem,
 };
