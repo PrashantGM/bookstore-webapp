@@ -8,27 +8,40 @@ const addItemToCart = async (req, res) => {
     const nUserId = Number(userId);
     const nAmount = Number(totalAmount);
     const nQuantity = Number(quantity);
-    const nBookID = Number(bookId);
-    await prisma.user.update({
+    const nBookId = Number(bookId);
+    const existingCart = await prisma.cartItem.findMany({
       where: {
-        id: nUserId,
-      },
-      data: {
-        cart: {
-          create: [
-            {
-              quantity: nQuantity,
-              total_amount: nAmount,
-              books: {
-                connect: {
-                  id: nBookID,
-                },
-              },
-            },
-          ],
-        },
+        user_id: nUserId,
+        book_id: nBookId,
       },
     });
+    console.log(typeof existingCart[0].quantity);
+    console.log(existingCart);
+    const newQuantity = existingCart[0].quantity + nQuantity;
+    const newAmount = existingCart[0].total_amount + nAmount;
+
+    if (existingCart) {
+      await prisma.cartItem.updateMany({
+        where: {
+          user_id: nUserId,
+          book_id: nBookId,
+        },
+        data: {
+          quantity: newQuantity,
+          total_amount: newAmount,
+        },
+      });
+    } else {
+      await prisma.cartItem.create({
+        data: {
+          user_id: nUserId,
+          book_id: nBookId,
+          quantity: nQuantity,
+          total_amount: nAmount,
+        },
+      });
+    }
+
     res.status(201).json({ msg: 'Successfully Added to Cart' });
   } catch (error) {
     res.status(500).json({ msg: error });
@@ -51,10 +64,22 @@ const viewCartItems = async (req, res) => {
         },
       },
     });
-    res.status(201).json({
-      msg: 'Successfully fetched reading list',
-      data: cartItems[0].cart,
+    const books = cartItems[0].cart;
+    console.log(books);
+    const parsedBooks = books.map((b) => {
+      if (!b.books.image.startsWith('https')) {
+        b.books.image = 'http://localhost:8000/uploads/' + b.books.image;
+      }
+
+      return { ...b };
     });
+    console.log(parsedBooks);
+
+    res.render('./pages/cart', { data: parsedBooks });
+    // res.status(201).json({
+    //   msg: 'Successfully fetched reading list',
+    //   data: parsedBooks,
+    // });
   } catch (error) {
     res.status(500).json({ msg: error });
   }

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart</title>
+   <link rel="stylesheet" href="../css/general.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+  {{>header}}
+    <div id="cart-container">
+        <h3 id="cart-header">Cart Items</h3>
+        {{#each data}}
+        <div class="cart-item">
+          <div>
+            <input type="checkbox" name="cart-item">
+          </div>
+            <div id="image-title">
+              <img src="{{books.image}}" id="cart-img" width="60" alt="">
+              <h4 id="cart-title">{{books.title}}</h4>
+            </div>
+            <div id="div-cart-price">
+             <p id="cart-price">{{total_amount}}</p> 
+            </div>
+            <div class="cart-button-container">
+              <div>
+                <button class="cart-button">-</button>
+                <span>{{quantity}}</span>
+                <button class="cart-button">+</button>
+              </div>
+                <button id="cart-delete"><img src="../imgs/delete.png" width="15"  alt="" srcset=""></button>
+          
+              </div>
+            </div>
+        {{/each}}
+        </div>
+  {{>footer}}
+  <script type="module" src="../js/cart.js" defer></script>
+</body>
+</html>

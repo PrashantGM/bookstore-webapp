@@ -46,8 +46,8 @@ app.get('/user/register', (req, res) => {
 app.get('/user/login', (req, res) => {
   res.render('./pages/login');
 });
-app.get('/book', (req, res) => {
-  res.render('./pages/book');
+app.get('/cart', (req, res) => {
+  res.render('./pages/cart');
 });
 
 app.use('/user', usersRoute);
