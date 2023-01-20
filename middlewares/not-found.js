@@ -1,4 +1,3 @@
-const notFound = (req, res) =>
-  res.status(404).send('This route does not exist!');
+const notFound = (req, res) => res.status(404).render('./pages/notFound');
 
 module.exports = notFound;

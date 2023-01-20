@@ -4,7 +4,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 //adds new user to db when user registers
-const registerUser = async (req, res) => {
+const registerUser = async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
     const salt = await bcrypt.genSalt(10);
@@ -29,11 +29,11 @@ const registerUser = async (req, res) => {
       .json({ success: true, msg: 'Successfully registered', data: tokenUser });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, msg: 'error' });
+    next();
   }
 };
 
-const loginUser = async (req, res) => {
+const loginUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     console.log(email, password);
@@ -71,21 +71,25 @@ const loginUser = async (req, res) => {
       .status(200)
       .json({ success: true, msg: 'Successfully logged in', data: tokenUser });
   } catch (error) {
-    res.status(500).json({ success: false, msg: 'error' });
+    next();
   }
 };
 
-const getSingleUser = async (req, res) => {
-  const id = Number(req.params.id);
-  const user = await prisma.user.findUnique({
-    where: {
-      id,
-    },
-  });
-  res.status(200).json(user);
+const getSingleUser = async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+    const user = await prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
+    res.status(200).json(user);
+  } catch (error) {
+    next();
+  }
 };
 
-const checkLoggedIn = async (req, res) => {
+const checkLoggedIn = async (req, res, next) => {
   try {
     const token = req.signedCookies.token;
     if (!token) {
@@ -94,20 +98,24 @@ const checkLoggedIn = async (req, res) => {
     var payload = Buffer.from(token.split('.')[1], 'base64').toString();
     res.status(200).json({ success: true, payload });
   } catch (error) {
-    res.status(500).json({ success: false, msg: error });
+    next();
   }
 };
 
-const logout = async (req, res) => {
-  res.cookie('token', '', {
-    httpOnly: true,
-    expires: new Date(Date.now()),
-  });
-  res.status(200).json({ msg: 'user logged out!' });
+const logout = async (req, res, next) => {
+  try {
+    res.cookie('token', '', {
+      httpOnly: true,
+      expires: new Date(Date.now()),
+    });
+    res.status(200).json({ msg: 'user logged out!' });
+  } catch (error) {
+    next();
+  }
 };
 
 //adds books to user's reading list
-const addBooksToReadingList = async (req, res) => {
+const addBooksToReadingList = async (req, res, next) => {
   try {
     const { id } = req.body;
     const userId = Number(req.params.id);
@@ -139,12 +147,12 @@ const addBooksToReadingList = async (req, res) => {
       .json({ success: true, bookToUser, msg: 'Added to Reading List' });
   } catch (error) {
     console.log(error);
-    res.status(500).json(error);
+    next();
   }
 };
 
 // sends books in user's reading list to front-end
-const viewReadingList = async (req, res) => {
+const viewReadingList = async (req, res, next) => {
   try {
     const userId = Number(req.params.id);
     let page = Number(req.query.page) || 1;
@@ -177,11 +185,11 @@ const viewReadingList = async (req, res) => {
       data: { reads, nbHits: reads.length },
     });
   } catch (error) {
-    res.status(500).json({ success: false, msg: error });
+    next();
   }
 };
 
-const deleteReadingList = async (req, res) => {
+const deleteReadingList = async (req, res, next) => {
   try {
     const { bookId, userId } = req.body;
     const updatePost = await prisma.user.update({
@@ -199,7 +207,7 @@ const deleteReadingList = async (req, res) => {
     });
     return res.status(200).json({ success: true, updatePost });
   } catch (error) {
-    return res.status(500).json({ sucess: false, msg: error });
+    next();
   }
 };
 

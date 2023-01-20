@@ -3,7 +3,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const cloudinary = require('../middlewares/cloudinary');
 
-const addBook = async (req, res) => {
+const addBook = async (req, res, next) => {
   try {
     //validation to be done later
     const {
@@ -54,12 +54,15 @@ const addBook = async (req, res) => {
       .status(201)
       .json({ success: true, msg: 'Successfully added!', data: book });
   } catch (error) {
-    res.status(500).json({ msg: error });
+    next();
   }
 };
 
-const getAllBooks = async (req, res) => {
+const getAllBooks = async (req, res, next) => {
   try {
+    if (res.msg) {
+      res.render('./pages/login');
+    }
     const book = await prisma.book.findMany({
       orderBy: {
         updated_at: 'desc',
@@ -94,11 +97,11 @@ const getAllBooks = async (req, res) => {
       data: bookWithParsedDate,
     });
   } catch (error) {
-    res.status(500).json({ msg: error });
+    next();
   }
 };
 
-const getBookById = async (req, res) => {
+const getBookById = async (req, res, next) => {
   try {
     const id = Number(req.params.id);
     const book = await prisma.book.findUnique({ where: { id } });
@@ -118,11 +121,11 @@ const getBookById = async (req, res) => {
       data: { ...book, parsedDate, imageURI },
     });
   } catch (error) {
-    res.status(500).json({ msg: error });
+    next();
   }
 };
 
-const updateBook = async (req, res) => {
+const updateBook = async (req, res, next) => {
   try {
     const id = Number(req.params.id);
     const {
@@ -179,7 +182,7 @@ const updateBook = async (req, res) => {
     });
     res.status(200).json({ msg: 'Successfully updated!', data: book });
   } catch (error) {
-    res.status(500).json(error);
+    next();
   }
 };
 
@@ -191,11 +194,11 @@ const deleteBook = async (req, res) => {
     });
     res.status(200).json({ msg: 'Successfully deleted!' });
   } catch (error) {
-    res.status(500).json({ msg: error });
+    throw new Error('Error');
   }
 };
 
-const getBooksForUser = async (req, res) => {
+const getBooksForUser = async (req, res, next) => {
   try {
     let genreD = [];
     const genreData = req.query.genre;
@@ -241,11 +244,12 @@ const getBooksForUser = async (req, res) => {
 
     res.status(200).json(parsedBooks);
   } catch (error) {
-    res.status(500).json({ msg: error });
+    // console.log(error);
+    next();
   }
 };
 
-const getSingleBookForUser = async (req, res) => {
+const getSingleBookForUser = async (req, res, next) => {
   try {
     const id = Number(req.params.id);
     const book = await prisma.book.findUnique({ where: { id } });
@@ -257,11 +261,11 @@ const getSingleBookForUser = async (req, res) => {
 
     res.render('./pages/book', { data: { ...book, imageURI } });
   } catch (error) {
-    res.status(500).json({ msg: error });
+    next();
   }
 };
 
-const getSimilarBooksForUser = async (req, res) => {
+const getSimilarBooksForUser = async (req, res, next) => {
   try {
     const genre = req.query.genre;
     // const skip = Math.floor(Math.random() * 5 + 1);
@@ -287,7 +291,7 @@ const getSimilarBooksForUser = async (req, res) => {
       data: parsedBooks,
     });
   } catch (error) {
-    res.status(500).json({ msg: error });
+    next();
   }
 };
 

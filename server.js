@@ -46,15 +46,15 @@ app.get('/user/register', (req, res) => {
 app.get('/user/login', (req, res) => {
   res.render('./pages/login');
 });
-app.get('/cart', (req, res) => {
-  res.render('./pages/cart');
+app.get('/notFound', (req, res) => {
+  res.render('./pages/notFound');
 });
 
 app.use('/user', usersRoute);
 app.use('/books', booksRoute);
-app.use('/order', ordersRoute);
+app.use('/order', authenticateUser, ordersRoute);
 
-app.use(notFound);
+app.use('*', notFound);
 
 app.listen(PORT, HOST, () => {
   console.log(`Running on http://${HOST}:${PORT}`);

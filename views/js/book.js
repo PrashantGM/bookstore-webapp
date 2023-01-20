@@ -50,6 +50,7 @@ async function loadNav() {
 async function loadPage() {
   const similarSection = document.querySelector('.others');
   let currentGenre = similarSection.getAttribute('data-genre');
+
   try {
     const response = await fetch(
       `http://localhost:8000/books/similar?genre=${currentGenre}`,
@@ -64,20 +65,29 @@ async function loadPage() {
     const books = result.data;
     books.forEach((book) => {
       bookId = book.id;
+      if (currentBookID == bookId) {
+        return;
+      }
       const bookOthers = document.createElement('div');
       bookOthers.className = 'book-others';
       similarSection.appendChild(bookOthers);
 
       const title = document.createElement('p');
       title.style.fontWeight = 'bold';
+      title.style.height = '40px';
+      title.style.textAlign = 'center';
       title.innerHTML = book.title;
       bookOthers.appendChild(title);
 
+      const divImage = document.createElement('div');
+      divImage.id = 'div-bookImage';
+      divImage.style.marginTop = '10px';
+      bookOthers.appendChild(divImage);
       const image = document.createElement('img');
       image.src = book.image;
-      image.width = '80';
-      image.height = '80';
-      bookOthers.appendChild(image);
+      image.width = '90';
+      image.height = '90';
+      divImage.appendChild(image);
 
       const author = document.createElement('p');
       author.className = 'm-t-5';
@@ -87,6 +97,7 @@ async function loadPage() {
 
       const genre = document.createElement('p');
       genre.style.fontStyle = 'italic';
+      genre.style.height = '20px';
       genre.className = 'm-t-5';
       genre.style.overflowWrap = 'break-word';
 
@@ -95,7 +106,7 @@ async function loadPage() {
 
       const price = document.createElement('p');
       price.style.fontWeight = 'bold';
-      price.className = 'm-t-5';
+      price.className = 'm-t-10';
       price.innerHTML = `Rs. ${book.price}`;
       bookOthers.appendChild(price);
 
