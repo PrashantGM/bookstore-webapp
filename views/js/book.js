@@ -136,7 +136,6 @@ async function addtoCart() {
   btnAddCart.addEventListener('click', async (e) => {
     e.preventDefault();
     try {
-      console.log('currentbookid', currentBookID);
       if (loggedIn) {
         const userId = parsedUserData.id;
         const response = await fetch(`http://localhost:8000/order/${userId}`, {
@@ -160,7 +159,7 @@ async function addtoCart() {
           length: '2000ms',
         });
       } else {
-        window.location.replace('http://localhost:8000/user/login');
+        window.location.assign('http://localhost:8000/user/login');
       }
     } catch (error) {
       console.log(error);

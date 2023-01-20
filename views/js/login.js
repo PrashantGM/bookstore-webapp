@@ -27,13 +27,12 @@ btnLogin.addEventListener('click', async (e) => {
       color: 'green',
       length: '1000ms',
     });
-    setTimeout(() => {
-      if (result.data.role === 'ADMIN') {
-        window.location.replace('http://localhost:8000/books/admin');
-      } else {
-        window.location.replace('http://localhost:8000/');
-      }
-    }, 1000);
+
+    if (result.data.role === 'ADMIN') {
+      window.location.assign('http://localhost:8000/books/admin');
+    } else {
+      window.history.go(-1);
+    }
   }
 });
 
