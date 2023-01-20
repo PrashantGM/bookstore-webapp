@@ -6,8 +6,10 @@ const {
   updateCartItem,
   deleteCartItem,
   viewCartItems,
+  getCartItemsCount,
 } = require('../controllers/orders');
 
+router.route('/count/:id').get(getCartItemsCount);
 router
   .route('/:id')
   .post(addItemToCart)

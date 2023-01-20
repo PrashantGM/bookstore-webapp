@@ -96,7 +96,6 @@ const viewCartItems = async (req, res, next) => {
   try {
     const { id: userId } = req.params;
     const nUserId = Number(userId);
-    console.log(nUserId);
     const cartItems = await prisma.user.findMany({
       where: {
         id: nUserId,
@@ -110,18 +109,32 @@ const viewCartItems = async (req, res, next) => {
       },
     });
     const books = cartItems[0].cart;
-
     const parsedBooks = books.map((b) => {
       if (!b.books.image.startsWith('https')) {
         b.books.image = 'http://localhost:8000/uploads/' + b.books.image;
       }
-
       return { ...b };
     });
-
     res.render('./pages/cart', { data: parsedBooks });
   } catch (error) {
     res.status(500).json({ msg: error });
+  }
+};
+
+const getCartItemsCount = async (req, res, next) => {
+  try {
+    const { id: userId } = req.params;
+    const nUserId = Number(userId);
+    console.log(nUserId);
+    const cartItemsCount = await prisma.cartItem.count({
+      where: {
+        user_id: nUserId,
+      },
+    });
+
+    res.status(200).json({ nbHits: cartItemsCount });
+  } catch (error) {
+    next();
   }
 };
 
@@ -130,4 +143,5 @@ module.exports = {
   updateCartItem,
   viewCartItems,
   deleteCartItem,
+  getCartItemsCount,
 };

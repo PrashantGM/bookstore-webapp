@@ -19,6 +19,9 @@ async function getBooksFromServer(page, genre) {
     //if user is logged in,
     if (isLoggedIn.success) {
       parsedUserData = JSON.parse(isLoggedIn.payload);
+
+      const cartItemsCount = await getCartItemsCount();
+      console.log(cartItemsCount);
       //display name of user on nav menu
       btnProfile.textContent = parsedUserData.username;
       btnProfile.fontFamily = "Times New Roman', Times, serif";
@@ -33,6 +36,28 @@ async function getBooksFromServer(page, genre) {
       downIcon.className = 'fa fa-caret-down';
       btnProfile.appendChild(downIcon);
 
+      const cartCount = document.createElement('sup');
+      cartCount.id = 'cart-count';
+      cartCount.innerHTML = `${cartItemsCount}`;
+      cartCount.style.color = 'white';
+      cartCount.style.backgroundColor = 'blue';
+      cartCount.style.borderRadius = '50%';
+      cartCount.style.margin = '2px';
+      cartCount.style.padding = '3px';
+      cartCount.style.font = 'bold 16px Georgia, serif';
+      btnProfile.appendChild(cartCount);
+
+      const navCart = document.querySelector('#nav-cart');
+      const cartCountD = document.createElement('sup');
+      cartCountD.id = 'cart-count';
+      cartCountD.innerHTML = `${cartItemsCount}`;
+      cartCountD.style.color = 'white';
+      cartCountD.style.backgroundColor = 'blue';
+      cartCountD.style.borderRadius = '50%';
+      cartCountD.style.margin = '2px';
+      cartCountD.style.padding = '3px';
+      cartCountD.style.font = 'bold 16px Georgia, serif';
+      navCart.appendChild(cartCountD);
       //do not display dashboard option on dropdown menu by default
       const navlinkDash = document.querySelector('#nav-dashboard');
       navlinkDash.style.display = 'none';
@@ -117,9 +142,24 @@ async function getBooksFromServer(page, genre) {
 
 async function load(page, genre) {
   await getBooksFromServer(page, genre);
-  viewLoggedIn();
 }
 load(page, '');
+
+async function getCartItemsCount() {
+  try {
+    const payload = await fetch(
+      `http://localhost:8000/order/count/${parsedUserData.id}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'GET',
+      }
+    );
+    const response = await payload.json();
+    return response.nbHits;
+  } catch (error) {}
+}
 
 //function for displaying controls for pagination
 export async function pagination() {
