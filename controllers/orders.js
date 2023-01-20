@@ -50,8 +50,10 @@ const addItemToCart = async (req, res) => {
 
 const updateCartItem = async (req, res) => {
   try {
+    console.log('it ran');
     const userId = req.params.id;
     const { quantity, amount, bookID } = req.body;
+    console.log(req.body);
     const nUserId = Number(userId);
     const nBookId = Number(bookID);
 

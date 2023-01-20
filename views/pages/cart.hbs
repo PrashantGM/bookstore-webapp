@@ -22,10 +22,10 @@
         </div>
         
         {{#each data}}
-        <div class="cart-main">
+        <div class="cart-main" data-userId="{{user_id}}">
 
 
-        <div class="cart-item" data-userId="{{user_id}}" data-bookId="{{books.id}}">
+        <div class="cart-item" data-bookId="{{books.id}}">
           {{!-- <div>
             <input type="checkbox" name="cart-item">
           </div> --}}

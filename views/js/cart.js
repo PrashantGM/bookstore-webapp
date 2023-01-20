@@ -1,8 +1,7 @@
 import { toast } from './toast.js';
 
-const cartItem = document.querySelector('.cart-item');
-const userId = cartItem.getAttribute('data-userId');
 const cartContainer = document.querySelector('#cart-container');
+let userId = 0;
 
 let total = 0;
 
@@ -21,94 +20,134 @@ checkout.id = 'btn-checkout';
 checkout.innerHTML = 'Proceed to Checkout';
 cartFinal.appendChild(checkout);
 
+const noItemsMsg = document.createElement('h2');
+noItemsMsg.innerHTML = 'No items currently in the cart!';
+cartFinal.appendChild(noItemsMsg);
+noItemsMsg.style.display = 'none';
+
 const cartItems = document.querySelectorAll('.cart-item');
-cartItems.forEach((cartItem) => {
-  const btnAdd = cartItem.querySelector('#btn-add');
-  console.log('after all');
-  console.log(btnAdd);
-  const btnSub = cartItem.querySelector('#btn-sub');
+function showNoItemsMessage() {
+  cartTotal.style.display = 'none';
+  checkout.style.display = 'none';
+  noItemsMsg.className = 'm-20';
+  cartFinal.style.alignItems = 'center';
+  noItemsMsg.style.display = 'block';
+}
+if (cartItems.length < 1) {
+  showNoItemsMessage();
+} else {
+  cartItems.forEach((cartItem) => {
+    const btnAdd = cartItem.querySelector('#btn-add');
+    const btnSub = cartItem.querySelector('#btn-sub');
 
-  const cartPrice = cartItem.querySelector('#cart-price');
-  let price = Number(cartPrice.textContent);
+    const cartPrice = cartItem.querySelector('#cart-price');
+    let price = Number(cartPrice.textContent);
 
-  const cartQuantity = cartItem.querySelector('#cart-quantity');
-  let quantity = Number(cartQuantity.textContent);
+    const cartQuantity = cartItem.querySelector('#cart-quantity');
+    let quantity = Number(cartQuantity.textContent);
 
-  const cartAmount = cartItem.querySelector('#cart-amount');
-  let amount = Number(cartAmount.textContent);
-  total += amount;
-  const bookId = cartItem.getAttribute('data-bookId');
-  toast.initToast(cartItem);
-  btnSub.addEventListener('click', async (e) => {
-    e.preventDefault();
+    const cartAmount = cartItem.querySelector('#cart-amount');
+    let amount = Number(cartAmount.textContent);
+    total += amount;
+    const bookId = cartItem.getAttribute('data-bookId');
+    toast.initToast(cartItem);
 
-    if (Number(quantity) > 1) {
-      try {
-        quantity = quantity - 1;
-        amount = quantity * price;
-
-        const response = await fetch(`http://localhost:8000/order/${userId}`, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          method: 'PUT',
-          body: JSON.stringify({ bookID: bookId, quantity, amount }),
-        });
-        const result = await response.json();
-        if (result.success) {
-          toast.generateToast({
-            message: 'Reduced',
-            background: '#eaf7fb',
-            color: 'green',
-            length: '2000ms',
-          });
-          cartQuantity.innerHTML = quantity;
-          cartAmount.innerHTML = amount;
-          await setCartTotal(price, 'sub');
-        } else {
-          toast.generateToast({
-            message: 'Error! Please try again',
-            background: '#eaf7fb',
-            color: 'red',
-            length: '2000ms',
-          });
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    } else {
-      toast.generateToast({
-        message: 'Quantity needs to be at least 1!',
-        background: '#eaf7fb',
-        color: 'red',
-        length: '2000ms',
-      });
+    if (Number(quantity) === 1) {
+      btnSub.disabled = true;
     }
-  });
-  btnAdd.addEventListener('click', async (e) => {
-    e.preventDefault();
+    if (Number(quantity) === 5) {
+      btnAdd.disabled = true;
+    }
+    btnSub.addEventListener('click', async (e) => {
+      e.preventDefault();
+      btnAdd.disabled = false;
+      if (Number(quantity) > 1) {
+        try {
+          quantity = quantity - 1;
+          amount = quantity * price;
+          const response = await fetch(
+            `http://localhost:8000/order/${userId}`,
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              method: 'PUT',
+              body: JSON.stringify({ bookID: bookId, quantity, amount }),
+            }
+          );
+          const result = await response.json();
+          if (result.success) {
+            cartQuantity.innerHTML = quantity;
+            cartAmount.innerHTML = amount;
+            await setCartTotal(price, 'sub');
+          } else {
+            toast.generateToast({
+              message: 'Error Occurred!',
+              background: '#eaf7fb',
+              color: 'red',
+              length: '2000ms',
+            });
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+      if (Number(quantity) === 1) {
+        btnSub.disabled = true;
+      }
+    });
 
-    try {
-      quantity = quantity + 1;
-      amount = quantity * price;
+    btnAdd.addEventListener('click', async (e) => {
+      e.preventDefault();
+      btnSub.disabled = false;
+      if (Number(quantity) < 6) {
+        try {
+          quantity = quantity + 1;
+          amount = quantity * price;
+          const response = await fetch(
+            `http://localhost:8000/order/${userId}`,
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              method: 'PUT',
+              body: JSON.stringify({ bookID: bookId, quantity, amount }),
+            }
+          );
+          const result = await response.json();
+          if (result.success) {
+            cartQuantity.innerHTML = quantity;
+            cartAmount.innerHTML = amount;
+            await setCartTotal(price, 'add');
+          } else {
+            toast.generateToast({
+              message: 'Error! Please try again',
+              background: '#eaf7fb',
+              color: 'red',
+              length: '2000ms',
+            });
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+      if (Number(quantity) === 5) {
+        btnAdd.disabled = true;
+      }
+    });
+    const cartDelete = cartItem.nextElementSibling;
+    cartDelete.addEventListener('click', async (e) => {
+      e.preventDefault();
       const response = await fetch(`http://localhost:8000/order/${userId}`, {
         headers: {
           'Content-Type': 'application/json',
         },
-        method: 'PUT',
-        body: JSON.stringify({ bookID: bookId, quantity, amount }),
+        method: 'DELETE',
+        body: JSON.stringify({ bookID: bookId }),
       });
       const result = await response.json();
       if (result.success) {
-        toast.generateToast({
-          message: 'Added',
-          background: '#eaf7fb',
-          color: 'green',
-          length: '2000ms',
-        });
-        cartQuantity.innerHTML = quantity;
-        cartAmount.innerHTML = amount;
-        await setCartTotal(price, 'add');
+        window.location.reload();
       } else {
         toast.generateToast({
           message: 'Error! Please try again',
@@ -117,43 +156,12 @@ cartItems.forEach((cartItem) => {
           length: '2000ms',
         });
       }
-    } catch (error) {
-      console.log(error);
-    }
-  });
-  const cartDelete = cartItem.nextElementSibling;
-  cartDelete.addEventListener('click', async (e) => {
-    e.preventDefault();
-    const response = await fetch(`http://localhost:8000/order/${userId}`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      method: 'DELETE',
-      body: JSON.stringify({ bookID: bookId }),
     });
-    const result = await response.json();
-    if (result.success) {
-      toast.generateToast({
-        message: 'Removed item from cart',
-        background: '#eaf7fb',
-        color: 'green',
-        length: '2000ms',
-      });
-      cartQuantity.innerHTML = quantity;
-      cartAmount.innerHTML = amount;
-      await setCartTotal(amount, 'delete');
-      cartItem.remove();
-      cartDelete.remove();
-    } else {
-      toast.generateToast({
-        message: 'Error! Please try again',
-        background: '#eaf7fb',
-        color: 'red',
-        length: '2000ms',
-      });
-    }
   });
-});
+}
+
+// if(cartI)
+
 async function setCartTotal(money, op) {
   if (op === 'add') {
     total = total + money;
@@ -177,7 +185,7 @@ async function loadNav() {
     let loggedIn = isLoggedIn.success;
     if (loggedIn) {
       let parsedUserData = JSON.parse(isLoggedIn.payload);
-
+      userId = parsedUserData.id;
       btnProfile.textContent = parsedUserData.username;
       const userIcon = document.createElement('i');
       userIcon.className = 'fa fa-user-circle';
