@@ -225,6 +225,12 @@ const getBooksForUser = async (req, res, next) => {
 
     const limit = 6;
     const skipValue = (page - 1) * limit;
+    const totalCount = await prisma.book.count({
+      where: {
+        genre: { hasSome: genreD },
+      },
+    });
+
     const books = await prisma.book.findMany({
       skip: skipValue,
       take: limit,
@@ -242,7 +248,9 @@ const getBooksForUser = async (req, res, next) => {
       return { ...b };
     });
 
-    res.status(200).json(parsedBooks);
+    res
+      .status(200)
+      .json({ data: parsedBooks, nbHits: parsedBooks.length, totalCount });
   } catch (error) {
     // console.log(error);
     next();

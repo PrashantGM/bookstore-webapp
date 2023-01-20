@@ -3,8 +3,8 @@ import { toast } from './toast.js';
 let page = 1;
 let bookData = [];
 let genre = '';
+let accumCount = 0;
 let parsedUserData = {};
-
 const container = document.querySelector('.container');
 const section = document.querySelector('.section');
 
@@ -36,28 +36,31 @@ async function getBooksFromServer(page, genre) {
       downIcon.className = 'fa fa-caret-down';
       btnProfile.appendChild(downIcon);
 
-      const cartCount = document.createElement('sup');
-      cartCount.id = 'cart-count';
-      cartCount.innerHTML = `${cartItemsCount}`;
-      cartCount.style.color = 'white';
-      cartCount.style.backgroundColor = 'blue';
-      cartCount.style.borderRadius = '50%';
-      cartCount.style.margin = '2px';
-      cartCount.style.padding = '3px';
-      cartCount.style.font = 'bold 16px Georgia, serif';
-      btnProfile.appendChild(cartCount);
+      if (cartItemsCount != 0) {
+        const cartCount = document.createElement('sup');
+        cartCount.id = 'cart-count';
+        cartCount.innerHTML = `${cartItemsCount}`;
+        cartCount.style.color = 'white';
+        cartCount.style.backgroundColor = 'blue';
+        cartCount.style.borderRadius = '50%';
+        cartCount.style.margin = '2px';
+        cartCount.style.padding = '3px';
+        cartCount.style.font = 'bold 16px Georgia, serif';
+        btnProfile.appendChild(cartCount);
 
-      const navCart = document.querySelector('#nav-cart');
-      const cartCountD = document.createElement('sup');
-      cartCountD.id = 'cart-count';
-      cartCountD.innerHTML = `${cartItemsCount}`;
-      cartCountD.style.color = 'white';
-      cartCountD.style.backgroundColor = 'blue';
-      cartCountD.style.borderRadius = '50%';
-      cartCountD.style.margin = '2px';
-      cartCountD.style.padding = '3px';
-      cartCountD.style.font = 'bold 16px Georgia, serif';
-      navCart.appendChild(cartCountD);
+        const navCart = document.querySelector('#nav-cart');
+        const cartCountD = document.createElement('sup');
+        cartCountD.id = 'cart-count';
+        cartCountD.innerHTML = `${cartItemsCount}`;
+        cartCountD.style.color = 'white';
+        cartCountD.style.backgroundColor = 'blue';
+        cartCountD.style.borderRadius = '50%';
+        cartCountD.style.margin = '2px';
+        cartCountD.style.padding = '3px';
+        cartCountD.style.font = 'bold 16px Georgia, serif';
+        navCart.appendChild(cartCountD);
+      }
+
       //do not display dashboard option on dropdown menu by default
       const navlinkDash = document.querySelector('#nav-dashboard');
       navlinkDash.style.display = 'none';
@@ -88,9 +91,24 @@ async function getBooksFromServer(page, genre) {
     }
   );
   const result = await books.json();
-  bookData = result;
+
+  bookData = result.data;
   //create and apply pagination controls below books displayed
+  const totalCount = result.totalCount;
+  const currentCount = result.nbHits;
+  accumCount = accumCount + currentCount;
+
+  console.log(totalCount, currentCount, accumCount);
   await pagination(true);
+
+  if (totalCount <= accumCount) {
+    //only tested for pagination two page worth of books
+    document.querySelector('#btn-next').disabled = true;
+  }
+
+  if (page == 1) {
+    document.querySelector('#btn-previous').disabled = true;
+  }
 
   //for each book in bookData array, display its data by creating corresponding elements
   bookData.forEach((book) => {
@@ -187,9 +205,14 @@ export async function pagination() {
   section.appendChild(divControls);
 
   btnPrev = document.getElementById('btn-previous');
+  btnNext = document.getElementById('btn-next');
+
   if (btnPrev) {
     btnPrev.addEventListener('click', (e) => {
       e.preventDefault();
+      btnNext.disabled = false;
+      accumCount = 0;
+      console.log('btnNext', btnNext);
       page -= 1;
       if (page < 1) {
         page = 1;
@@ -201,10 +224,10 @@ export async function pagination() {
     });
   }
 
-  btnNext = document.getElementById('btn-next');
   if (btnNext) {
     btnNext.addEventListener('click', (e) => {
       e.preventDefault();
+      btnPrev.disabled = false;
       document.querySelectorAll('.div-novel').forEach((e) => e.remove());
       page += 1;
       console.log(page);

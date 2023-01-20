@@ -9,8 +9,7 @@ const addItemToCart = async (req, res) => {
     const nAmount = Number(totalAmount);
     const nQuantity = Number(quantity);
     const nBookId = Number(bookId);
-    console.log(nBookId);
-    console.log(req.body, req.params.id);
+
     const existingCart = await prisma.cartItem.findMany({
       where: {
         user_id: nUserId,
@@ -18,7 +17,6 @@ const addItemToCart = async (req, res) => {
       },
     });
     if (existingCart[0]) {
-      console.log('wait this?');
       const newQuantity = existingCart[0].quantity + nQuantity;
       const newAmount = existingCart[0].total_amount + nAmount;
       await prisma.cartItem.updateMany({
@@ -50,10 +48,8 @@ const addItemToCart = async (req, res) => {
 
 const updateCartItem = async (req, res) => {
   try {
-    console.log('it ran');
     const userId = req.params.id;
     const { quantity, amount, bookID } = req.body;
-    console.log(req.body);
     const nUserId = Number(userId);
     const nBookId = Number(bookID);
 
@@ -125,7 +121,6 @@ const getCartItemsCount = async (req, res, next) => {
   try {
     const { id: userId } = req.params;
     const nUserId = Number(userId);
-    console.log(nUserId);
     const cartItemsCount = await prisma.cartItem.count({
       where: {
         user_id: nUserId,
