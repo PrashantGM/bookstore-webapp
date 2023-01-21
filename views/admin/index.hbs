@@ -6,7 +6,12 @@
     <title>{{title}}</title>
     <link rel='stylesheet' href='../css/style.css' />
     <link rel="stylesheet" href="../css/general.css"/>
-    <script src='../js/script.js'></script>
+     <script type="module" defer>
+    import {updateBook,addBook,closeIt } from "../js/script.js";
+    window.addBook=addBook;
+    window.updateBook=updateBook;
+    window.closeIt=closeIt;
+  </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
   <body>
@@ -42,7 +47,7 @@
                     width='20px'
                     alt=''
                   /></button></td>
-              <td><button id='btn-Delete' onclick='deleteBook({{id}})'>
+              <td><button id='btn-Delete' data-bookId="{{id}}">
                   <img src='../imgs/delete.png' width='20px' alt='' />
                 </button></td>
             </tr>
@@ -167,7 +172,7 @@
               <button
                 type='button'
                 id='btn-cancel'
-                onclick='closeForm()'
+                onclick='closeIt()'
               >Back</button>
               </div>
             </form>

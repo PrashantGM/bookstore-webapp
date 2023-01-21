@@ -1,5 +1,19 @@
 //this opens new form when add new book button is clicked
+import { toast } from './toast.js';
+
 const BOOK_URL = 'http://localhost:8000/books/admin';
+
+toast.initToast();
+let message = sessionStorage.getItem('notification');
+if (message) {
+  toast.generateToast({
+    message: message,
+    background: '#76B947',
+    color: 'white',
+    length: '2000ms',
+  });
+}
+sessionStorage.clear();
 function openForm(actionType, id) {
   const form = document.getElementById('popupForm');
   form.style.display = 'block';
@@ -25,8 +39,18 @@ function openForm(actionType, id) {
         body: formData,
       })
         .then((res) => res.json())
-        .then(() => {
-          closeForm();
+        .then((result) => {
+          if (result.success) {
+            sessionStorage.setItem('notification', `${result.msg}`);
+            closeForm();
+          } else {
+            toast.generateToast({
+              message: 'Something went wrong! Please try again',
+              background: 'red',
+              color: 'white',
+              length: '2000ms',
+            });
+          }
         })
         .catch(function (err) {
           console.log(err);
@@ -73,8 +97,19 @@ function openForm(actionType, id) {
         method: 'PUT',
         body: formUpdatedData,
       })
-        .then(function (res) {
-          closeForm();
+        .then((res) => res.json())
+        .then((result) => {
+          if (result.success) {
+            sessionStorage.setItem('notification', `${result.msg}`);
+            closeForm();
+          } else {
+            toast.generateToast({
+              message: 'Something went wrong! Please try again',
+              background: 'red',
+              color: 'white',
+              length: '2000ms',
+            });
+          }
         })
         .catch(function (err) {
           console.log(err);
@@ -92,7 +127,11 @@ function closeForm() {
   document.getElementById('btn-add').style.display = 'block';
   window.location.reload();
 }
-function addBook() {
+export function closeIt() {
+  closeForm();
+}
+
+export function addBook() {
   openForm('add', '');
 }
 
@@ -132,23 +171,38 @@ function appendDataToForm() {
 }
 
 //updates corresponding book
-function updateBook(id) {
+export function updateBook(id) {
   openForm('update', id);
 }
 
 //deletes corresponding book
-function deleteBook(id) {
-  // if (confirm('Are you sure to delete this book?')) {
-  fetch(`${BOOK_URL}/${id}`, {
-    method: 'DELETE',
-  })
-    .then(() => {
-      window.location.href = BOOK_URL;
+const btnsDelete = document.querySelectorAll('#btn-Delete');
+btnsDelete.forEach((btnDelete) => {
+  btnDelete.addEventListener('click', (e) => {
+    e.preventDefault();
+    const bookId = btnDelete.getAttribute('data-bookId');
+    fetch(`${BOOK_URL}/${bookId}`, {
+      method: 'DELETE',
     })
-    .catch(function (err) {
-      console.log(err);
-    });
-}
+      .then((res) => res.json())
+      .then((result) => {
+        if (result.success) {
+          sessionStorage.setItem('notification', `${result.msg}`);
+          window.location.reload();
+        } else {
+          toast.generateToast({
+            message: 'Something went wrong! Please try again',
+            background: 'red',
+            color: 'white',
+            length: '2000ms',
+          });
+        }
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
+  });
+});
 
 // window.onclick = function (event) {
 //   let modal = document.getElementById('modalAddBook');

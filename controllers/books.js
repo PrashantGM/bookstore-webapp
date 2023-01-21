@@ -52,7 +52,7 @@ const addBook = async (req, res, next) => {
 
     res
       .status(201)
-      .json({ success: true, msg: 'Successfully added!', data: book });
+      .json({ success: true, msg: 'Successfully Added!', data: book });
   } catch (error) {
     next();
   }
@@ -180,7 +180,9 @@ const updateBook = async (req, res, next) => {
         publication_date: parsedDate,
       },
     });
-    res.status(200).json({ msg: 'Successfully updated!', data: book });
+    res
+      .status(200)
+      .json({ success: true, msg: 'Successfully Updated!', data: book });
   } catch (error) {
     next();
   }
@@ -192,7 +194,7 @@ const deleteBook = async (req, res) => {
     await prisma.book.delete({
       where: { id },
     });
-    res.status(200).json({ msg: 'Successfully deleted!' });
+    res.status(200).json({ success: true, msg: 'Successfully Deleted!' });
   } catch (error) {
     throw new Error('Error');
   }

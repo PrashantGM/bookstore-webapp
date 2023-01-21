@@ -6,7 +6,17 @@ let bookId = 0;
 let currentBookID = Number(
   document.querySelector('.book-details').getAttribute('data-bookId')
 );
-console.log('current bookId', currentBookID);
+toast.initToast();
+let message = sessionStorage.getItem('notification');
+if (message) {
+  toast.generateToast({
+    message: message,
+    background: 'green',
+    color: 'white',
+    length: '2000ms',
+  });
+}
+sessionStorage.clear();
 async function onload() {
   await loadNav();
   await loadPage();
@@ -150,12 +160,11 @@ async function addtoCart() {
           }),
         });
         const parsedResponse = await response.json();
-        const bookSection = document.querySelector('.book-section');
-        toast.initToast(bookSection);
+
         toast.generateToast({
           message: parsedResponse.msg,
-          background: '#eaf7fb',
-          color: 'green',
+          background: 'green',
+          color: 'white',
           length: '2000ms',
         });
       } else {

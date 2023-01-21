@@ -21,7 +21,7 @@ async function onload() {
       downIcon.className = 'fa fa-caret-down';
       btnProfile.appendChild(downIcon);
 
-      document.querySelector('#navRead').style.display = 'none';
+      document.querySelector('#nav-cart').style.display = 'none';
       document.querySelector('#nav-dashboard').style.display = 'none';
     } else {
       btnProfile.addEventListener('click', (e) => {

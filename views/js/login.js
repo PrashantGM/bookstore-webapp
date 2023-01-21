@@ -13,26 +13,24 @@ btnLogin.addEventListener('click', async (e) => {
   const password = document.querySelector('input[name="password"]').value;
   const result = await login(email, password);
   toast.initToast(loginForm);
-  if (!result.success) {
+  if (result.success) {
+    if (result.data.role === 'ADMIN') {
+      sessionStorage.setItem(
+        'notification',
+        'Successfully Logged In As Admin!'
+      );
+      window.location.assign('http://localhost:8000/books/admin');
+    } else {
+      sessionStorage.setItem('notification', 'Successfully Logged In!');
+      window.history.go(-1);
+    }
+  } else {
     toast.generateToast({
       message: result.msg,
       background: 'rgb(194 232 247)',
       color: 'red',
       length: '2000ms',
     });
-  } else {
-    toast.generateToast({
-      message: result.msg,
-      background: 'rgb(194 232 247)',
-      color: 'green',
-      length: '1000ms',
-    });
-
-    if (result.data.role === 'ADMIN') {
-      window.location.assign('http://localhost:8000/books/admin');
-    } else {
-      window.history.go(-1);
-    }
   }
 });
 

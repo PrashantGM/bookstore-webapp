@@ -7,7 +7,17 @@ let accumCount = 0;
 let parsedUserData = {};
 const container = document.querySelector('.container');
 const section = document.querySelector('.section');
-
+toast.initToast();
+let message = sessionStorage.getItem('notification');
+if (message) {
+  toast.generateToast({
+    message: message,
+    background: '#76B947',
+    color: 'white',
+    length: '2000ms',
+  });
+}
+sessionStorage.clear();
 //gets books from server and loads on the page
 async function getBooksFromServer(page, genre) {
   const btnProfile = document.querySelector('.btn-profile');
