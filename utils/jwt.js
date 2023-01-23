@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+
 const secret = process.env.JWT_SECRET;
 const lifeTime = process.env.JWT_LIFE_TIME;
 const createToken = ({ payload }) => {
