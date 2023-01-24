@@ -42,9 +42,8 @@ model CartItem{
 
 model Order{
   id Int @id @default(autoincrement())
-  subtotal Float
   delivery_charge Float
-  delivery_address String
+  delivery_address String?
   total Float
   status Status? @default(PENDING)
   client_secret String?
