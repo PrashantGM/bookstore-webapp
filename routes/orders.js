@@ -7,8 +7,10 @@ const {
   deleteCartItem,
   viewCartItems,
   getCartItemsCount,
+  createPaymentIntent,
 } = require('../controllers/orders');
 
+router.route('/stripe').post(createPaymentIntent);
 router.route('/count/:id').get(getCartItemsCount);
 router
   .route('/:id')

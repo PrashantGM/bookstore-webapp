@@ -51,14 +51,24 @@ app.get('/user/login', (req, res) => {
 app.get('/notFound', (req, res) => {
   res.render('./pages/notFound');
 });
+
+app.get('/orders/checkout', (req, res) => {
+  res.render('./pages/checkout');
+});
+
+app.get('/orders/checkout/completed', (req, res) => {
+  console.log('this hit');
+  res.render('./pages/success');
+});
+
 // console.log('this ran');
 
 app.use('/user', usersRoute);
 app.use('/books', booksRoute);
-app.use('/order', authenticateUser, ordersRoute);
+app.use('/order', ordersRoute);
 
-app.use(errorHandler);
 app.use('*', notFound);
+app.use(errorHandler);
 
 // app.use((err, req, res, next) => {
 //   console.log('this handler ran');
