@@ -187,7 +187,6 @@ const getBooksForUser = asyncWrapper(async (req, res) => {
       genreTemp.push(...genreResult[g].genre);
     }
     genreD = genreTemp.filter((g, index) => genreTemp.indexOf(g) === index);
-    console.log(genreD);
   } else {
     page = 1;
     const uppercasedGenre =
