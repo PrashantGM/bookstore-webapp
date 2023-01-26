@@ -117,7 +117,7 @@ async function loadPage() {
       const price = document.createElement('p');
       price.style.fontWeight = 'bold';
       price.className = 'm-t-10';
-      price.innerHTML = `Rs. ${book.price}`;
+      price.innerHTML = `$ ${book.price}`;
       bookOthers.appendChild(price);
 
       bookOthers.addEventListener('click', () => {
@@ -139,7 +139,7 @@ async function addtoCart() {
     e.preventDefault();
     quantity = Number(inputQuantity.value);
     totalAmount = price * quantity;
-    totalPrice.innerHTML = `Rs ${totalAmount}`;
+    totalPrice.innerHTML = `$ ${totalAmount}`;
   });
 
   const btnAddCart = document.querySelector('#btn-addCart');

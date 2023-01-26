@@ -4,7 +4,6 @@ const cartContainer = document.querySelector('#cart-container');
 
 let userId = 0;
 let subTotal = 0;
-let total = 0;
 
 async function onload() {
   await loadNav();
@@ -19,21 +18,8 @@ async function loadPage() {
 
   const cartSubTotal = document.createElement('p');
   cartSubTotal.id = 'cart-subtotal';
-  cartSubTotal.innerHTML = `SubTotal:  Rs ${subTotal}`;
-
+  cartSubTotal.innerHTML = `Total:  $ ${subTotal}`;
   cartFinal.appendChild(cartSubTotal);
-
-  const cartDeliveryFee = document.createElement('p');
-  cartDeliveryFee.id = 'cart-deliveryfee';
-  let deliveryFee = Math.floor(Math.random() * 200 + 50);
-  cartDeliveryFee.innerHTML = `Delivery:  Rs ${deliveryFee}`;
-
-  cartFinal.appendChild(cartDeliveryFee);
-
-  const cartTotal = document.createElement('p');
-  cartTotal.id = 'cart-total';
-  cartTotal.innerHTML = `Total:  Rs ${cartTotal}`;
-  cartFinal.appendChild(cartTotal);
 
   const checkout = document.createElement('button');
   checkout.id = 'btn-checkout';
@@ -48,7 +34,6 @@ async function loadPage() {
   const cartItems = document.querySelectorAll('.cart-item');
   function showNoItemsMessage() {
     cartSubTotal.style.display = 'none';
-    cartTotal.style.display = 'none';
     cartDeliveryFee.style.display = 'none';
     checkout.style.display = 'none';
     noItemsMsg.className = 'm-20';
@@ -71,7 +56,6 @@ async function loadPage() {
       const cartAmount = cartItem.querySelector('#cart-amount');
       let amount = Number(cartAmount.textContent);
       subTotal += amount;
-      total = subTotal + deliveryFee;
       const bookId = cartItem.getAttribute('data-bookId');
       toast.initToast(cartItem);
 
@@ -191,18 +175,13 @@ async function loadPage() {
     } else {
       subTotal = subTotal - money;
     }
-    total = subTotal + deliveryFee;
-    console.log('total cost', total);
-    cartSubTotal.innerHTML = `SubTotal:  Rs ${subTotal}`;
-    cartTotal.innerHTML = `Total: Rs ${total}`;
+    cartSubTotal.innerHTML = `Total:  $ ${subTotal}`;
   }
-  cartSubTotal.innerHTML = `Subtotal:  Rs ${subTotal}`;
-  cartTotal.innerHTML = `Total: Rs ${total}`;
+  cartSubTotal.innerHTML = `Total:  $ ${subTotal}`;
 }
 
 async function loadNav() {
   const btnProfile = document.querySelector('.btn-profile');
-  console.log('btnprofile', btnProfile);
 
   try {
     const isLoggedIn = await viewLoggedIn();
@@ -210,7 +189,7 @@ async function loadNav() {
     if (loggedIn) {
       let parsedUserData = JSON.parse(isLoggedIn.payload);
       userId = parsedUserData.id;
-      console.log('userId', userId);
+
       btnProfile.textContent = parsedUserData.username;
       const userIcon = document.createElement('i');
       userIcon.className = 'fa fa-user-circle';

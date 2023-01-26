@@ -146,7 +146,7 @@ async function getBooksFromServer(page, genre) {
 
     let pAuthor = document.createElement('p');
     pAuthor.className = 'el-novel p-author';
-    pAuthor.innerHTML = `By ${book.author}`;
+    pAuthor.innerHTML = `$ ${book.author}`;
     divNovel.appendChild(pAuthor);
 
     let pGenre = document.createElement('p');
@@ -156,7 +156,7 @@ async function getBooksFromServer(page, genre) {
 
     let pPrice = document.createElement('p');
     pPrice.className = 'el-novel p-price';
-    pPrice.innerHTML = `Rs. ${book.price}`;
+    pPrice.innerHTML = `$ ${book.price}`;
     divNovel.appendChild(pPrice);
 
     //when particular book card is clicked, open page for that book
