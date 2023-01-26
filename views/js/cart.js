@@ -34,7 +34,6 @@ async function loadPage() {
   const cartItems = document.querySelectorAll('.cart-item');
   function showNoItemsMessage() {
     cartSubTotal.style.display = 'none';
-    cartDeliveryFee.style.display = 'none';
     checkout.style.display = 'none';
     noItemsMsg.className = 'm-20';
     cartFinal.style.alignItems = 'center';
@@ -166,8 +165,30 @@ async function loadPage() {
       });
     });
   }
+  document
+    .querySelector('#btn-checkout')
+    .addEventListener('click', async (e) => {
+      e.preventDefault();
 
-  // if(cartI)
+      const response = await fetch('http://localhost:8000/order/stripe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId }),
+      });
+      const result = await response.json();
+
+      if (result.success) {
+        console.log('this ran');
+        window.location.assign(result.data.url);
+      } else {
+        toast.generateToast({
+          message: 'Error! Please try again',
+          background: '#eaf7fb',
+          color: 'red',
+          length: '2000ms',
+        });
+      }
+    });
 
   async function setcartSubTotal(money, op) {
     if (op === 'add') {

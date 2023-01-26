@@ -25,5 +25,14 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.20"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PrashantGM/bookstore-webapp.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/PrashantGM/bookstore-webapp/issues"
+  },
+  "homepage": "https://github.com/PrashantGM/bookstore-webapp#readme"
 }
