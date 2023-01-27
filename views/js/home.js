@@ -1,4 +1,5 @@
 import { toast } from './toast.js';
+import { loadNav, logout } from './session.js';
 
 let page = 1;
 let bookData = [];
@@ -20,77 +21,7 @@ if (message) {
 sessionStorage.clear();
 //gets books from server and loads on the page
 async function getBooksFromServer(page, genre) {
-  const btnProfile = document.querySelector('.btn-profile');
-  const navDropdown = document.querySelector('#dropdown-profile');
-
-  //first check if user is logged
-  const isLoggedIn = await viewLoggedIn();
-  try {
-    //if user is logged in,
-    if (isLoggedIn.success) {
-      parsedUserData = JSON.parse(isLoggedIn.payload);
-
-      const cartItemsCount = await getCartItemsCount();
-      console.log(cartItemsCount);
-      //display name of user on nav menu
-      btnProfile.textContent = parsedUserData.username;
-      btnProfile.fontFamily = "Times New Roman', Times, serif";
-
-      //adding user profile icon
-      const userIcon = document.createElement('i');
-      userIcon.className = 'fa fa-user-circle';
-      btnProfile.appendChild(userIcon);
-
-      //adding down icon
-      const downIcon = document.createElement('i');
-      downIcon.className = 'fa fa-caret-down';
-      btnProfile.appendChild(downIcon);
-
-      if (cartItemsCount != 0) {
-        const cartCount = document.createElement('sup');
-        cartCount.id = 'cart-count';
-        cartCount.innerHTML = `${cartItemsCount}`;
-        cartCount.style.color = 'white';
-        cartCount.style.backgroundColor = 'blue';
-        cartCount.style.borderRadius = '50%';
-        cartCount.style.margin = '2px';
-        cartCount.style.padding = '3px';
-        cartCount.style.font = 'bold 16px Georgia, serif';
-        btnProfile.appendChild(cartCount);
-
-        const navCart = document.querySelector('#nav-cart');
-        const cartCountD = document.createElement('sup');
-        cartCountD.id = 'cart-count';
-        cartCountD.innerHTML = `${cartItemsCount}`;
-        cartCountD.style.color = 'white';
-        cartCountD.style.backgroundColor = 'blue';
-        cartCountD.style.borderRadius = '50%';
-        cartCountD.style.margin = '2px';
-        cartCountD.style.padding = '3px';
-        cartCountD.style.font = 'bold 16px Georgia, serif';
-        navCart.appendChild(cartCountD);
-      }
-
-      //do not display dashboard option on dropdown menu by default
-      const navlinkDash = document.querySelector('#nav-dashboard');
-      navlinkDash.style.display = 'none';
-
-      //if logged in user is admin, show dashboard option
-      if (parsedUserData.role === 'ADMIN') {
-        navlinkDash.style.display = 'block';
-      }
-    } else {
-      //if user isn't logged in, don't display dropdown menu. Displays login button by default.
-      navDropdown.style.display = 'none';
-      btnProfile.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.location.href = 'http://localhost:8000/user/login';
-      });
-    }
-  } catch (error) {
-    //catch and log exception error to console
-    console.log(error);
-  }
+  parsedUserData = await loadNav();
   const books = await fetch(
     `http://localhost:8000/books?genre=${genre}&page=${page}`,
     {
@@ -108,7 +39,6 @@ async function getBooksFromServer(page, genre) {
   const currentCount = result.nbHits;
   accumCount = accumCount + currentCount;
 
-  console.log(totalCount, currentCount, accumCount);
   await pagination(true);
 
   if (totalCount <= accumCount) {
@@ -173,22 +103,6 @@ async function load(page, genre) {
 }
 load(page, '');
 
-async function getCartItemsCount() {
-  try {
-    const payload = await fetch(
-      `http://localhost:8000/order/count/${parsedUserData.id}`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        method: 'GET',
-      }
-    );
-    const response = await payload.json();
-    return response.nbHits;
-  } catch (error) {}
-}
-
 //function for displaying controls for pagination
 export async function pagination() {
   let divControls = document.createElement('div');
@@ -251,37 +165,8 @@ export function viewCartItems() {
   window.location.assign(`http://localhost:8000/order/${parsedUserData.id}`);
 }
 
-//function that checks with server if user is logged or not
-async function viewLoggedIn() {
-  try {
-    const payload = await fetch('http://localhost:8000/user/stat', {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      method: 'GET',
-    });
-    const userData = await payload.json();
-    return userData;
-  } catch (error) {
-    console.log(error);
-  }
-}
-//this function is invoked when user selects genre
-
 export function getBooksByGenre(genre) {
   document.querySelectorAll('.div-novel').forEach((e) => e.remove());
   document.querySelector('.page-controls').remove();
   load(page, genre);
-}
-
-//logout functionality
-export function logout() {
-  fetch('http://localhost:8000/user/logout', {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    method: 'POST',
-  }).then(() => {
-    window.location.replace('http://localhost:8000');
-  });
 }

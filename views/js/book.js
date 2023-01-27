@@ -1,5 +1,5 @@
 import { toast } from './toast.js';
-
+import { loadNav, logout } from './session.js';
 let loggedIn = false;
 let parsedUserData;
 let bookId = 0;
@@ -18,45 +18,15 @@ if (message) {
 }
 sessionStorage.clear();
 async function onload() {
-  await loadNav();
+  parsedUserData = await loadNav();
+  if (parsedUserData) {
+    loggedIn = true;
+  }
   await loadPage();
   await addtoCart();
 }
 onload();
 
-async function loadNav() {
-  const btnProfile = document.querySelector('.btn-profile');
-  console.log('btnprofile', btnProfile);
-
-  try {
-    const isLoggedIn = await viewLoggedIn();
-    loggedIn = isLoggedIn.success;
-    if (loggedIn) {
-      parsedUserData = JSON.parse(isLoggedIn.payload);
-
-      btnProfile.textContent = parsedUserData.username;
-      const userIcon = document.createElement('i');
-      userIcon.className = 'fa fa-user-circle';
-      btnProfile.appendChild(userIcon);
-
-      const downIcon = document.createElement('i');
-      downIcon.className = 'fa fa-caret-down';
-      btnProfile.appendChild(downIcon);
-
-      // document.querySelector('#navRead').style.display = 'none';
-      const navlinkDash = document.querySelector('#nav-dashboard');
-      console.log('navlinkdash', navlinkDash);
-      navlinkDash.style.display = 'none';
-    } else {
-      btnProfile.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.location.href = 'http://localhost:8000/user/login';
-      });
-    }
-  } catch (error) {
-    console.log(error);
-  }
-}
 async function loadPage() {
   const similarSection = document.querySelector('.others');
   let currentGenre = similarSection.getAttribute('data-genre');
@@ -174,19 +144,4 @@ async function addtoCart() {
       console.log(error);
     }
   });
-}
-
-async function viewLoggedIn() {
-  try {
-    const payload = await fetch('http://localhost:8000/user/stat', {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      method: 'GET',
-    });
-    const userData = await payload.json();
-    return userData;
-  } catch (error) {
-    console.log(error);
-  }
 }
