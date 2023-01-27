@@ -194,6 +194,7 @@ const createPaymentIntent = asyncWrapper(async (req, res) => {
     success_url: `http://localhost:8000/orders/checkout/success`,
     cancel_url: `http://localhost:8000/order/${nUserId}`,
   });
+  console.log(session);
 
   const order = await prisma.order.create({
     data: {
@@ -231,8 +232,7 @@ const testRoute = async (req, res) => {
 
 const webhookListener = asyncWrapper(async (req, res) => {
   let event = req.body;
-  let endpointSecret =
-    'whsec_1cbc1cd63219a182467557d1faa8eab59fe98ed22b5d7b0fd96948de8e09ed98';
+  let endpointSecret = process.env.WEBHOOK_TEST_KEY;
   if (endpointSecret) {
     const signature = req.headers['stripe-signature'];
     try {
