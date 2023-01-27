@@ -49,12 +49,19 @@ export async function loadNav() {
 
       if (parsedUserData.role === 'ADMIN') {
         navlinkDash.style.display = 'block';
+        navlinkDash.addEventListener('click', () => {
+          window.location.assign('http://localhost:8000/books/admin');
+        });
       }
       navCart.addEventListener('click', (e) => {
         e.preventDefault();
         window.location.assign(
           `http://localhost:8000/order/${parsedUserData.id}`
         );
+      });
+      document.querySelector('#nav-logout').addEventListener('click', (e) => {
+        e.preventDefault();
+        logout();
       });
 
       return parsedUserData;
