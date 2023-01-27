@@ -25,30 +25,30 @@
 
 ### HOMEPAGE
 
-![alt text](https://github.com/PrashantGM/bookstore-webapp/blob/main/views/public/imgs/mainpage-demo.png?raw=true)
+![alt text](https://github.com/PrashantGM/bookstore-webapp/blob/main/views/imgs/mainpage-demo.png?raw=true)
 
 ### BOOKS BY GENRE
 
-![alt text](https://github.com/PrashantGM/bookstore-webapp/blob/main/views/public/imgs/books-by-genre-demo.png?raw=true)
+![alt text](https://github.com/PrashantGM/bookstore-webapp/blob/main/views/imgs/books-by-genre-demo.png?raw=true)
 
 ### BOOK PAGE
 
-![alt text](https://github.com/PrashantGM/bookstore-webapp/blob/main/views/public/imgs/book-demo.png?raw=true)
+![alt text](https://github.com/PrashantGM/bookstore-webapp/blob/main/views/imgs/book-demo.png?raw=true)
 
 ### CART
 
-![alt text](https://github.com/PrashantGM/bookstore-webapp/blob/main/views/public/imgs/cart-demo.png?raw=true)
+![alt text](https://github.com/PrashantGM/bookstore-webapp/blob/main/views/imgs/cart-demo.png?raw=true)
 
 ### STRIPE PAYMENT
 
-![alt text](https://github.com/PrashantGM/bookstore-webapp/blob/main/views/public/imgs/stripe-payment-demo.png?raw=true)
+![alt text](https://github.com/PrashantGM/bookstore-webapp/blob/main/views/imgs/stripe-payment-demo.png?raw=true)
 
 ### ADD BOOK(ADMIN)
 
-![alt text](https://github.com/PrashantGM/bookstore-webapp/blob/main/views/public/imgs/add-book-demo.png?raw=true)
+![alt text](https://github.com/PrashantGM/bookstore-webapp/blob/main/views/imgs/add-book-demo.png?raw=true)
 
 ### UPDATE BOOK(ADMIN)
 
-![alt text](https://github.com/PrashantGM/bookstore-webapp/blob/main/views/public/imgs/edit-book-demo.png?raw=true)
+![alt text](https://github.com/PrashantGM/bookstore-webapp/blob/main/views/imgs/edit-book-demo.png?raw=true)
 
-**_ ADMIN other pages will be added within an hour._**
+**_ Other pages admin pages will be added within an hour _**
