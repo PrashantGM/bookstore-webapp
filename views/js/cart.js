@@ -1,12 +1,13 @@
 import { toast } from './toast.js';
-
+import { loadNav, logout } from './session.js';
 const cartContainer = document.querySelector('#cart-container');
 
 let userId = 0;
 let subTotal = 0;
 
 async function onload() {
-  await loadNav();
+  const { id } = await loadNav();
+  userId = id;
   await loadPage();
 }
 
@@ -34,7 +35,6 @@ async function loadPage() {
   const cartItems = document.querySelectorAll('.cart-item');
   function showNoItemsMessage() {
     cartSubTotal.style.display = 'none';
-    cartDeliveryFee.style.display = 'none';
     checkout.style.display = 'none';
     noItemsMsg.className = 'm-20';
     cartFinal.style.alignItems = 'center';
@@ -166,8 +166,30 @@ async function loadPage() {
       });
     });
   }
+  document
+    .querySelector('#btn-checkout')
+    .addEventListener('click', async (e) => {
+      e.preventDefault();
 
-  // if(cartI)
+      const response = await fetch('http://localhost:8000/order/stripe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId }),
+      });
+      const result = await response.json();
+
+      if (result.success) {
+        console.log('this ran');
+        window.location.assign(result.data.url);
+      } else {
+        toast.generateToast({
+          message: 'Error! Please try again',
+          background: '#eaf7fb',
+          color: 'red',
+          length: '2000ms',
+        });
+      }
+    });
 
   async function setcartSubTotal(money, op) {
     if (op === 'add') {
@@ -178,50 +200,4 @@ async function loadPage() {
     cartSubTotal.innerHTML = `Total:  $ ${subTotal}`;
   }
   cartSubTotal.innerHTML = `Total:  $ ${subTotal}`;
-}
-
-async function loadNav() {
-  const btnProfile = document.querySelector('.btn-profile');
-
-  try {
-    const isLoggedIn = await viewLoggedIn();
-    let loggedIn = isLoggedIn.success;
-    if (loggedIn) {
-      let parsedUserData = JSON.parse(isLoggedIn.payload);
-      userId = parsedUserData.id;
-
-      btnProfile.textContent = parsedUserData.username;
-      const userIcon = document.createElement('i');
-      userIcon.className = 'fa fa-user-circle';
-      btnProfile.appendChild(userIcon);
-
-      const downIcon = document.createElement('i');
-      downIcon.className = 'fa fa-caret-down';
-      btnProfile.appendChild(downIcon);
-
-      document.querySelector('#nav-dashboard').style.display = 'none';
-    } else {
-      btnProfile.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.location.href = 'http://localhost:8000/user/login';
-      });
-    }
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-async function viewLoggedIn() {
-  try {
-    const payload = await fetch('http://localhost:8000/user/stat', {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      method: 'GET',
-    });
-    const userData = await payload.json();
-    return userData;
-  } catch (error) {
-    console.log(error);
-  }
 }

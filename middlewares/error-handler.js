@@ -15,10 +15,10 @@ const errorHandler = (err, req, res, next) => {
       .status(err.statusCode)
       .json({ success: false, msg: err.message });
   }
-  next();
-  // return res
-  //   .status(500)
-  //   .json({ success: false, msg: 'Something went wrong! Try Again.' });
+  // next();
+  return res
+    .status(500)
+    .json({ success: false, msg: 'Something went wrong! Please Try Again.' });
 };
 
 module.exports = errorHandler;

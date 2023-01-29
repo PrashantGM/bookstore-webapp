@@ -25,10 +25,9 @@ app.use(
     origin: `http://${HOST}:${PORT}`,
   })
 );
-
+app.use('/order/stripe/webhook', express.raw({ type: '*/*' }));
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
-// app.use(express.static('views'));
 app.use(express.static(__dirname + '/views'));
 app.set('view engine', 'hbs');
 
@@ -51,23 +50,21 @@ app.get('/user/login', (req, res) => {
 app.get('/notFound', (req, res) => {
   res.render('./pages/notFound');
 });
-// console.log('this ran');
+
+app.get('/orders/checkout', (req, res) => {
+  res.render('./pages/checkout');
+});
+
+app.get('/orders/checkout/success', (req, res) => {
+  res.render('./pages/success');
+});
 
 app.use('/user', usersRoute);
 app.use('/books', booksRoute);
-app.use('/order', authenticateUser, ordersRoute);
+app.use('/order', ordersRoute);
 
-app.use(errorHandler);
 app.use('*', notFound);
-
-// app.use((err, req, res, next) => {
-//   console.log('this handler ran');
-//   console.log(err.message);
-//   // if (err instanceof CustomError) {
-//   //   return res.status(err.statusCode).json({ msg: err.message });
-//   // }
-//   return res.status(500).json({ msg: 'Something went wrong! Try Again.' });
-// });
+app.use(errorHandler);
 
 app.listen(PORT, HOST, () => {
   console.log(`Running on http://${HOST}:${PORT}`);

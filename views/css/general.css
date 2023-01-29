@@ -328,7 +328,7 @@ button {
   display: flex;
   justify-content: flex-start;
   gap: 20px;
-  padding: 40px;
+  padding: 30px 40px;
 }
 #p-author {
   margin-left: 15px;
@@ -409,7 +409,7 @@ button {
 .caption-others {
   display: flex;
   justify-content: flex-start;
-  margin: 40px 10px 2px 30px;
+  margin: 15px 10px 2px 30px;
   font-style: italic;
   font-weight: bold;
 }

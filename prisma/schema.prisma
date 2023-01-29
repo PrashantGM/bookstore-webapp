@@ -46,7 +46,6 @@ model Order{
   delivery_address String?
   total Float
   status Status? @default(PENDING)
-  client_secret String?
   payment_intent_id String?
   cart_items CartItem[]
   created_at DateTime @default(now())
