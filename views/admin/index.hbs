@@ -7,9 +7,7 @@
     <link rel='stylesheet' href='../css/style.css' />
     <link rel="stylesheet" href="../css/general.css"/>
      <script type="module" defer>
-    import {updateBook,addBook,closeIt } from "../js/script.js";
-    window.addBook=addBook;
-    window.updateBook=updateBook;
+    import {closeIt } from "../js/script.js";
     window.closeIt=closeIt;
   </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -19,7 +17,7 @@
     <div id='base'>
       <div id='container'>
         <h1>BookStore Dashboard</h1>
-        <button id='btn-add' onclick='addBook()'>Add New Book</button>
+        <button id='btn-add' >Add New Book</button>
         <div class="container-table">
         <table id='tb-books'>
           <tr class='row'>
@@ -34,7 +32,7 @@
             <th>Remove</th>
           </tr>
           {{#each data}}
-            <tr class='row'>
+            <tr class='row' id="row-book" data-bookId="{{id}}">
               <td>{{title}}</td>
               <td><img src='{{image}}' width='150px' alt='book-img' /> </td>
               <td>{{genre}}</td>
@@ -42,12 +40,12 @@
               <td>{{price}}</td>
               <td>{{author}}</td>
               <td>{{publication_date}}</td>
-              <td><button id='btn-Update' onclick='updateBook({{id}})'><img
+              <td><button id='btn-update' ><img
                     src='../imgs/edit.png'
                     width='20px'
                     alt=''
                   /></button></td>
-              <td><button id='btn-Delete' data-bookId="{{id}}">
+              <td><button id='btn-delete'>
                   <img src='../imgs/delete.png' width='20px' alt='' />
                 </button></td>
             </tr>
@@ -180,6 +178,6 @@
         </div>
       </div>
     </div>
-    <script src="../js/index.js"></script>
+    
   </body>
 </html>

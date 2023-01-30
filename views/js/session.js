@@ -73,7 +73,7 @@ export async function loadNav() {
       });
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
   }
 }
 async function getCartItemsCount(userId) {
@@ -100,7 +100,7 @@ async function viewLoggedIn() {
     const userData = await payload.json();
     return userData;
   } catch (error) {
-    console.log(error);
+    // console.log(error);
   }
 }
 export function logout() {

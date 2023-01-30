@@ -3,7 +3,6 @@ import { loadNav, logout } from './session.js';
 
 let page = 1;
 let bookData = [];
-let genre = '';
 let accumCount = 0;
 let parsedUserData = {};
 const container = document.querySelector('.container');
@@ -19,7 +18,6 @@ if (message) {
   });
 }
 sessionStorage.clear();
-//gets books from server and loads on the page
 async function getBooksFromServer(page, genre) {
   parsedUserData = await loadNav();
   const books = await fetch(
@@ -34,7 +32,7 @@ async function getBooksFromServer(page, genre) {
   const result = await books.json();
 
   bookData = result.data;
-  //create and apply pagination controls below books displayed
+
   const totalCount = result.totalCount;
   const currentCount = result.nbHits;
   accumCount = accumCount + currentCount;
@@ -50,7 +48,6 @@ async function getBooksFromServer(page, genre) {
     document.querySelector('#btn-previous').disabled = true;
   }
 
-  //for each book in bookData array, display its data by creating corresponding elements
   bookData.forEach((book) => {
     const divNovel = document.createElement('div');
     divNovel.className = 'div-novel';
@@ -76,7 +73,7 @@ async function getBooksFromServer(page, genre) {
 
     let pAuthor = document.createElement('p');
     pAuthor.className = 'el-novel p-author';
-    pAuthor.innerHTML = `$ ${book.author}`;
+    pAuthor.innerHTML = `By ${book.author}`;
     divNovel.appendChild(pAuthor);
 
     let pGenre = document.createElement('p');
@@ -89,10 +86,7 @@ async function getBooksFromServer(page, genre) {
     pPrice.innerHTML = `$ ${book.price}`;
     divNovel.appendChild(pPrice);
 
-    //when particular book card is clicked, open page for that book
-
     divNovel.addEventListener('click', (e) => {
-      // e.preventDefault();
       window.location.assign(`http://localhost:8000/books/${book.id}`);
     });
   });
@@ -103,7 +97,6 @@ async function load(page, genre) {
 }
 load(page, '');
 
-//function for displaying controls for pagination
 export async function pagination() {
   let divControls = document.createElement('div');
   divControls.className = 'page-controls';
@@ -141,7 +134,6 @@ export async function pagination() {
       if (page < 1) {
         page = 1;
       }
-      console.log(page);
       document.querySelectorAll('.div-novel').forEach((e) => e.remove());
       document.querySelector('.page-controls').remove();
       load(page);
@@ -154,7 +146,6 @@ export async function pagination() {
       btnPrev.disabled = false;
       document.querySelectorAll('.div-novel').forEach((e) => e.remove());
       page += 1;
-      console.log(page);
       document.querySelector('.page-controls').remove();
       load(page);
     });
