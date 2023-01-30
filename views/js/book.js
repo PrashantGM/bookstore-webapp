@@ -114,7 +114,7 @@ async function addtoCart() {
     try {
       if (parsedUserData) {
         const userId = parsedUserData.id;
-        const response = await fetch(`http://localhost:8000/order/${userId}`, {
+        const response = await fetch(`http://localhost:8000/cart/${userId}`, {
           headers: {
             'Content-Type': 'application/json',
           },

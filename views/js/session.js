@@ -56,7 +56,7 @@ export async function loadNav() {
       navCart.addEventListener('click', (e) => {
         e.preventDefault();
         window.location.assign(
-          `http://localhost:8000/order/${parsedUserData.id}`
+          `http://localhost:8000/cart/${parsedUserData.id}`
         );
       });
       document.querySelector('#nav-logout').addEventListener('click', (e) => {
@@ -78,7 +78,7 @@ export async function loadNav() {
 }
 async function getCartItemsCount(userId) {
   try {
-    const payload = await fetch(`http://localhost:8000/order/count/${userId}`, {
+    const payload = await fetch(`http://localhost:8000/cart/count/${userId}`, {
       headers: {
         'Content-Type': 'application/json',
       },

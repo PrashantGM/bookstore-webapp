@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart</title>
+   <link rel="stylesheet" href="../css/general.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+  <div class="body-container">
+  {{>header}}
+    <div id="order-container">
+      
+      <table class="tbl-orders" id="tbl-ongoing">
+        <caption>Ongoing Orders</caption>
+        <thead>
+          <tr>
+            <th>Order Date</th>
+            <th>Items
+            </th>
+            <th>Delivery Fee</th>
+            <th>Total</th>
+            <th>Delivery Address</th>
+            <th>Delivery Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each dataCurrent}}
+          <tr>
+            <td>{{order_date}}</td>
+            <td>
+               <table class="tbl-orderitems">
+              {{#each cart_items}}
+              <tr>
+                <td>
+              {{books.title}}
+               </td>
+               <td>
+               $ {{books.price}}
+             </td>
+             <td>
+                x{{quantity}} 
+                </td>
+              </tr>
+              {{/each}}
+          </table>
+          </td>
+           <td>{{delivery_charge}}</td>
+            <td>{{total}}</td>
+            <td>{{delivery_address}}</td>
+            <td>{{status}}</td>
+            <td>2023/01/11</td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+      </div>
+      <div id="order-container">
+       <table class="tbl-orders" id="tbl-past">
+        <caption>Past Orders</caption>
+        <thead>
+          <tr>
+            <th>Order Date</th>
+            <th>Items</th>            
+            <th>Delivery Fee</th>
+            <th>Total</th>
+            <th>Delivery Address</th>
+            <th>Status</th>
+            <th>Delivery Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each data}}
+          <tr>
+            <td>{{order_date}}</td>
+            <td>
+          <table class="tbl-orderitems">
+              {{#each cart_items}}
+              <tr>
+                <td>
+              {{books.title}}
+               </td>
+               <td>
+               $ {{books.price}}
+             </td>
+             <td>
+                x{{quantity}} 
+                </td>
+              </tr>
+              {{/each}}
+          </table>
+
+            </td>
+            <td>{{delivery_charge}}</td>
+            <td>{{total}}</td>
+            <td>{{delivery_address}}</td>
+            <td>{{status}}</td>
+            <td>2023/01/11</td>
+          </tr>
+       
+          {{/each}}
+        </tbody>
+         </table>
+    </div>
+    </div>
+  {{>footer}}
+  </div>
+</body>
+</html>

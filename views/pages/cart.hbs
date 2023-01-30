@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
+  <div class="body-container">
   {{>header}}
     <div id="cart-container">
         <h3 id="cart-header">Cart Items</h3>
@@ -23,7 +24,6 @@
         
         {{#each data}}
         <div class="cart-main" data-userId="{{user_id}}">
-
 
         <div class="cart-item" data-bookId="{{books.id}}">
           {{!-- <div>
@@ -49,7 +49,9 @@
             </div>
         {{/each}}
         </div>
+        <div></div>
   {{>footer}}
+  </div>
   <script type="module" src="../js/cart.js" defer></script>
 </body>
 </html>

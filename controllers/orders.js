@@ -309,6 +309,79 @@ const webhookListener = asyncWrapper(async (req, res) => {
   res.send();
 });
 
+const getOrders = asyncWrapper(async (req, res) => {
+  const { id: userId } = req.params;
+  const nUserId = Number(userId);
+  console.log(userId);
+  // const cartItems = await prisma.user.findUnique({
+  //   where: {
+  //     id: nUserId,
+  //   },
+  //   include: {
+  //     cart: {
+  //       where: {
+  //         NOT: {
+  //           order_id: null,
+  //         },
+  //       },
+  //       include: {
+  //         order: true,
+  //         books: true,
+  //       },
+  //     },
+  //   },
+  // });
+
+  const orderItems = await prisma.order.findMany({
+    where: {
+      cart_items: {
+        some: {
+          user_id: nUserId,
+        },
+      },
+    },
+    include: {
+      cart_items: {
+        include: {
+          books: true,
+        },
+      },
+    },
+  });
+
+  console.log(orderItems);
+  console.log(orderItems[0].cart_items);
+
+  const parsedOrderItems = orderItems.map((order) => {
+    const date = new Date(order.created_at);
+    let month = date.getUTCMonth() + 1;
+    let day = date.getUTCDate();
+    let year = date.getUTCFullYear();
+    const newCreatedAt = year + '/' + month + '/' + day;
+    if (order.delivery_charge == 0) {
+      order.delivery_charge = 'FREE';
+    }
+    return { ...order, order_date: newCreatedAt };
+  });
+  const ongoingOrders = parsedOrderItems.filter((order) => {
+    return (order.status = 'PENDING');
+  });
+  console.log(ongoingOrders);
+
+  // const books = cartItems[0].cart;
+  // const parsedBooks = books.map((b) => {
+  //   if (!b.books.image.startsWith('https')) {
+  //     b.books.image = 'http://localhost:8000/uploads/' + b.books.image;
+  //   }
+  //   return { ...b };
+  // });
+
+  res.render('./pages/order', {
+    dataCurrent: ongoingOrders,
+    data: parsedOrderItems,
+  });
+});
+
 module.exports = {
   addItemToCart,
   updateCartItem,
@@ -317,5 +390,6 @@ module.exports = {
   getCartItemsCount,
   createPaymentIntent,
   webhookListener,
+  getOrders,
   testRoute,
 };

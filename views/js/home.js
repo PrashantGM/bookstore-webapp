@@ -153,7 +153,7 @@ export async function pagination() {
 }
 
 export function viewCartItems() {
-  window.location.assign(`http://localhost:8000/order/${parsedUserData.id}`);
+  window.location.assign(`http://localhost:8000/cart/${parsedUserData.id}`);
 }
 
 export function getBooksByGenre(genre) {

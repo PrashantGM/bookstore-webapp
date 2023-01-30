@@ -73,7 +73,7 @@ async function loadPage() {
             quantity = quantity - 1;
             amount = quantity * price;
             const response = await fetch(
-              `http://localhost:8000/order/${userId}`,
+              `http://localhost:8000/cart/${userId}`,
               {
                 headers: {
                   'Content-Type': 'application/json',
@@ -112,7 +112,7 @@ async function loadPage() {
             quantity = quantity + 1;
             amount = quantity * price;
             const response = await fetch(
-              `http://localhost:8000/order/${userId}`,
+              `http://localhost:8000/cart/${userId}`,
               {
                 headers: {
                   'Content-Type': 'application/json',
@@ -145,7 +145,7 @@ async function loadPage() {
       const cartDelete = cartItem.nextElementSibling;
       cartDelete.addEventListener('click', async (e) => {
         e.preventDefault();
-        const response = await fetch(`http://localhost:8000/order/${userId}`, {
+        const response = await fetch(`http://localhost:8000/cart/${userId}`, {
           headers: {
             'Content-Type': 'application/json',
           },
