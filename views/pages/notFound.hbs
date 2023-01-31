@@ -9,12 +9,18 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
+  <div class="container">
+
   {{>header}}
     <div class="notFound-container">
       <h1>404 Error! Not Found</h1>
       <h3>Resource you are looking for is not available.</h3>
     </div>
   {{>footer}}
-  <script type="module" src="../js/notFound.js"></script>
+  </div>
+  <script type="module">
+    import {loadNav} from '../js/session.js'
+    loadNav()
+  </script>
 </body>
 </html>

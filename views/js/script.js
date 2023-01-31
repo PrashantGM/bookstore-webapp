@@ -7,10 +7,6 @@ async function onload() {
   try {
     const parsedUserData = await loadNav();
     if (parsedUserData) {
-      // document.querySelector('.li-home').style.display = 'none';
-      // document.querySelector('.li-genre').style.display = 'none';
-      // document.querySelector('.li-about').style.display = 'none';
-
       document.querySelector('#nav-dashboard').style.display = 'none';
     }
   } catch (error) {
@@ -25,7 +21,7 @@ let message = sessionStorage.getItem('notification');
 if (message) {
   toast.generateToast({
     message: message,
-    background: '#76B947',
+    background: 'green',
     color: 'white',
     length: '2000ms',
   });

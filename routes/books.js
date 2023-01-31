@@ -21,21 +21,21 @@ router
   .route('/admin')
   .post(
     authenticateUser,
-    authorizePermissions('admin'),
+    authorizePermissions('ADMIN'),
     upload.single('image'),
     addBook
   )
-  .get(authenticateUser, authorizePermissions('admin'), getAllBooks);
+  .get(authenticateUser, authorizePermissions('ADMIN'), getAllBooks);
 router
   .route('/admin/:id')
-  .get(authenticateUser, authorizePermissions('admin'), getBookById)
+  .get(authenticateUser, authorizePermissions('ADMIN'), getBookById)
   .put(
     authenticateUser,
-    authorizePermissions('admin'),
+    authorizePermissions('ADMIN'),
     upload.single('image'),
     updateBook
   )
-  .delete(authenticateUser, authorizePermissions('admin'), deleteBook);
+  .delete(authenticateUser, authorizePermissions('ADMIN'), deleteBook);
 router.route('/').get(getBooksForUser);
 router.route('/similar').get(getSimilarBooksForUser);
 router.route('/:id').get(getSingleBookForUser);
