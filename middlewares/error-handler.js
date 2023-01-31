@@ -1,3 +1,4 @@
+const { UnauthorizedError, UnauthenticatedError } = require('../errors');
 const CustomAPIError = require('../errors/custom-error');
 
 const errorHandler = (err, req, res, next) => {
@@ -15,7 +16,7 @@ const errorHandler = (err, req, res, next) => {
       .status(err.statusCode)
       .json({ success: false, msg: err.message });
   }
-  // next();
+  next();
   return res
     .status(500)
     .json({ success: false, msg: 'Something went wrong! Please Try Again.' });

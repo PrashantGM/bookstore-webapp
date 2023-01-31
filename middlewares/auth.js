@@ -1,24 +1,33 @@
 const { verifyToken } = require('../utils/jwt');
+const asyncWrapper = require('../utils/async-wrapper');
+
+const { UnauthorizedError } = require('../errors/index');
 
 const authenticateUser = async (req, res, next) => {
   const token = req.signedCookies.token;
   if (!token) {
-    res.render('./pages/login');
+    return res.status(404).render('./pages/notFound');
   }
   try {
     const { email, id, role } = verifyToken({ token });
+    if (Number(req.params.userId) !== id) {
+      return res.status(404).render('./pages/notFound');
+    }
     req.user = { email, id, role };
     next();
   } catch (error) {
-    res.render('./pages/login');
+    next();
   }
 };
 
-const authorizePermissions = (req, res, next) => {
-  if (req.user.role !== 'ADMIN') {
-    res.render('./pages/login');
-  }
-  next();
+const authorizePermissions = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      throw new UnauthorizedError('Unauthorized to access this route');
+    }
+    next();
+  };
+  //  return res.status(404).render('./pages/notFound');
 };
 
 module.exports = { authenticateUser, authorizePermissions };

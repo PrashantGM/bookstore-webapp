@@ -3,10 +3,9 @@ const prisma = new PrismaClient();
 const stripe = require('stripe')(process.env.STRIPE_KEY);
 const asyncWrapper = require('../utils/async-wrapper');
 const { BadRequestError, UnauthorizedError } = require('../errors/index');
-const { parse } = require('dotenv');
 
 const addItemToCart = asyncWrapper(async (req, res) => {
-  const userId = req.params.id;
+  const { userId } = req.params;
   const { quantity, totalAmount, bookId } = req.body;
   const nUserId = Number(userId);
   const nAmount = Number(totalAmount);
@@ -49,7 +48,7 @@ const addItemToCart = asyncWrapper(async (req, res) => {
 });
 
 const updateCartItem = asyncWrapper(async (req, res) => {
-  const userId = req.params.id;
+  const { userId } = req.params;
   const { quantity, amount, bookID } = req.body;
   const nUserId = Number(userId);
   const nBookId = Number(bookID);
@@ -70,7 +69,7 @@ const updateCartItem = asyncWrapper(async (req, res) => {
 });
 
 const deleteCartItem = asyncWrapper(async (req, res) => {
-  const userId = req.params.id;
+  const { userId } = req.params;
   const { bookID } = req.body;
   const nUserId = Number(userId);
   const nBookId = Number(bookID);
@@ -85,7 +84,7 @@ const deleteCartItem = asyncWrapper(async (req, res) => {
 });
 
 const viewCartItems = asyncWrapper(async (req, res) => {
-  const { id: userId } = req.params;
+  const { userId } = req.params;
   const nUserId = Number(userId);
   console.log(userId);
   const cartItems = await prisma.user.findMany({
@@ -115,15 +114,15 @@ const viewCartItems = asyncWrapper(async (req, res) => {
 });
 
 const getCartItemsCount = asyncWrapper(async (req, res) => {
-  const { id: userId } = req.params;
+  const { uid: userId } = req.params;
   const nUserId = Number(userId);
+  console.log(nUserId);
   const cartItemsCount = await prisma.cartItem.findMany({
     where: {
       user_id: nUserId,
       order_id: null,
     },
   });
-
   res.status(200).json({ cartItemsCount, nbHits: cartItemsCount.length });
 });
 
@@ -206,7 +205,7 @@ const testRoute = async (req, res) => {
 const webhookListener = asyncWrapper(async (req, res) => {
   let event = req.body;
   let endpointSecret = process.env.WEBHOOK_TEST_KEY;
-  console.log('this ran');
+
   if (endpointSecret) {
     const signature = req.headers['stripe-signature'];
     try {
@@ -222,7 +221,6 @@ const webhookListener = asyncWrapper(async (req, res) => {
   }
   switch (event.type) {
     case 'checkout.session.completed':
-      console.log(event.data.object);
       const { payment_intent, customer_details, shipping_cost, amount_total } =
         event.data.object;
       const { email, address } = customer_details;
@@ -273,24 +271,6 @@ const webhookListener = asyncWrapper(async (req, res) => {
       if (updatedCart.count == 0) {
         throw new BadRequestError('Something went wrong! Please try again');
       }
-
-      // const order = await prisma.order.updateMany({
-      //   where: {
-      //     AND: [
-      //       {
-      //         id: users.cart[0].order.id,
-      //       },
-      //       {
-      //         status: 'PENDING',
-      //       },
-      //     ],
-      //   },
-      //   data: {
-      // delivery_address: deliveryAddress,
-      // status: 'PAID',
-      // payment_intent_id: payment_intent,
-      // },
-      // });
       if (order.length > 0) {
         console.log('Placed complete order successfuly to database');
       }
@@ -304,34 +284,14 @@ const webhookListener = asyncWrapper(async (req, res) => {
       console.log(`${event.type} success!`);
       break;
     default:
-      // Unexpected event type
       console.log(`Unhandled event type ${event.type}.`);
   }
   res.send();
 });
 
 const getOrders = asyncWrapper(async (req, res) => {
-  const { id: userId } = req.params;
+  const { userId } = req.params;
   const nUserId = Number(userId);
-  console.log(userId);
-  // const cartItems = await prisma.user.findUnique({
-  //   where: {
-  //     id: nUserId,
-  //   },
-  //   include: {
-  //     cart: {
-  //       where: {
-  //         NOT: {
-  //           order_id: null,
-  //         },
-  //       },
-  //       include: {
-  //         order: true,
-  //         books: true,
-  //       },
-  //     },
-  //   },
-  // });
 
   const orderItems = await prisma.order.findMany({
     where: {
@@ -349,9 +309,6 @@ const getOrders = asyncWrapper(async (req, res) => {
       },
     },
   });
-
-  console.log(orderItems);
-  console.log(orderItems[0].cart_items);
 
   const parsedOrderItems = orderItems.map((order) => {
     const date = new Date(order.created_at);

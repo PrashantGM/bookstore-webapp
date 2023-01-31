@@ -19,18 +19,23 @@ const {
 
 router
   .route('/admin')
-  .post(authenticateUser, authorizePermissions, upload.single('image'), addBook)
-  .get(authenticateUser, authorizePermissions, getAllBooks);
+  .post(
+    authenticateUser,
+    authorizePermissions('admin'),
+    upload.single('image'),
+    addBook
+  )
+  .get(authenticateUser, authorizePermissions('admin'), getAllBooks);
 router
   .route('/admin/:id')
-  .get(authenticateUser, authorizePermissions, getBookById)
+  .get(authenticateUser, authorizePermissions('admin'), getBookById)
   .put(
     authenticateUser,
-    authorizePermissions,
+    authorizePermissions('admin'),
     upload.single('image'),
     updateBook
   )
-  .delete(authenticateUser, authorizePermissions, deleteBook);
+  .delete(authenticateUser, authorizePermissions('admin'), deleteBook);
 router.route('/').get(getBooksForUser);
 router.route('/similar').get(getSimilarBooksForUser);
 router.route('/:id').get(getSingleBookForUser);

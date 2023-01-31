@@ -9,11 +9,7 @@ const templatesRoute = require('./routes/templates');
 const booksRoute = require('./routes/books');
 const usersRoute = require('./routes/users');
 const ordersRoute = require('./routes/orders');
-// const CustomError = require('./errors/custom-error');
-const {
-  authenticateUser,
-  authorizePermissions,
-} = require('./middlewares/auth');
+
 const notFound = require('./middlewares/not-found');
 const errorHandler = require('./middlewares/error-handler');
 
