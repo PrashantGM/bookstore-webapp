@@ -1,10 +1,10 @@
-* {
+/* * {
   font-family: 'Times New Roman', Times, serif;
 }
 body {
   margin: 0;
   padding: 0;
-}
+} */
 #base {
   display: flex;
   justify-content: center;
@@ -57,8 +57,8 @@ td {
   color: white;
 }
 
-#btn-Delete,
-#btn-Update {
+#btn-delete,
+#btn-update {
   background-color: azure;
   border: none;
   padding: 10px;
@@ -122,9 +122,6 @@ td {
   display: flex;
   justify-content: center;
   gap: 15px;
-}
-button {
-  padding: 10px;
 }
 
 td {

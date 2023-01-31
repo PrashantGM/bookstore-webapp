@@ -1,6 +1,5 @@
+import { loadNav } from './session.js';
 import { toast } from './toast.js';
-import { loadNav, logout } from './session.js';
-let loggedIn = false;
 let parsedUserData;
 let bookId = 0;
 let currentBookID = Number(
@@ -19,9 +18,6 @@ if (message) {
 sessionStorage.clear();
 async function onload() {
   parsedUserData = await loadNav();
-  if (parsedUserData) {
-    loggedIn = true;
-  }
   await loadPage();
   await addtoCart();
 }
@@ -116,9 +112,9 @@ async function addtoCart() {
   btnAddCart.addEventListener('click', async (e) => {
     e.preventDefault();
     try {
-      if (loggedIn) {
+      if (parsedUserData) {
         const userId = parsedUserData.id;
-        const response = await fetch(`http://localhost:8000/order/${userId}`, {
+        const response = await fetch(`http://localhost:8000/cart/${userId}`, {
           headers: {
             'Content-Type': 'application/json',
           },

@@ -51,17 +51,13 @@ app.get('/notFound', (req, res) => {
   res.render('./pages/notFound');
 });
 
-app.get('/orders/checkout', (req, res) => {
-  res.render('./pages/checkout');
-});
-
 app.get('/orders/checkout/success', (req, res) => {
   res.render('./pages/success');
 });
 
 app.use('/user', usersRoute);
 app.use('/books', booksRoute);
-app.use('/order', ordersRoute);
+app.use(ordersRoute);
 
 app.use('*', notFound);
 app.use(errorHandler);

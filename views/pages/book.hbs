@@ -9,43 +9,45 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-  {{>header}}
-    <div class="book-container">
-      <section class="book-section">
-      <p id="book-path"> <a href="/"><span class="path-content">Books</span></a> 
-       {{!-- > <span class="path-content">Genre</span>  --}}
-       > <span class="path-content">{{data.title}}</span></p>
-        <div class="book-details" data-bookId="{{data.id}}">
-          <img src="{{data.imageURI}}" width="200" alt="" srcset="">
-          <div class="details-section">
-            <h3 id="book-title">{{data.title}}</h3>          
-            <p id="p-author">Author: {{data.author}}</p>
-            <p id="p-genre">Genre: {{data.genre}}</p>
-            <hr>
-            <h3 id="price-total" data-price="{{data.price}}">$ {{data.price}}</h3> 
-            <div id="div-quantity">
-              <label for="quantity">Quantity:</label>
-              <input type="number" id="quantity" name="quantity" value="1" min="1" max="5">
-            </div> 
-            <div>
-            <button class="button m-l-15 m-t-10" id="btn-order">Order Now</button>
-            <button class="button m-l-15" id="btn-addCart"><i class="fa fa-cart-plus" aria-hidden="true"></i> Add to Cart</button> 
+  <div class="container">
+    {{>header}}
+      <div class="book-container">
+        <section class="book-section">
+        <p id="book-path"> <a href="/"><span class="path-content">Books</span></a> 
+        {{!-- > <span class="path-content">Genre</span>  --}}
+        > <span class="path-content">{{data.title}}</span></p>
+          <div class="book-details" data-bookId="{{data.id}}">
+            <img src="{{data.imageURI}}" width="200" alt="" srcset="">
+            <div class="details-section">
+              <h3 id="book-title">{{data.title}}</h3>          
+              <p id="p-author">Author: {{data.author}}</p>
+              <p id="p-genre">Genre: {{data.genre}}</p>
+              <hr>
+              <h3 id="price-total" data-price="{{data.price}}">$ {{data.price}}</h3> 
+              <div id="div-quantity">
+                <label for="quantity">Quantity:</label>
+                <input type="number" id="quantity" name="quantity" value="1" min="1" max="5">
+              </div> 
+              <div>
+              <button class="button m-l-15 m-t-10" id="btn-order">Order Now</button>
+              <button class="button m-l-15" id="btn-addCart"><i class="fa fa-cart-plus" aria-hidden="true"></i> Add to Cart</button> 
+              </div>
             </div>
           </div>
+          <div class="book-desc">
+            <p><strong>About Book</strong> </p>
+            <p id="p-desc">{{data.description}}</p>
+          </div>
+        </section>
+          <div class="caption-others">
+            <p>Similar Books That You Viewed</p>
+          </div>
+        <div class="others" data-genre="{{data.genre}}" >
+            {{!--books get loaded from javascript --}}
         </div>
-        <div class="book-desc">
-          <p><strong>About Book</strong> </p>
-          <p id="p-desc">{{data.description}}</p>
-        </div>
-      </section>
-        <div class="caption-others">
-           <p>Similar Books That You Viewed</p>
-        </div>
-      <div class="others" data-genre="{{data.genre}}" >
-          {{!--books get loaded from javascript --}}
       </div>
-    </div>
-  {{>footer}}
+    {{>footer}}
+  </div>
   <script type="module" defer src="../js/book.js"></script>
 </body>
 </html>

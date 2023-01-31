@@ -1,5 +1,22 @@
 //this opens new form when add new book button is clicked
 import { toast } from './toast.js';
+import { loadNav } from './session.js';
+
+onload();
+async function onload() {
+  try {
+    const parsedUserData = await loadNav();
+    if (parsedUserData) {
+      // document.querySelector('.li-home').style.display = 'none';
+      // document.querySelector('.li-genre').style.display = 'none';
+      // document.querySelector('.li-about').style.display = 'none';
+
+      document.querySelector('#nav-dashboard').style.display = 'none';
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 const BOOK_URL = 'http://localhost:8000/books/admin';
 
@@ -131,9 +148,9 @@ export function closeIt() {
   closeForm();
 }
 
-export function addBook() {
+document.querySelector('#btn-add').addEventListener('click', (e) => {
   openForm('add', '');
-}
+});
 
 function appendDataToForm() {
   const formData = new FormData();
@@ -170,17 +187,15 @@ function appendDataToForm() {
   return formData;
 }
 
-//updates corresponding book
-export function updateBook(id) {
-  openForm('update', id);
-}
-
 //deletes corresponding book
-const btnsDelete = document.querySelectorAll('#btn-Delete');
-btnsDelete.forEach((btnDelete) => {
-  btnDelete.addEventListener('click', (e) => {
+const rowBook = document.querySelectorAll('#row-book');
+rowBook.forEach((rowBook) => {
+  const bookId = rowBook.getAttribute('data-bookId');
+  rowBook.querySelector('#btn-update').addEventListener('click', (e) => {
+    openForm('update', bookId);
+  });
+  rowBook.querySelector('#btn-delete').addEventListener('click', (e) => {
     e.preventDefault();
-    const bookId = btnDelete.getAttribute('data-bookId');
     fetch(`${BOOK_URL}/${bookId}`, {
       method: 'DELETE',
     })

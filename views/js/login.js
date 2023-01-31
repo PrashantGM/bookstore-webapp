@@ -22,7 +22,20 @@ btnLogin.addEventListener('click', async (e) => {
       window.location.assign('http://localhost:8000/books/admin');
     } else {
       sessionStorage.setItem('notification', 'Successfully Logged In!');
-      window.history.go(-1);
+      console.log('this ran');
+      if ('referrer' in document) {
+        if (
+          document.referrer === 'http://localhost:8000/login' ||
+          document.referrer === 'http://localhost:8000/user/register' ||
+          document.referrer === ''
+        ) {
+          window.location.href = 'http://localhost:8000';
+        } else {
+          window.location.replace(document.referrer);
+        }
+      } else {
+        window.location.href = 'http://localhost:8000';
+      }
     }
   } else {
     toast.generateToast({

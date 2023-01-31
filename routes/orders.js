@@ -9,17 +9,21 @@ const {
   getCartItemsCount,
   createPaymentIntent,
   webhookListener,
+  getOrders,
   testRoute,
 } = require('../controllers/orders');
 
-router.route('/stripe').post(createPaymentIntent);
-router.route('/testRoute').get(testRoute);
+router.route('/order/stripe').post(createPaymentIntent);
+router.route('/order/testRoute').get(testRoute);
 router
-  .route('/stripe/webhook')
+  .route('/order/stripe/webhook')
   .post(express.raw({ type: 'application/json' }), webhookListener);
-router.route('/count/:id').get(getCartItemsCount);
+router.route('/cart/count/:id').get(getCartItemsCount);
+
+router.route('/order/:id').get(getOrders);
+
 router
-  .route('/:id')
+  .route('/cart/:id')
   .post(addItemToCart)
   .get(viewCartItems)
   .put(updateCartItem)

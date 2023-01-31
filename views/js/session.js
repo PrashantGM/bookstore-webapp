@@ -56,12 +56,18 @@ export async function loadNav() {
       navCart.addEventListener('click', (e) => {
         e.preventDefault();
         window.location.assign(
-          `http://localhost:8000/order/${parsedUserData.id}`
+          `http://localhost:8000/cart/${parsedUserData.id}`
         );
       });
       document.querySelector('#nav-logout').addEventListener('click', (e) => {
         e.preventDefault();
         logout();
+      });
+      document.querySelector('#nav-orders').addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.assign(
+          `http://localhost:8000/order/${parsedUserData.id}`
+        );
       });
 
       return parsedUserData;
@@ -73,12 +79,12 @@ export async function loadNav() {
       });
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
   }
 }
 async function getCartItemsCount(userId) {
   try {
-    const payload = await fetch(`http://localhost:8000/order/count/${userId}`, {
+    const payload = await fetch(`http://localhost:8000/cart/count/${userId}`, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -100,7 +106,7 @@ async function viewLoggedIn() {
     const userData = await payload.json();
     return userData;
   } catch (error) {
-    console.log(error);
+    // console.log(error);
   }
 }
 export function logout() {

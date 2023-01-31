@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
+  <div class="container">
   {{>header}}
     <div id="cart-container">
         <h3 id="cart-header">Cart Items</h3>
@@ -24,32 +25,31 @@
         {{#each data}}
         <div class="cart-main" data-userId="{{user_id}}">
 
-
-        <div class="cart-item" data-bookId="{{books.id}}">
-          {{!-- <div>
-            <input type="checkbox" name="cart-item">
-          </div> --}}
-            <div id="image-title">
-              <img src="{{books.image}}" id="cart-img" width="60" alt="">
-              <h4 id="cart-title">{{books.title}}</h4>
+          <div class="cart-item" data-bookId="{{books.id}}">
+              <div id="image-title">
+                <img src="{{books.image}}" id="cart-img" width="60" alt="">
+                <h4 id="cart-title">{{books.title}}</h4>
+              </div>
+              <div id="div-cart-price">
+                <p id="cart-price">{{books.price}}</p>
+              </div>
+              <div class="cart-button-container">
+                  <button class="cart-button" id="btn-sub">-</button>
+                  <span id="cart-quantity">{{quantity}}</span>
+                  <button class="cart-button" id="btn-add">+</button>
+              </div>
+              <div id="div-cart-amount">
+              <p id="cart-amount">{{total_amount}}</p> 
+              </div>
             </div>
-            <div id="div-cart-price">
-              <p id="cart-price">{{books.price}}</p>
-            </div>
-            <div class="cart-button-container">
-                <button class="cart-button" id="btn-sub">-</button>
-                <span id="cart-quantity">{{quantity}}</span>
-                <button class="cart-button" id="btn-add">+</button>
-            </div>
-            <div id="div-cart-amount">
-             <p id="cart-amount">{{total_amount}}</p> 
-            </div>
-            </div>
-                <button id="cart-delete"><img src="../imgs/delete.png" width="15"  alt="" srcset=""></button>
-            </div>
-        {{/each}}
-        </div>
+            <button id="cart-delete"><img src="../imgs/delete.png" width="15"  alt="" srcset=""></button>
+          </div>
+          {{/each}}
+          </div>
+      
+      <div id="fillup"></div>
   {{>footer}}
+  </div>
   <script type="module" src="../js/cart.js" defer></script>
 </body>
 </html>

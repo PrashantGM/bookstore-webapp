@@ -3,6 +3,7 @@ const prisma = new PrismaClient();
 const stripe = require('stripe')(process.env.STRIPE_KEY);
 const asyncWrapper = require('../utils/async-wrapper');
 const { BadRequestError, UnauthorizedError } = require('../errors/index');
+const { parse } = require('dotenv');
 
 const addItemToCart = asyncWrapper(async (req, res) => {
   const userId = req.params.id;
@@ -194,34 +195,6 @@ const createPaymentIntent = asyncWrapper(async (req, res) => {
     success_url: `http://localhost:8000/orders/checkout/success`,
     cancel_url: `http://localhost:8000/order/${nUserId}`,
   });
-  console.log(session);
-
-  const order = await prisma.order.create({
-    data: {
-      delivery_charge: session.shipping_cost.amount_total,
-      total: session.amount_total / 100,
-      status: 'PENDING',
-    },
-  });
-
-  const updatedCart = await prisma.cartItem.updateMany({
-    where: {
-      AND: [
-        {
-          user_id: userId,
-        },
-        {
-          order_id: null,
-        },
-      ],
-    },
-    data: {
-      order_id: order.id,
-    },
-  });
-  if (updatedCart.count == 0) {
-    throw new BadRequestError('Something went wrong! Please try again');
-  }
 
   res.status(200).json({ success: true, data: { url: session.url } });
 });
@@ -233,6 +206,7 @@ const testRoute = async (req, res) => {
 const webhookListener = asyncWrapper(async (req, res) => {
   let event = req.body;
   let endpointSecret = process.env.WEBHOOK_TEST_KEY;
+  console.log('this ran');
   if (endpointSecret) {
     const signature = req.headers['stripe-signature'];
     try {
@@ -248,8 +222,11 @@ const webhookListener = asyncWrapper(async (req, res) => {
   }
   switch (event.type) {
     case 'checkout.session.completed':
-      const { payment_intent, customer_details } = event.data.object;
+      console.log(event.data.object);
+      const { payment_intent, customer_details, shipping_cost, amount_total } =
+        event.data.object;
       const { email, address } = customer_details;
+      const deliveryCharge = shipping_cost.amount_total;
       const deliveryAddress = Object.values(address).join(',');
 
       const users = await prisma.user.findUnique({
@@ -268,34 +245,137 @@ const webhookListener = asyncWrapper(async (req, res) => {
         },
       });
 
-      const order = await prisma.order.updateMany({
-        where: {
-          AND: [
-            {
-              id: users.cart[0].order.id,
-            },
-            {
-              status: 'PENDING',
-            },
-          ],
-        },
+      const order = await prisma.order.create({
         data: {
+          delivery_charge: deliveryCharge,
+          total: amount_total / 100,
           delivery_address: deliveryAddress,
           status: 'PAID',
           payment_intent_id: payment_intent,
         },
       });
-      if (order.count > 0) {
+
+      const updatedCart = await prisma.cartItem.updateMany({
+        where: {
+          AND: [
+            {
+              user_id: users.id,
+            },
+            {
+              order_id: null,
+            },
+          ],
+        },
+        data: {
+          order_id: order.id,
+        },
+      });
+      if (updatedCart.count == 0) {
+        throw new BadRequestError('Something went wrong! Please try again');
+      }
+
+      // const order = await prisma.order.updateMany({
+      //   where: {
+      //     AND: [
+      //       {
+      //         id: users.cart[0].order.id,
+      //       },
+      //       {
+      //         status: 'PENDING',
+      //       },
+      //     ],
+      //   },
+      //   data: {
+      // delivery_address: deliveryAddress,
+      // status: 'PAID',
+      // payment_intent_id: payment_intent,
+      // },
+      // });
+      if (order.length > 0) {
         console.log('Placed complete order successfuly to database');
       }
       break;
     case 'customer.created':
       console.log('customer created');
+      break;
+    case 'charge.succeeded' ||
+      'payment_intent.created' ||
+      'payment_intent.succeeded':
+      console.log(`${event.type} success!`);
+      break;
     default:
       // Unexpected event type
       console.log(`Unhandled event type ${event.type}.`);
   }
   res.send();
+});
+
+const getOrders = asyncWrapper(async (req, res) => {
+  const { id: userId } = req.params;
+  const nUserId = Number(userId);
+  console.log(userId);
+  // const cartItems = await prisma.user.findUnique({
+  //   where: {
+  //     id: nUserId,
+  //   },
+  //   include: {
+  //     cart: {
+  //       where: {
+  //         NOT: {
+  //           order_id: null,
+  //         },
+  //       },
+  //       include: {
+  //         order: true,
+  //         books: true,
+  //       },
+  //     },
+  //   },
+  // });
+
+  const orderItems = await prisma.order.findMany({
+    where: {
+      cart_items: {
+        some: {
+          user_id: nUserId,
+        },
+      },
+    },
+    include: {
+      cart_items: {
+        include: {
+          books: true,
+        },
+      },
+    },
+  });
+
+  console.log(orderItems);
+  console.log(orderItems[0].cart_items);
+
+  const parsedOrderItems = orderItems.map((order) => {
+    const date = new Date(order.created_at);
+    let month = date.getUTCMonth() + 1;
+    let day = date.getUTCDate();
+    let year = date.getUTCFullYear();
+    const newCreatedAt = year + '/' + month + '/' + day;
+    if (order.delivery_charge == 0) {
+      order.delivery_charge = 'FREE';
+    }
+    return { ...order, order_date: newCreatedAt };
+  });
+
+  const ongoingOrders = parsedOrderItems.filter((o) => {
+    return o.status === 'PAID';
+  });
+
+  const pastOrders = parsedOrderItems.filter((o) => {
+    return o.status === 'DELIVERED';
+  });
+  res.render('./pages/order', {
+    dataCurrent: ongoingOrders,
+    data: pastOrders,
+  });
 });
 
 module.exports = {
@@ -306,5 +386,6 @@ module.exports = {
   getCartItemsCount,
   createPaymentIntent,
   webhookListener,
+  getOrders,
   testRoute,
 };
