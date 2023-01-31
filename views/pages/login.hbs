@@ -8,18 +8,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
   <body>
-  {{>header}}
-    <div class='container-2'>
-
+    <div class='container'>
+      {{>header}}
+      <div class="auth-container">
       <form method='post' id='form-login'>
         <h3 class='f-center p-b-20'>
           Log In Your Account
         </h3>
         <div class='f-space-between'>
           <label for='email'>Email  </label>
-          <input type='email' id='email' name='email' required/>
-         
-         
+          <input type='email' id='email' name='email' required/>         
         </div>
         <br />
         <div class='f-space-between'>
@@ -32,8 +30,9 @@
         </div>
         <p class="m-t-5 p-10  ">Don't have account? <a href="/user/register" id="a-register"> Register </a></p>
       </form>
+      </div>
+    {{>footer}}
     </div>
-  {{>footer}}
     <script type="module" src='../js/login.js'></script>
   </body>
 </html>

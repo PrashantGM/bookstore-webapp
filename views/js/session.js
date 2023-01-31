@@ -63,6 +63,12 @@ export async function loadNav() {
         e.preventDefault();
         logout();
       });
+      document.querySelector('#nav-orders').addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.assign(
+          `http://localhost:8000/order/${parsedUserData.id}`
+        );
+      });
 
       return parsedUserData;
     } else {

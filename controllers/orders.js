@@ -3,6 +3,7 @@ const prisma = new PrismaClient();
 const stripe = require('stripe')(process.env.STRIPE_KEY);
 const asyncWrapper = require('../utils/async-wrapper');
 const { BadRequestError, UnauthorizedError } = require('../errors/index');
+const { parse } = require('dotenv');
 
 const addItemToCart = asyncWrapper(async (req, res) => {
   const userId = req.params.id;
@@ -363,22 +364,17 @@ const getOrders = asyncWrapper(async (req, res) => {
     }
     return { ...order, order_date: newCreatedAt };
   });
-  const ongoingOrders = parsedOrderItems.filter((order) => {
-    return (order.status = 'PENDING');
+
+  const ongoingOrders = parsedOrderItems.filter((o) => {
+    return o.status === 'PAID';
   });
-  console.log(ongoingOrders);
 
-  // const books = cartItems[0].cart;
-  // const parsedBooks = books.map((b) => {
-  //   if (!b.books.image.startsWith('https')) {
-  //     b.books.image = 'http://localhost:8000/uploads/' + b.books.image;
-  //   }
-  //   return { ...b };
-  // });
-
+  const pastOrders = parsedOrderItems.filter((o) => {
+    return o.status === 'DELIVERED';
+  });
   res.render('./pages/order', {
     dataCurrent: ongoingOrders,
-    data: parsedOrderItems,
+    data: pastOrders,
   });
 });
 

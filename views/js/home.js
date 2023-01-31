@@ -5,7 +5,7 @@ let page = 1;
 let bookData = [];
 let accumCount = 0;
 let parsedUserData = {};
-const container = document.querySelector('.container');
+const container = document.querySelector('.card-container');
 const section = document.querySelector('.section');
 toast.initToast();
 let message = sessionStorage.getItem('notification');
@@ -20,6 +20,7 @@ if (message) {
 sessionStorage.clear();
 async function getBooksFromServer(page, genre) {
   parsedUserData = await loadNav();
+
   const books = await fetch(
     `http://localhost:8000/books?genre=${genre}&page=${page}`,
     {
@@ -29,10 +30,11 @@ async function getBooksFromServer(page, genre) {
       method: 'GET',
     }
   );
+
   const result = await books.json();
 
   bookData = result.data;
-
+  console.log(bookData);
   const totalCount = result.totalCount;
   const currentCount = result.nbHits;
   accumCount = accumCount + currentCount;

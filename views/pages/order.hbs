@@ -7,10 +7,11 @@
   <title>Cart</title>
    <link rel="stylesheet" href="../css/general.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  
 </head>
 <body>
-  <div class="body-container">
-  {{>header}}
+  <div class="container">
+    {{>header}}
     <div id="order-container">
       
       <table class="tbl-orders" id="tbl-ongoing">
@@ -18,13 +19,12 @@
         <thead>
           <tr>
             <th>Order Date</th>
-            <th>Items
-            </th>
+            <th>Items</th>
             <th>Delivery Fee</th>
             <th>Total</th>
             <th>Delivery Address</th>
-            <th>Delivery Date</th>
             <th>Status</th>
+            <th>Delivery Time</th>
           </tr>
         </thead>
         <tbody>
@@ -42,17 +42,17 @@
                $ {{books.price}}
              </td>
              <td>
-                x{{quantity}} 
+                &times;{{quantity}} 
                 </td>
               </tr>
               {{/each}}
-          </table>
+              </table>
           </td>
            <td>{{delivery_charge}}</td>
-            <td>{{total}}</td>
+            <td>$ {{total}}</td>
             <td>{{delivery_address}}</td>
             <td>{{status}}</td>
-            <td>2023/01/11</td>
+            <td>5-7 days</td>
           </tr>
         {{/each}}
         </tbody>
@@ -69,7 +69,7 @@
             <th>Total</th>
             <th>Delivery Address</th>
             <th>Status</th>
-            <th>Delivery Date</th>
+            <th>Delivered Date</th>
           </tr>
         </thead>
         <tbody>
@@ -86,8 +86,7 @@
                <td>
                $ {{books.price}}
              </td>
-             <td>
-                x{{quantity}} 
+             <td> &times;{{quantity}} 
                 </td>
               </tr>
               {{/each}}
@@ -95,18 +94,22 @@
 
             </td>
             <td>{{delivery_charge}}</td>
-            <td>{{total}}</td>
+            <td>$ {{total}}</td>
             <td>{{delivery_address}}</td>
             <td>{{status}}</td>
-            <td>2023/01/11</td>
+            <td>2023/02/03</td>
           </tr>
        
           {{/each}}
         </tbody>
          </table>
     </div>
-    </div>
-  {{>footer}}
+    
+    {{>footer}}
   </div>
+  <script type="module">
+    import {loadNav} from '../js/session.js';
+    loadNav();
+  </script>
 </body>
 </html>

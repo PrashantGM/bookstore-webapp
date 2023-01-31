@@ -13,10 +13,10 @@ const {
   testRoute,
 } = require('../controllers/orders');
 
-router.route('order/stripe').post(createPaymentIntent);
-router.route('order/testRoute').get(testRoute);
+router.route('/order/stripe').post(createPaymentIntent);
+router.route('/order/testRoute').get(testRoute);
 router
-  .route('order/stripe/webhook')
+  .route('/order/stripe/webhook')
   .post(express.raw({ type: 'application/json' }), webhookListener);
 router.route('/cart/count/:id').get(getCartItemsCount);
 

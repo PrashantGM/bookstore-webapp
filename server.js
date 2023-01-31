@@ -51,10 +51,6 @@ app.get('/notFound', (req, res) => {
   res.render('./pages/notFound');
 });
 
-app.get('/orders', (req, res) => {
-  res.render('./pages/order');
-});
-
 app.get('/orders/checkout/success', (req, res) => {
   res.render('./pages/success');
 });
