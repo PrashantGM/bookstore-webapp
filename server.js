@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 require('dotenv').config();
 const hbs = require('hbs');
 
+const templatesRoute = require('./routes/templates');
 const booksRoute = require('./routes/books');
 const usersRoute = require('./routes/users');
 const ordersRoute = require('./routes/orders');
@@ -32,29 +33,8 @@ app.use(express.static(__dirname + '/views'));
 app.set('view engine', 'hbs');
 
 hbs.registerPartials(__dirname + '/views/partials/');
-//rendering hbs templates
-app.get('/', (req, res) => {
-  res.render('./pages/home');
-});
 
-app.get('/landing', (req, res) => {
-  console.log(req.signedCookies);
-  res.render('./pages/landing');
-});
-app.get('/user/register', (req, res) => {
-  res.render('./pages/register');
-});
-app.get('/user/login', (req, res) => {
-  res.render('./pages/login');
-});
-app.get('/notFound', (req, res) => {
-  res.render('./pages/notFound');
-});
-
-app.get('/orders/checkout/success', (req, res) => {
-  res.render('./pages/success');
-});
-
+app.use(templatesRoute);
 app.use('/user', usersRoute);
 app.use('/books', booksRoute);
 app.use(ordersRoute);
