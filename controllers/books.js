@@ -28,6 +28,8 @@ const addBook = asyncWrapper(async (req, res) => {
   });
   const intPrice = Number(price);
   const parsedDate = new Date(publication_date);
+  console.log(req.body);
+  console.log(result.secure_url);
   const book = await prisma.book.create({
     data: {
       title: title,
@@ -39,7 +41,7 @@ const addBook = asyncWrapper(async (req, res) => {
       publication_date: parsedDate,
     },
   });
-
+  console.log(book);
   res
     .status(201)
     .json({ success: true, msg: 'Successfully Added!', data: book });
@@ -172,16 +174,21 @@ const deleteBook = asyncWrapper(async (req, res) => {
 });
 
 const getBooksForUser = asyncWrapper(async (req, res) => {
+  console.log('this happend');
+  // logger.debug('Debug message');
   let genreD = [];
   const genreData = req.query.genre;
   let page = Number(req.query.page) || 1;
   if (genreData == '' || genreData == 'undefined') {
+    console.log('before');
     const genreResult = await prisma.book.findMany({
       distinct: ['genre'],
       select: {
         genre: true,
       },
     });
+    console.log(genreResult);
+    console.log('i');
     let genreTemp = [];
     for (g in genreResult) {
       genreTemp.push(...genreResult[g].genre);

@@ -17,15 +17,7 @@ const {
   getSimilarBooksForUser,
 } = require('../controllers/books');
 
-router
-  .route('/admin')
-  .post(
-    authenticateUser,
-    authorizePermissions('ADMIN'),
-    upload.single('image'),
-    addBook
-  )
-  .get(authenticateUser, authorizePermissions('ADMIN'), getAllBooks);
+router.route('/admin').post(upload.single('image'), addBook).get(getAllBooks);
 router
   .route('/admin/:id')
   .get(authenticateUser, authorizePermissions('ADMIN'), getBookById)

@@ -2,7 +2,7 @@ const btnProfile = document.querySelector('.btn-profile');
 const navDropdown = document.querySelector('#dropdown-profile');
 
 export async function loadNav() {
-  const isLoggedIn = await viewLoggedIn();
+  // const isLoggedIn = await viewLoggedIn();
   try {
     if (isLoggedIn.success) {
       let parsedUserData = JSON.parse(isLoggedIn.payload);

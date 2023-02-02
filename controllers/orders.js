@@ -199,7 +199,7 @@ const createPaymentIntent = asyncWrapper(async (req, res) => {
 });
 const testRoute = async (req, res) => {
   //for testing
-  res.json({ order });
+  res.json('Something');
 };
 
 const webhookListener = asyncWrapper(async (req, res) => {
