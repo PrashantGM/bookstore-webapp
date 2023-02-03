@@ -32,11 +32,11 @@ async function getBooksFromServer(page, genre) {
   );
 
   const result = await books.json();
-
-  bookData = result.data;
+  console.log(result);
+  bookData = result.data.parsedBooks;
   console.log(bookData);
-  const totalCount = result.totalCount;
-  const currentCount = result.nbHits;
+  const totalCount = result.data.totalCount;
+  const currentCount = result.data.nbHits;
   accumCount = accumCount + currentCount;
 
   await pagination(true);

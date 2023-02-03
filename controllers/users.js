@@ -7,19 +7,25 @@ const asyncWrapper = require('../utils/async-wrapper');
 
 //adds new user to db when user registers
 const registerUser = asyncWrapper(async (req, res) => {
+  const isFirstAccount = (await prisma.user.count({})) === 0;
+  const role = isFirstAccount ? 'ADMIN' : 'USER';
+  console.info(role);
   const { username, email, password } = req.body;
+
   const salt = await bcrypt.genSalt(10);
   const users = await prisma.user.findUnique({ where: { email } });
 
   if (users) {
     throw new BadRequestError('This email already exists!');
   }
+
   const encryptedPassword = await bcrypt.hash(password, salt);
   const user = await prisma.user.create({
     data: {
       username,
       email,
       password: encryptedPassword,
+      role,
     },
   });
   const tokenUser = { email: user.email, id: user.id, role: user.role };

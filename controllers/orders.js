@@ -116,13 +116,14 @@ const viewCartItems = asyncWrapper(async (req, res) => {
 const getCartItemsCount = asyncWrapper(async (req, res) => {
   const { uid: userId } = req.params;
   const nUserId = Number(userId);
-  console.log(nUserId);
+
   const cartItemsCount = await prisma.cartItem.findMany({
     where: {
       user_id: nUserId,
       order_id: null,
     },
   });
+  console.log(cartItemsCount);
   res.status(200).json({ cartItemsCount, nbHits: cartItemsCount.length });
 });
 
@@ -203,6 +204,7 @@ const testRoute = async (req, res) => {
 };
 
 const webhookListener = asyncWrapper(async (req, res) => {
+  console.log('should at least trigger');
   let event = req.body;
   let endpointSecret = process.env.WEBHOOK_TEST_KEY;
 
@@ -221,6 +223,7 @@ const webhookListener = asyncWrapper(async (req, res) => {
   }
   switch (event.type) {
     case 'checkout.session.completed':
+      console.log(event.data.object);
       const { payment_intent, customer_details, shipping_cost, amount_total } =
         event.data.object;
       const { email, address } = customer_details;

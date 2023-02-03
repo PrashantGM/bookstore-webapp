@@ -16,8 +16,16 @@ const {
   getSingleBookForUser,
   getSimilarBooksForUser,
 } = require('../controllers/books');
-
-router.route('/admin').post(upload.single('image'), addBook).get(getAllBooks);
+const { cacheData } = require('../middlewares/prisma-redis');
+router
+  .route('/admin')
+  .post(
+    authenticateUser,
+    authorizePermissions('ADMIN'),
+    upload.single('image'),
+    addBook
+  )
+  .get(authenticateUser, authorizePermissions('ADMIN'), getAllBooks);
 router
   .route('/admin/:id')
   .get(authenticateUser, authorizePermissions('ADMIN'), getBookById)
