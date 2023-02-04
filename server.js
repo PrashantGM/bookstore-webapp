@@ -1,10 +1,9 @@
 'use strict';
-const SegfaultHandler = require('segfault-handler');
-SegfaultHandler.registerHandler('logs/crash.log');
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const winston = require('winston');
+const SegfaultHandler = require('segfault-handler');
 require('dotenv').config();
 const hbs = require('hbs');
 
@@ -25,13 +24,9 @@ app.use(
     origin: `http://${HOST}:${PORT}`,
   })
 );
-const logger = winston.createLogger({
-  transports: [
-    new winston.transports.File({
-      filename: 'logs/node-app.log',
-      level: 'debug',
-    }),
-  ],
+
+SegfaultHandler.registerHandler('logs/crash.log');
+winston.createLogger({
   exceptionHandlers: [
     new winston.transports.File({ filename: 'logs/exception.log' }),
   ],
@@ -39,7 +34,7 @@ const logger = winston.createLogger({
     new winston.transports.File({ filename: 'logs/rejections.log' }),
   ],
 });
-logger.debug('debug');
+
 app.use('/order/stripe/webhook', express.raw({ type: '*/*' }));
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
