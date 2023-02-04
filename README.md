@@ -2,24 +2,22 @@
  You must have:
 
 1. Node and PostgreSQL installed on your PC.
-2. Optional: Cloudinary account.  
-   (By default, images are saved locally in the device. You can opt in later to save images to cloud with cloudinary when adding new books. For that, you would need cloudinary account.)
-3. Optional: Code Editor is recommended. Eg; VS Code
-4. Optional: Stripe account for payment feature.
+2. Stripe account for payment feature.
+3. Optional: Cloudinary account to opt in saving images in cloud. (By default, images are saved locally.)
+4. Optional: Code Editor eg; VS Code.
 
 ### STEPS TO RUN BOOKSTORE-WEBAPP
 
 1. Download .zip file or clone the app with :&ensp; `git clone https://github.com/PrashantGM/bookstore-webapp.git`.
 2. Open the project folder in your favorite text editor and run npm install on the terminal.
-3. Optional:
-   - Set up cloudinary account and get its account name, api key and api secret.
-   - Also, set up stripe account, go to developer's section and get secret key.
-   - Then, set up webhook listener from your terminal by running following commands and get webhook test key.<br>
-     ```console
-     stripe login
-     stripe listen --forward-to http://localhost:8000/order/stripe/webhook
-     ```
-4. Create .env file on project's root directory and include aforementioned keys with other .env variables below:
+3. Set up stripe account, go to developer's section and get secret key.
+   Also, set up webhook listener from your terminal by running following commands and get webhook test key.<br>
+   ```console
+   stripe login
+   stripe listen --forward-to http://localhost:8000/order/stripe/webhook
+   ```
+4. Optional: Set up cloudinary account and get its account name, api key and secret.
+5. Create .env file on project's root directory and include aforementioned keys with other .env variables below:
 
 ```
    PORT= <port your app is listening to>
@@ -39,7 +37,7 @@
 **Notice:**
 
 - **_If optional requirements weren't applied, relevant source code must be disabled to avoid errors._**
-- **_By default, new users are registered as normal users. To register admin user for CRUD operations, you need to manually update user's role within the postgres database._**
+- **_First user registered is assigned with admin role._**
 
 <br>
 
@@ -74,6 +72,10 @@
 ![stripe](/views/imgs/ui/stripe-payment-demo.png?raw=true)
 
 ---
+
+#### ORDERS
+
+![orders](/views/imgs/ui/orders-demo.png?raw=true)
 
 <br>
 
