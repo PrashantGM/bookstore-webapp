@@ -6,7 +6,7 @@ export async function loadNav() {
   try {
     if (isLoggedIn.success) {
       let parsedUserData = JSON.parse(isLoggedIn.payload);
-
+      console.log(parsedUserData);
       const cartItemsCount = await getCartItemsCount(parsedUserData.id);
       btnProfile.textContent = parsedUserData.username;
       btnProfile.fontFamily = "Times New Roman', Times, serif";

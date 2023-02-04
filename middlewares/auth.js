@@ -1,5 +1,4 @@
 const { verifyToken } = require('../utils/jwt');
-const asyncWrapper = require('../utils/async-wrapper');
 
 const { UnauthorizedError } = require('../errors/index');
 

@@ -15,13 +15,11 @@ const {
 
 router.route('/order/stripe').post(authenticateUser, createPaymentIntent);
 router.route('/order/testRoute').get(testRoute);
-router
-  .route('/order/stripe/webhook')
-  .post(
-    express.raw({ type: 'application/json' }),
-    authenticateUser,
-    webhookListener
-  );
+router.route('/order/stripe/webhook').post(
+  express.raw({ type: 'application/json' }),
+  // authenticateUser,
+  webhookListener
+);
 router.route('/cart/count/:uid').get(getCartItemsCount);
 
 router.route('/order/:userId').get(authenticateUser, getOrders);

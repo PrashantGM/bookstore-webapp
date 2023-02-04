@@ -1,24 +1,30 @@
-/*
-  Warnings:
+-- CreateEnum
+CREATE TYPE "Role" AS ENUM ('USER', 'ADMIN');
 
-  - You are about to drop the `_BookToUser` table. If the table is not empty, all the data it contains will be lost.
-
-*/
 -- CreateEnum
 CREATE TYPE "Status" AS ENUM ('PENDING', 'FAILED', 'PAID', 'DELIVERED', 'CANCELED');
 
--- DropForeignKey
-ALTER TABLE "_BookToUser" DROP CONSTRAINT "_BookToUser_A_fkey";
+-- CreateTable
+CREATE TABLE "books" (
+    "id" SERIAL NOT NULL,
+    "title" TEXT NOT NULL,
+    "genre" TEXT[],
+    "description" TEXT NOT NULL,
+    "image" TEXT NOT NULL,
+    "price" DOUBLE PRECISION NOT NULL,
+    "author" TEXT NOT NULL,
+    "publication_date" DATE NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
 
--- DropForeignKey
-ALTER TABLE "_BookToUser" DROP CONSTRAINT "_BookToUser_B_fkey";
-
--- DropTable
-DROP TABLE "_BookToUser";
+    CONSTRAINT "books_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "cart_items" (
     "id" SERIAL NOT NULL,
+    "quantity" INTEGER NOT NULL,
+    "total_amount" DOUBLE PRECISION NOT NULL,
     "book_id" INTEGER,
     "user_id" INTEGER,
     "order_id" INTEGER,
@@ -31,18 +37,32 @@ CREATE TABLE "cart_items" (
 -- CreateTable
 CREATE TABLE "orders" (
     "id" SERIAL NOT NULL,
-    "subtotal" DOUBLE PRECISION NOT NULL,
     "delivery_charge" DOUBLE PRECISION NOT NULL,
-    "delivery_address" TEXT NOT NULL,
+    "delivery_address" TEXT,
     "total" DOUBLE PRECISION NOT NULL,
     "status" "Status" DEFAULT 'PENDING',
-    "client_secret" TEXT,
     "payment_intent_id" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "orders_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateTable
+CREATE TABLE "users" (
+    "id" SERIAL NOT NULL,
+    "email" TEXT NOT NULL,
+    "username" TEXT,
+    "password" TEXT NOT NULL,
+    "role" "Role" DEFAULT 'USER',
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "users_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- AddForeignKey
 ALTER TABLE "cart_items" ADD CONSTRAINT "cart_items_book_id_fkey" FOREIGN KEY ("book_id") REFERENCES "books"("id") ON DELETE SET NULL ON UPDATE CASCADE;

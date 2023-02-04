@@ -1,8 +1,11 @@
 const fs = require('fs').promises;
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-const cloudinary = require('../middlewares/cloudinary');
+const cloudinary = require('../services/cloudinary');
 const asyncWrapper = require('../utils/async-wrapper');
+const { cacheData } = require('../services/prisma-redis');
+
+prisma.$use(cacheData);
 
 const addBook = asyncWrapper(async (req, res) => {
   const { title, cloud, genre, description, price, author, publication_date } =
@@ -28,6 +31,7 @@ const addBook = asyncWrapper(async (req, res) => {
   });
   const intPrice = Number(price);
   const parsedDate = new Date(publication_date);
+
   const book = await prisma.book.create({
     data: {
       title: title,
@@ -39,7 +43,6 @@ const addBook = asyncWrapper(async (req, res) => {
       publication_date: parsedDate,
     },
   });
-
   res
     .status(201)
     .json({ success: true, msg: 'Successfully Added!', data: book });
@@ -193,7 +196,6 @@ const getBooksForUser = asyncWrapper(async (req, res) => {
       genreData.charAt(0).toUpperCase() + genreData.slice(1);
     genreD.push(uppercasedGenre);
   }
-
   const limit = 6;
   const skipValue = (page - 1) * limit;
   const totalCount = await prisma.book.count({
@@ -201,7 +203,6 @@ const getBooksForUser = asyncWrapper(async (req, res) => {
       genre: { hasSome: genreD },
     },
   });
-
   const books = await prisma.book.findMany({
     skip: skipValue,
     take: limit,
@@ -212,6 +213,7 @@ const getBooksForUser = asyncWrapper(async (req, res) => {
       title: 'asc',
     },
   });
+
   const parsedBooks = books.map((b) => {
     if (!b.image.startsWith('https')) {
       b.image = 'http://localhost:8000/uploads/' + b.image;
@@ -219,9 +221,12 @@ const getBooksForUser = asyncWrapper(async (req, res) => {
     return { ...b };
   });
 
-  res
-    .status(200)
-    .json({ data: parsedBooks, nbHits: parsedBooks.length, totalCount });
+  const data = {
+    parsedBooks,
+    nbHits: parsedBooks.length,
+    totalCount,
+  };
+  res.status(200).json({ data });
 });
 
 const getSingleBookForUser = asyncWrapper(async (req, res) => {
