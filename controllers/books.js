@@ -1,37 +1,11 @@
 const fs = require('fs').promises;
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-const cloudinary = require('../middlewares/cloudinary');
+const cloudinary = require('../services/cloudinary');
 const asyncWrapper = require('../utils/async-wrapper');
-// const { cacheData } = require('../middlewares/prisma-redis');
-const redis = require('redis');
-const url = 'redis://127.0.0.1:6379';
-const client = redis.createClient(url);
+const { cacheData } = require('../services/prisma-redis');
 
-// prisma.$use(cacheData);
-
-// prisma.$use();
-prisma.$use(async function (params, next) {
-  const query = JSON.stringify({
-    model: params.model,
-    action: params.action,
-    args: params.args,
-  });
-  if (!client.isOpen) {
-    await client.connect();
-  }
-
-  const cache = await client.GET(query);
-  if (cache) {
-    console.log('cached data', cache);
-    const parsedCache = JSON.parse(cache);
-    return parsedCache;
-  }
-  const result = await next(params);
-  client.SET(query, JSON.stringify(result), { EX: 60, NX: true });
-  console.log('resultfrom database', result);
-  return result;
-});
+prisma.$use(cacheData);
 
 const addBook = asyncWrapper(async (req, res) => {
   const { title, cloud, genre, description, price, author, publication_date } =

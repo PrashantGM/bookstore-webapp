@@ -16,7 +16,7 @@ const {
   getSingleBookForUser,
   getSimilarBooksForUser,
 } = require('../controllers/books');
-const { cacheData } = require('../middlewares/prisma-redis');
+
 router
   .route('/admin')
   .post(
