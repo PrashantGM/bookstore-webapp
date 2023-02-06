@@ -92,6 +92,9 @@ function openForm(actionType, id) {
         document.querySelector('#btn-save').textContent = 'Update';
         document.querySelector('input[name="title"]').value = title;
         document.querySelector('#img-display').src = imageURI;
+        if (imageURI.startsWith('https://')) {
+          document.querySelector('#cloudinary').checked = true;
+        }
         document.querySelector('input[name="genre"]').value = genre;
         document.querySelector('textarea[name="description"]').value =
           description;
@@ -154,16 +157,16 @@ function appendDataToForm() {
 
   const imgBook = document.querySelector('input[name="image"]');
   if (imgBook.files[0]) {
-    formData.append('image', imgBook.files[0]);
+    formData.append('new-image', imgBook.files[0]);
   } else {
     formData.append('image', document.querySelector('#img-display').src);
   }
 
-  const cloudCheck = document.querySelector('input[name="cloudinary"]');
-
-  if (cloudCheck.ariaChecked) {
+  const cloudCheck = document.querySelector('#cloudinary');
+  if (cloudCheck.checked) {
     cloudCheck.value = 'cloudinary';
   }
+
   formData.append('cloud', cloudCheck.value);
 
   formData.append('genre', document.querySelector('input[name="genre"]').value);

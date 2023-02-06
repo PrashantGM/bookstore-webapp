@@ -5,7 +5,7 @@ const cloudinary = require('../services/cloudinary');
 const asyncWrapper = require('../utils/async-wrapper');
 const { cacheData } = require('../services/prisma-redis');
 
-prisma.$use(cacheData);
+// prisma.$use(cacheData);
 
 const addBook = asyncWrapper(async (req, res) => {
   const { title, cloud, genre, description, price, author, publication_date } =
@@ -119,27 +119,65 @@ const updateBook = asyncWrapper(async (req, res) => {
     author,
     publication_date,
   } = req.body;
-  let finalImage = '';
+  let finalImage;
 
-  if (typeof image === 'string') {
-    if (image.startsWith('https://')) {
-      finalImage = image;
+  const bookForUpdate = await prisma.book.findUnique({
+    where: {
+      id,
+    },
+  });
+  const imageURI = bookForUpdate.image;
+  let localImageURI;
+  if (!imageURI.startsWith('https://')) {
+    localImageURI = 'views/uploads/' + imageURI;
+  }
+  const publicId = 'bookstore/books/' + bookForUpdate.title;
+  if (req.file !== undefined) {
+    if (cloud === 'cloudinary') {
+      if (imageURI.startsWith('https://')) {
+        await cloudinary.uploader.destroy(publicId);
+        const result = await cloudinary.uploader.upload(req.file.path, {
+          public_id: `bookstore/books/${title}`,
+          width: 400,
+          height: 300,
+          crop: 'scale',
+        });
+        finalImage = result.secure_url;
+      } else {
+        const result = await cloudinary.uploader.upload(req.file.path, {
+          public_id: `bookstore/books/${title}`,
+          width: 400,
+          height: 300,
+          crop: 'scale',
+        });
+        finalImage = result.secure_url;
+        await fs.unlink(localImageURI);
+      }
+      await fs.unlink(req.file.path);
     } else {
-      finalImage = image.replace('http://localhost:8000/uploads/', '');
-      console.log('locally saved finalimage', finalImage);
+      if (imageURI.startsWith('https://')) {
+        await cloudinary.uploader.destroy(publicId);
+      } else {
+        await fs.unlink(localImageURI);
+      }
+      finalImage = req.file.filename;
     }
   } else {
-    finalImage = req.file.filename;
-  }
+    if (cloud === 'cloudinary') {
+      if (localImageURI) {
+        const result = await cloudinary.uploader.upload(localImageURI, {
+          public_id: `bookstore/books/${title}`,
+          width: 400,
+          height: 300,
+          crop: 'scale',
+        });
+        finalImage = result.secure_url;
 
-  if (cloud === 'cloudinary') {
-    result = await cloudinary.uploader.upload(req.file.path, {
-      public_id: `bookstore/books/${title}`,
-      width: 400,
-      height: 300,
-      crop: 'fill',
-    });
-    await fs.unlink(req.file.path);
+        await fs.unlink(localImageURI);
+      }
+    } else {
+      //later
+    }
   }
   const genreTemp = genre.split(',');
   const genreArr = genreTemp.map((genre) => {
@@ -168,6 +206,19 @@ const updateBook = asyncWrapper(async (req, res) => {
 
 const deleteBook = asyncWrapper(async (req, res) => {
   const id = Number(req.params.id);
+  const book = await prisma.book.findUnique({
+    where: {
+      id,
+    },
+  });
+  if (book.image.startsWith('https://')) {
+    const public_id = 'bookstore/books/' + book.title;
+    await cloudinary.uploader.destroy(public_id);
+  } else {
+    const localImageURI = 'views/uploads/' + book.image;
+    await fs.unlink(localImageURI);
+  }
+
   await prisma.book.delete({
     where: { id },
   });

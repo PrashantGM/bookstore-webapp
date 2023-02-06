@@ -2,14 +2,19 @@ const { UnauthorizedError, UnauthenticatedError } = require('../errors');
 const CustomAPIError = require('../errors/custom-error');
 
 const errorHandler = (err, req, res, next) => {
-  // if (!process.env.NODE_ENV === 'production') {
-  //   return res.status(err.statusCode).json({
-  //      success: false,
-  //      error: err,
-  //      errMessage: err.message,
-  //      stack: err.stack,
-  //    });
-  // }
+  console.log('env', process.env.NODE_ENV);
+  if (process.env.NODE_ENV === 'development') {
+    console.log('this');
+    console.log(err, err.message, err.stack);
+    console.log('message', err.message);
+    console.log('stack', err.stack);
+    // return res.status(err.statusCode).json({
+    //   success: false,
+    //   error: err,
+    //   errMessage: err.message,
+    //   stack: err.stack,
+    // });
+  }
 
   if (err instanceof CustomAPIError) {
     return res

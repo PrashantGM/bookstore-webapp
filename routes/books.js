@@ -22,7 +22,7 @@ router
   .post(
     authenticateUser,
     authorizePermissions('ADMIN'),
-    upload.single('image'),
+    upload.single('new-image'),
     addBook
   )
   .get(authenticateUser, authorizePermissions('ADMIN'), getAllBooks);
@@ -32,7 +32,7 @@ router
   .put(
     authenticateUser,
     authorizePermissions('ADMIN'),
-    upload.single('image'),
+    upload.single('new-image'),
     updateBook
   )
   .delete(authenticateUser, authorizePermissions('ADMIN'), deleteBook);
