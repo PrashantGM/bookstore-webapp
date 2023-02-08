@@ -6,6 +6,8 @@ const winston = require('winston');
 const SegfaultHandler = require('segfault-handler');
 require('dotenv').config();
 const hbs = require('hbs');
+const rateLimiter = require('express-rate-limit');
+const xss = require('xss-clean');
 
 const templatesRoute = require('./routes/templates');
 const booksRoute = require('./routes/books');
@@ -19,6 +21,13 @@ const PORT = process.env.PORT;
 const HOST = '127.0.0.1'; //dev
 
 const app = express();
+app.use(
+  rateLimiter({
+    windowMs: 15 * 60 * 1000,
+    max: 50,
+  })
+);
+app.use(xss());
 app.use(
   cors({
     origin: `http://${HOST}:${PORT}`,
