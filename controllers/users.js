@@ -138,8 +138,6 @@ const sendResetToken = asyncWrapper(async (req, res, next) => {
 
 const resetPassword = asyncWrapper(async (req, res) => {
   const { email, token, password } = req.body;
-  console.log(token);
-
   const user = await prisma.user.findUnique({
     where: {
       email,
@@ -159,7 +157,6 @@ const resetPassword = asyncWrapper(async (req, res) => {
       password: hashedPassword,
     },
   });
-  console.log(updatePassword);
   if (!updatePassword) {
     throw new Error('Internal Server Error');
   }
@@ -168,96 +165,12 @@ const resetPassword = asyncWrapper(async (req, res) => {
     .json({ success: true, msg: 'Password changed successfully!' });
 });
 
-//adds books to user's reading list
-const addBooksToReadingList = asyncWrapper(async (req, res, next) => {
-  const { id } = req.body;
-  const userId = Number(req.params.id);
-  const readingList = await prisma.user.findMany({
-    where: {
-      id: userId,
-      reading_list: {
-        some: {
-          id,
-        },
-      },
-    },
-  });
-  if (typeof readingList[0] === 'object' && readingList[0] !== null) {
-    throw new BadRequestError('Book already exists in Reading List!');
-  }
-  const bookToUser = await prisma.user.update({
-    where: {
-      id: userId,
-    },
-    data: {
-      reading_list: { connect: [{ id }] },
-    },
-  });
-  res
-    .status(200)
-    .json({ success: true, bookToUser, msg: 'Added to Reading List' });
-});
-
-// sends books in user's reading list to front-end
-const viewReadingList = asyncWrapper(async (req, res, next) => {
-  const userId = Number(req.params.id);
-  let page = Number(req.query.page) || 1;
-  const limit = 6;
-  const skipValue = (page - 1) * limit;
-  const readingList = await prisma.user.findMany({
-    where: {
-      id: userId,
-    },
-    select: {
-      reading_list: {
-        skip: skipValue,
-        take: limit,
-        orderBy: {
-          title: 'asc',
-        },
-      },
-    },
-  });
-  const unparsedReads = readingList[0].reading_list;
-  const reads = unparsedReads.map((b) => {
-    if (!b.image.startsWith('https')) {
-      b.image = 'http://localhost:8000/uploads/' + b.image;
-    }
-    return { ...b };
-  });
-  res.status(200).json({
-    success: true,
-    data: { reads, nbHits: reads.length },
-  });
-});
-
-const deleteReadingList = asyncWrapper(async (req, res, next) => {
-  const { bookId, userId } = req.body;
-  const updatePost = await prisma.user.update({
-    where: {
-      id: userId,
-    },
-    data: {
-      reading_list: {
-        disconnect: [{ id: bookId }],
-      },
-    },
-    select: {
-      reading_list: true,
-    },
-  });
-  return res.status(200).json({ success: true, updatePost });
-});
-
 module.exports = {
   registerUser,
   loginUser,
   getSingleUser,
   logout,
-  addBooksToReadingList,
-  viewReadingList,
   checkLoggedIn,
-  deleteReadingList,
   sendResetToken,
   resetPassword,
 };
