@@ -216,12 +216,15 @@ const deleteBook = asyncWrapper(async (req, res) => {
     await cloudinary.uploader.destroy(public_id);
   } else {
     const localImageURI = 'views/uploads/' + book.image;
-    await fs.unlink(localImageURI);
+    try {
+      await fs.unlink(localImageURI);
+    } finally {
+      await prisma.book.delete({
+        where: { id },
+      });
+    }
   }
 
-  await prisma.book.delete({
-    where: { id },
-  });
   res.status(200).json({ success: true, msg: 'Successfully Deleted!' });
 });
 
