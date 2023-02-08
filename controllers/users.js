@@ -71,16 +71,6 @@ const loginUser = asyncWrapper(async (req, res, next) => {
     .json({ success: true, msg: 'Successfully logged in.', data: tokenUser });
 });
 
-const getSingleUser = asyncWrapper(async (req, res, next) => {
-  const id = Number(req.params.id);
-  const user = await prisma.user.findUnique({
-    where: {
-      id,
-    },
-  });
-  res.status(200).json(user);
-});
-
 const checkLoggedIn = asyncWrapper(async (req, res, next) => {
   const token = req.signedCookies.token;
   if (!token) {
@@ -165,12 +155,42 @@ const resetPassword = asyncWrapper(async (req, res) => {
     .json({ success: true, msg: 'Password changed successfully!' });
 });
 
+const viewAllUsers = asyncWrapper(async (req, res) => {
+  const users = await prisma.user.findMany();
+  res
+    .status(200)
+    .json({ success: true, msg: 'Successfully fetched!', data: users });
+});
+
+const getSingleUser = asyncWrapper(async (req, res) => {
+  const id = Number(req.params.userId);
+  const user = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+  });
+  res.status(200).json({ success: true, data: user });
+});
+
+const deleteUser = asyncWrapper(async (req, res) => {
+  const { userId } = req.params;
+  const nUserId = Number(userId);
+  const users = await prisma.user.delete({
+    where: {
+      id: nUserId,
+    },
+  });
+  res.status(200).json({ success: true, msg: 'Successfully deleted!' });
+});
+
 module.exports = {
   registerUser,
   loginUser,
-  getSingleUser,
   logout,
   checkLoggedIn,
   sendResetToken,
   resetPassword,
+  viewAllUsers,
+  getSingleUser,
+  deleteUser,
 };
