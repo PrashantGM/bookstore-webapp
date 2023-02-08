@@ -21,12 +21,12 @@ const PORT = process.env.PORT;
 const HOST = '127.0.0.1'; //dev
 
 const app = express();
-app.use(
-  rateLimiter({
-    windowMs: 15 * 60 * 1000,
-    max: 50,
-  })
-);
+// app.use(
+//   rateLimiter({
+//     windowMs: 15 * 60 * 1000,
+//     max: 50,
+//   })
+// );
 app.use(xss());
 app.use(
   cors({

@@ -13,6 +13,8 @@ const {
   viewReadingList,
   checkLoggedIn,
   deleteReadingList,
+  sendResetToken,
+  resetPassword,
 } = require('../controllers/users');
 // const { getAllBooks } = require('../controllers/books');
 
@@ -23,6 +25,8 @@ router.route('/:id').get(getSingleUser).patch(addBooksToReadingList);
 router.route('/reads/:id').get(viewReadingList);
 router.route('/logout').post(logout);
 router.route('/reads').delete(deleteReadingList);
+router.route('/sendLink').post(sendResetToken);
+router.route('/resetPassword').post(resetPassword);
 // router
 //   .route('/admin/books')
 //   .get(authenticateUser, authorizePermissions, getAllBooks);
