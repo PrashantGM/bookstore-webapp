@@ -164,7 +164,8 @@ button {
   justify-content: center;
 }
 #form-register,
-#form-login {
+#form-login,
+#form-reset {
   background-color: rgb(227, 240, 245);
   padding: 30px;
   position: relative;
@@ -176,7 +177,8 @@ button {
 }
 
 #btn-login,
-#btn-register {
+#btn-register,
+#btn-confirm {
   padding: 5px;
   border: none;
   background-color: rgb(88, 150, 171);
@@ -184,6 +186,7 @@ button {
   border-radius: 5px;
   font-size: 14px;
   font-weight: bold;
+  cursor: pointer;
 }
 .p-b-20 {
   padding-bottom: 20px;
@@ -657,6 +660,18 @@ td {
   border-bottom: 1px solid #ccc !important;
 }
 
+#div-reset {
+  display: flex;
+  justify-content: center;
+}
+
+#btn-reset {
+  border: none;
+  font-size: 14px;
+  background-color: transparent;
+  text-decoration: underline;
+  color: rgb(70, 2, 2);
+}
 /* td {
   border: 1px solid #bbb;
 } */

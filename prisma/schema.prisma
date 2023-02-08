@@ -63,6 +63,8 @@ model User{
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   cart CartItem[] 
+  reset_token String?
+  reset_at DateTime?
 
   @@map(name:"users")
 }

@@ -15,6 +15,9 @@ router.get('/orders/checkout/success', (req, res) => {
   res.render('./pages/success');
 });
 
+router.get('/user/reset-password', (req, res) => {
+  res.render('./pages/reset');
+});
 router.get('/', (req, res) => {
   res.render('./pages/home');
 });

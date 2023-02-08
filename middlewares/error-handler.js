@@ -2,10 +2,7 @@ const { UnauthorizedError, UnauthenticatedError } = require('../errors');
 const CustomAPIError = require('../errors/custom-error');
 
 const errorHandler = (err, req, res, next) => {
-  console.log('env', process.env.NODE_ENV);
   if (process.env.NODE_ENV === 'development') {
-    console.log('this');
-    console.log(err, err.message, err.stack);
     console.log('message', err.message);
     console.log('stack', err.stack);
     // return res.status(err.statusCode).json({
@@ -17,6 +14,8 @@ const errorHandler = (err, req, res, next) => {
   }
 
   if (err instanceof CustomAPIError) {
+    console.log('this rannn');
+    console.log(err.statusCode, err.message);
     return res
       .status(err.statusCode)
       .json({ success: false, msg: err.message });

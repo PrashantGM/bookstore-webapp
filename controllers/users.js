@@ -1,9 +1,15 @@
+const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const { attachCookiesToRes } = require('../utils/jwt');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-const { BadRequestError, UnauthenticatedError } = require('../errors/index');
+const {
+  BadRequestError,
+  UnauthenticatedError,
+  UnauthorizedError,
+} = require('../errors/index');
 const asyncWrapper = require('../utils/async-wrapper');
+const { sendResetEmail } = require('../utils/send-mail');
 
 //adds new user to db when user registers
 const registerUser = asyncWrapper(async (req, res) => {
@@ -90,6 +96,76 @@ const logout = asyncWrapper(async (req, res, next) => {
     expires: new Date(Date.now()),
   });
   res.status(200).json({ msg: 'Successfully logged out!' });
+});
+
+const sendResetToken = asyncWrapper(async (req, res, next) => {
+  const { email } = req.body;
+  if (!email) {
+    throw new BadRequestError('Please enter your email!');
+  }
+  const user = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
+  console.log(user);
+  if (!user) {
+    throw new BadRequestError("User doesn't exist!");
+  }
+  let resetToken = crypto.randomBytes(32).toString('hex');
+  const salt = await bcrypt.genSalt(10);
+  const hashedToken = await bcrypt.hash(resetToken, salt);
+
+  const updateUser = await prisma.user.update({
+    where: {
+      email,
+    },
+    data: {
+      reset_token: hashedToken,
+      reset_at: new Date(),
+    },
+  });
+  const sendLink = await sendResetEmail(email, resetToken);
+  if (sendLink) {
+    res.status(200).json({
+      success: true,
+      msg: 'Reset link has been sent to your email. Please check your inbox!',
+    });
+  }
+
+  // res.status(200).json({})
+});
+
+const resetPassword = asyncWrapper(async (req, res) => {
+  const { email, token, password } = req.body;
+  console.log(token);
+
+  const user = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
+  const isMatch = bcrypt.compare(token, user.reset_token);
+  if (!isMatch) {
+    throw new UnauthorizedError('Error Occurred!');
+  }
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
+  const updatePassword = await prisma.user.update({
+    where: {
+      email,
+    },
+    data: {
+      password: hashedPassword,
+    },
+  });
+  console.log(updatePassword);
+  if (!updatePassword) {
+    throw new Error('Internal Server Error');
+  }
+  res
+    .status(200)
+    .json({ success: true, msg: 'Password changed successfully!' });
 });
 
 //adds books to user's reading list
@@ -182,4 +258,6 @@ module.exports = {
   viewReadingList,
   checkLoggedIn,
   deleteReadingList,
+  sendResetToken,
+  resetPassword,
 };
