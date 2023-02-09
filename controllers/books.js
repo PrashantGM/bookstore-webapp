@@ -8,8 +8,16 @@ const { cacheData } = require('../services/prisma-redis');
 // prisma.$use(cacheData);
 
 const addBook = asyncWrapper(async (req, res) => {
-  const { title, cloud, genre, description, price, author, publication_date } =
-    req.body;
+  const {
+    title,
+    cloud,
+    genre,
+    description,
+    price,
+    quantity,
+    author,
+    publication_date,
+  } = req.body;
   let result = {};
 
   if (cloud === 'cloudinary') {
@@ -30,6 +38,7 @@ const addBook = asyncWrapper(async (req, res) => {
     return trimmedGenre.charAt(0).toUpperCase() + trimmedGenre.slice(1);
   });
   const intPrice = Number(price);
+  const intQuantity = Number(quantity);
   const parsedDate = new Date(publication_date);
 
   const book = await prisma.book.create({
@@ -39,6 +48,7 @@ const addBook = asyncWrapper(async (req, res) => {
       description: description,
       image: result.secure_url,
       price: intPrice,
+      quantity: intQuantity,
       author: author,
       publication_date: parsedDate,
     },
@@ -76,6 +86,7 @@ const getAllBooks = asyncWrapper(async (req, res) => {
       title: b.title,
       description: b.description,
       price: b.price,
+      quantity: b.quantity,
       author: b.author,
       publication_date: newDate,
     };
@@ -116,6 +127,7 @@ const updateBook = asyncWrapper(async (req, res) => {
     cloud,
     description,
     price,
+    quantity,
     author,
     publication_date,
   } = req.body;
@@ -185,6 +197,7 @@ const updateBook = asyncWrapper(async (req, res) => {
     return trimmedGenre.charAt(0).toUpperCase() + trimmedGenre.slice(1);
   });
   const intPrice = Number(price);
+  const intQuantity = Number(quantity);
   const parsedDate = new Date(publication_date);
 
   const book = await prisma.book.update({
@@ -195,6 +208,7 @@ const updateBook = asyncWrapper(async (req, res) => {
       genre: genreArr,
       description,
       price: intPrice,
+      quantity: intQuantity,
       author,
       publication_date: parsedDate,
     },

@@ -49,6 +49,9 @@ td {
   border: 1px solid grey;
   background-color: azure;
 }
+thead {
+  width: 100%;
+}
 
 #btn-add,
 #btn-save,
@@ -150,6 +153,7 @@ h3 {
   justify-content: start;
   align-items: start;
   gap: 5px;
+  width: 140px;
   border-radius: 2px;
   background-color: rgb(220, 183, 164);
 }
@@ -165,8 +169,8 @@ h3 {
   border: none;
   padding: 8px 12px;
   border-radius: 2px;
-  width: 90px;
   font-size: 15px;
+  width: 100%;
   text-transform: uppercase;
 }
 
@@ -174,9 +178,36 @@ h3 {
   border: none;
   padding: 8px 12px;
   border-radius: 2px;
-  width: 90px;
   font-size: 15px;
   text-transform: uppercase;
+  width: 100%;
   background-color: rgb(17, 87, 122);
   color: white;
+}
+
+.thead-users th:nth-child(1) {
+  width: 20%;
+}
+
+.thead-users th:nth-child(2) {
+  width: 35%;
+}
+
+.thead-users th:nth-child(3) {
+  width: 30%;
+}
+.thead-users th:nth-child(4) {
+  width: 15%;
+}
+#tb-users {
+  width: 600px;
+  text-align: center;
+}
+
+#dashboard {
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 15px;
+  color: #333;
 }

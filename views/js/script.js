@@ -92,6 +92,7 @@ function openForm(actionType, id) {
           description,
           price,
           author,
+          quantity,
           parsedDate,
         } = booksData.data;
         document.querySelector('#h3-newbook').textContent = 'Edit Book';
@@ -105,6 +106,7 @@ function openForm(actionType, id) {
         document.querySelector('textarea[name="description"]').value =
           description;
         document.querySelector('input[name="price"]').value = price;
+        document.querySelector('input[name="quantity"]').value = quantity;
         document.querySelector('input[name="author"]').value = author;
         document.querySelector('input[name="publication_date"]').value =
           parsedDate;
@@ -182,6 +184,10 @@ function appendDataToForm() {
   );
   formData.append('price', document.querySelector('input[name="price"]').value);
   formData.append(
+    'quantity',
+    document.querySelector('input[name="quantity"]').value
+  );
+  formData.append(
     'author',
     document.querySelector('input[name="author"]').value
   );
@@ -224,12 +230,6 @@ rowBook.forEach((rowBook) => {
   });
 });
 
-// window.onclick = function (event) {
-//   let modal = document.getElementById('modalAddBook');
-//   if (event.target == modal) {
-//     closeForm();
-//   }
-// };
 //poulate the modal form
 let modalBtns = [...document.querySelectorAll('#btn-addBook')];
 modalBtns.forEach(function (btn) {

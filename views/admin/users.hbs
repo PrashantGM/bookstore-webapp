@@ -15,21 +15,23 @@
     {{>header}}
       <div class="admin-options">
           <div class="options">
+          <p id="dashboard">Dashboard</p>
             <button id="btn-books">Books</button>
             <button id="btn-users">Users</button>
           </div>
         </div>
     <div id='base'>
       <div id='container'>
-        <h1>BookStore Dashboard</h1>
         <div class="container-table">
         <table id='tb-users'>
+          <thead class="thead-users">
           <tr class='row'>
             <th>Username</th>
             <th>Email</th>
             <th>Date Registered</th>
             <th>Delete</th>
           </tr>
+          </thead>
           {{#each data}}
             <tr class='row' id="row-user" data-userId="{{id}}">
               <td>{{username}}</td>

@@ -361,6 +361,13 @@ button {
   margin-top: 10px;
   margin-left: 15px;
 }
+
+#stock {
+  margin: 10px;
+  font-size: 18px;
+  display: none;
+}
+
 #btn-addCart,
 #btn-order {
   color: white;

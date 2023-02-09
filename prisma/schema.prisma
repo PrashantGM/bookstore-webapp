@@ -15,6 +15,7 @@ model Book{
   description String
   image String
   price Float
+  quantity Int?
   author String
   publication_date DateTime @db.Date
   created_at DateTime @default(now())

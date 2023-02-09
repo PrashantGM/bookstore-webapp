@@ -2,6 +2,7 @@ import { loadNav } from './session.js';
 import { toast } from './toast.js';
 let parsedUserData;
 let bookId = 0;
+let stock;
 let currentBookID = Number(
   document.querySelector('.book-details').getAttribute('data-bookId')
 );
@@ -26,6 +27,15 @@ onload();
 async function loadPage() {
   const similarSection = document.querySelector('.others');
   let currentGenre = similarSection.getAttribute('data-genre');
+  stock = Number(
+    document.querySelector('.book-details').getAttribute('data-quantity')
+  );
+  if (stock < 1) {
+    document.querySelector('#stock').style.display = 'block';
+    document.querySelector('#div-quantity').style.display = 'none';
+    document.querySelector('#btn-order').disabled = true;
+    document.querySelector('#btn-addCart').disabled = true;
+  }
 
   try {
     const response = await fetch(
@@ -113,26 +123,42 @@ async function addtoCart() {
     e.preventDefault();
     try {
       if (parsedUserData) {
-        const userId = parsedUserData.id;
-        const response = await fetch(`http://localhost:8000/cart/${userId}`, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          method: 'POST',
-          body: JSON.stringify({
-            quantity,
-            totalAmount,
-            bookId: currentBookID,
-          }),
-        });
-        const parsedResponse = await response.json();
+        if (quantity < 1 || quantity > 5) {
+          toast.generateToast({
+            message: 'Quantity Not Allowed!',
+            background: 'red',
+            color: 'white',
+            length: '3000ms',
+          });
+        } else if (quantity > stock) {
+          toast.generateToast({
+            message: `Currently only ${stock} books in stock.`,
+            background: 'red',
+            color: 'white',
+            length: '3000ms',
+          });
+        } else {
+          const userId = parsedUserData.id;
+          const response = await fetch(`http://localhost:8000/cart/${userId}`, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            method: 'POST',
+            body: JSON.stringify({
+              quantity,
+              totalAmount,
+              bookId: currentBookID,
+            }),
+          });
+          const parsedResponse = await response.json();
 
-        toast.generateToast({
-          message: parsedResponse.msg,
-          background: 'green',
-          color: 'white',
-          length: '2000ms',
-        });
+          toast.generateToast({
+            message: parsedResponse.msg,
+            background: 'green',
+            color: 'white',
+            length: '2000ms',
+          });
+        }
       } else {
         window.location.assign('http://localhost:8000/user/login');
       }
