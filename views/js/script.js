@@ -38,6 +38,7 @@ function openForm(actionType, id) {
   form.style.display = 'block';
   const trueForm = document.querySelector('.formContainer');
   document.querySelector('#btn-add').style.display = 'none';
+  document.querySelector('.admin-options').style.display = 'none';
   const imgBook = document.querySelector('input[name="image"]');
   imgBook.onchange = () => {
     let display = document.querySelector('#img-display');

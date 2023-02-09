@@ -7,24 +7,22 @@ body {
 } */
 #base {
   display: flex;
-  justify-content: center;
-  /* position: relative; */
-
-  /* min-height: 100vh; */
+  align-self: start;
+  justify-content: start;
+  align-items: start;
+  width: 80%;
+  min-height: 85vh;
+  margin: auto;
+  border-radius: 5px;
+  background-color: #fdf7f4;
 }
-/* #footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 2.5rem; /* Footer height
-} */
+
 h1 {
   text-align: center;
   margin-bottom: 60px;
 }
 #container {
-  margin: 10px;
-  padding: 10px;
+  padding: 60px 20px 20px 60px;
 }
 /* .container-table {
   overflow: hidden;
@@ -35,9 +33,8 @@ h1 {
 
 #tb-books,
 #tb-users {
-  width: 300px;
-  height: 500px;
-  /* overflow-y: scroll; */
+  width: 100%;
+  text-align: center;
 }
 th {
   padding: 5px;
@@ -48,7 +45,12 @@ td {
   padding: 5px 10px;
   border: 1px solid grey;
   background-color: azure;
+  overflow: hidden;
 }
+tr {
+  height: 30px;
+}
+
 thead {
   width: 100%;
 }
@@ -68,22 +70,12 @@ thead {
   padding: 10px;
 }
 
-/* .field {
-  border: none;
-  background-color: rgb(223, 235, 246);
-  width: 200px;
-  height: 35px;
-} */
-
 #popupform {
   background-color: azure;
   padding: 20px;
 
   border: 1px dashed black;
 }
-/* textarea {
-  font-family: 'Times New Roman', Times, serif;
-} */
 
 #h3-newbook {
   text-align: center;
@@ -143,8 +135,9 @@ h3 {
 .admin-options {
   display: flex;
   justify-content: start;
+  padding: 20px;
   gap: 10px;
-  margin: 30px 0px 0px 300px;
+  background-color: #fdf7f4;
 }
 
 .options {
@@ -154,8 +147,6 @@ h3 {
   align-items: start;
   gap: 5px;
   width: 140px;
-  border-radius: 2px;
-  background-color: rgb(220, 183, 164);
 }
 
 #btn-books:hover,
@@ -199,6 +190,39 @@ h3 {
 .thead-users th:nth-child(4) {
   width: 15%;
 }
+/* books */
+.thead-books th:nth-child(1) {
+  width: 10%;
+}
+.thead-books th:nth-child(2) {
+  width: 10%;
+}
+.thead-books th:nth-child(3) {
+  width: 10%;
+}
+.thead-books th:nth-child(4) {
+  width: 30%;
+}
+
+.thead-books th:nth-child(5) {
+  width: 5%;
+}
+.thead-books th:nth-child(6) {
+  width: 10%;
+}
+.thead-books th:nth-child(7) {
+  width: 10%;
+}
+.thead-books th:nth-child(8) {
+  width: 5%;
+}
+.thead-books th:nth-child(9) {
+  width: 5%;
+}
+.thead-books th:nth-child(10) {
+  width: 5%;
+}
+
 #tb-users {
   width: 600px;
   text-align: center;

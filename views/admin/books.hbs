@@ -15,6 +15,7 @@
   <body>
     <div class="container">
     {{>header}}
+    <div id='base'>
         <div class="admin-options">
           <div class="options">
           <p id="dashboard">Dashboard</p>
@@ -22,23 +23,24 @@
             <button id="btn-users">Users</button>
           </div>
         </div>
-    <div id='base'>
       <div id='container'>
         <button id='btn-add' >Add New Book</button>
         <div class="container-table">
         <table id='tb-books'>
-          <tr class='row'>
-            <th>Title</th>
-            <th>Image</th>
-            <th>Genre</th>
-            <th>Description</th>
-            <th>Price</th>
-            <th>Author</th>
-            <th>Publication Date</th>
-            <th>Quantity</th>
-            <th>Edit</th>
-            <th>Remove</th>
-          </tr>
+          <thead class="thead-books">
+            <tr class='row'>
+              <th>Title</th>
+              <th>Image</th>
+              <th>Genre</th>
+              <th>Description</th>
+              <th>Price</th>
+              <th>Author</th>
+              <th>Publication Date</th>
+              <th>Quantity</th>
+              <th>Edit</th>
+              <th>Remove</th>
+            </tr>
+          </thead>
           {{#each data}}
             <tr class='row' id="row-book" data-bookId="{{id}}">
               <td>{{title}}</td>

@@ -558,7 +558,6 @@ button {
   flex-direction: column;
   min-height: 100vh;
   justify-content: space-between;
-  /* align-items: stretch; */
 }
 .notFound-container {
   display: flex;
