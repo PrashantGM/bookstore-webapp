@@ -98,7 +98,6 @@ const sendResetToken = asyncWrapper(async (req, res, next) => {
       email,
     },
   });
-  console.log(user);
   if (!user) {
     throw new BadRequestError("User doesn't exist!");
   }
@@ -122,8 +121,6 @@ const sendResetToken = asyncWrapper(async (req, res, next) => {
       msg: 'Reset link has been sent to your email. Please check your inbox!',
     });
   }
-
-  // res.status(200).json({})
 });
 
 const resetPassword = asyncWrapper(async (req, res) => {
@@ -157,9 +154,7 @@ const resetPassword = asyncWrapper(async (req, res) => {
 
 const viewAllUsers = asyncWrapper(async (req, res) => {
   const users = await prisma.user.findMany();
-  res
-    .status(200)
-    .json({ success: true, msg: 'Successfully fetched!', data: users });
+  res.status(200).render('./admin/users', { data: users });
 });
 
 const getSingleUser = asyncWrapper(async (req, res) => {
@@ -173,8 +168,10 @@ const getSingleUser = asyncWrapper(async (req, res) => {
 });
 
 const deleteUser = asyncWrapper(async (req, res) => {
+  console.log('ran');
   const { userId } = req.params;
   const nUserId = Number(userId);
+  console.log(nUserId);
   const users = await prisma.user.delete({
     where: {
       id: nUserId,

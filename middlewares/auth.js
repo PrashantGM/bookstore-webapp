@@ -9,9 +9,12 @@ const authenticateUser = async (req, res, next) => {
   }
   try {
     const { email, id, role } = verifyToken({ token });
+
     if (req.params.userId) {
-      if (Number(req.params.userId) !== id) {
-        return res.status(404).render('./pages/notFound');
+      if (role !== 'ADMIN') {
+        if (Number(req.params.userId) !== id) {
+          return res.status(404).render('./pages/notFound');
+        }
       }
     }
     req.user = { email, id, role };
@@ -28,7 +31,6 @@ const authorizePermissions = (...roles) => {
     }
     next();
   };
-  //  return res.status(404).render('./pages/notFound');
 };
 
 module.exports = { authenticateUser, authorizePermissions };

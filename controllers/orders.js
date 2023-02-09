@@ -52,7 +52,6 @@ const updateCartItem = asyncWrapper(async (req, res) => {
   const { quantity, amount, bookID } = req.body;
   const nUserId = Number(userId);
   const nBookId = Number(bookID);
-  console.log(req.body, userId);
   const result = await prisma.cartItem.updateMany({
     where: {
       user_id: nUserId,
@@ -123,7 +122,6 @@ const getCartItemsCount = asyncWrapper(async (req, res) => {
       order_id: null,
     },
   });
-  console.log(cartItemsCount);
   res.status(200).json({ cartItemsCount, nbHits: cartItemsCount.length });
 });
 

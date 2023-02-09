@@ -15,6 +15,12 @@
   <body>
     <div class="container">
     {{>header}}
+        <div class="admin-options">
+          <div class="options">
+            <button id="btn-books">Books</button>
+            <button id="btn-users">Users</button>
+          </div>
+        </div>
     <div id='base'>
       <div id='container'>
         <h1>BookStore Dashboard</h1>
@@ -29,6 +35,7 @@
             <th>Price</th>
             <th>Author</th>
             <th>Publication Date</th>
+            <th>Quantity</th>
             <th>Edit</th>
             <th>Remove</th>
           </tr>
@@ -41,6 +48,7 @@
               <td>{{price}}</td>
               <td>{{author}}</td>
               <td>{{publication_date}}</td>
+              <td>{{quantity}}</td>
               <td><button id='btn-update' ><img
                     src='../imgs/edit.png'
                     width='20px'
@@ -137,6 +145,18 @@
                   class="field"
                   placeholder='in NRs.'
                   name='price'
+                  required
+                />
+              </div>
+                <div class="div-addbooks">
+                <label id='lbl-quantity' for='text'>
+                  Quantity
+                </label>
+                <input
+                  type='text'
+                  id='quantity'
+                  class="field"                
+                  name='quantity'
                   required
                 />
               </div>

@@ -8,7 +8,13 @@ async function onload() {
     const parsedUserData = await loadNav();
     if (parsedUserData) {
       document.querySelector('#nav-dashboard').style.display = 'none';
+      document.querySelector('#btn-books').className = 'active';
+      document.querySelector('#btn-users').className = 'before';
     }
+    document.querySelector('#btn-users').addEventListener('click', (e) => {
+      e.preventDefault();
+      window.location.assign('http://localhost:8000/user/all');
+    });
   } catch (error) {
     console.log(error);
   }

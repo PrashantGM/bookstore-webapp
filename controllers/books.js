@@ -81,7 +81,7 @@ const getAllBooks = asyncWrapper(async (req, res) => {
     };
   });
 
-  res.render('./admin/index', {
+  res.render('./admin/books', {
     title: 'BookStore',
     data: bookWithParsedDate,
   });
