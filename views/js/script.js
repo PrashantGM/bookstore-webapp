@@ -6,15 +6,26 @@ onload();
 async function onload() {
   try {
     const parsedUserData = await loadNav();
+
     if (parsedUserData) {
+      const btnUsers = document.querySelector('#btn-users');
+      const btnOrders = document.querySelector('#btn-orders');
       document.querySelector('#nav-dashboard').style.display = 'none';
       document.querySelector('#btn-books').className = 'active';
-      document.querySelector('#btn-users').className = 'before';
+
+      btnUsers.className = 'before';
+      btnOrders.className = 'before';
+
+      btnUsers.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.assign('http://localhost:8000/user/all');
+      });
+
+      btnOrders.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.assign('http://localhost:8000/orders/all');
+      });
     }
-    document.querySelector('#btn-users').addEventListener('click', (e) => {
-      e.preventDefault();
-      window.location.assign('http://localhost:8000/user/all');
-    });
   } catch (error) {
     console.log(error);
   }

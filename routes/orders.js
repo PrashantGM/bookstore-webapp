@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { authenticateUser } = require('../middlewares/auth');
+const {
+  authenticateUser,
+  authorizePermissions,
+} = require('../middlewares/auth');
 const {
   addItemToCart,
   updateCartItem,
@@ -10,6 +13,9 @@ const {
   createPaymentIntent,
   webhookListener,
   getOrders,
+  getAllOrders,
+  updateOrder,
+  deleteOrder,
   testRoute,
 } = require('../controllers/orders');
 
@@ -20,6 +26,7 @@ router.route('/order/stripe/webhook').post(
   // authenticateUser,
   webhookListener
 );
+router.route('/orders/all').get(getAllOrders);
 router.route('/cart/count/:uid').get(getCartItemsCount);
 
 router.route('/order/:userId').get(authenticateUser, getOrders);
@@ -30,5 +37,10 @@ router
   .get(authenticateUser, viewCartItems)
   .put(authenticateUser, updateCartItem)
   .delete(authenticateUser, deleteCartItem);
+
+router
+  .route('/admin/order/:id')
+  .put(authenticateUser, authorizePermissions('ADMIN'), updateOrder)
+  .delete(authenticateUser, authorizePermissions('ADMIN'), deleteOrder);
 
 module.exports = router;

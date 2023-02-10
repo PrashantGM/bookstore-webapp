@@ -336,6 +336,70 @@ const getOrders = asyncWrapper(async (req, res) => {
   });
 });
 
+const getAllOrders = asyncWrapper(async (req, res) => {
+  const orderItems = await prisma.order.findMany({
+    include: {
+      cart_items: {
+        include: {
+          books: true,
+          users: true,
+        },
+      },
+    },
+  });
+  orderItems.forEach((order) => {
+    const dateOrdered = new Date(order.created_at);
+    let monthOrdered = dateOrdered.getUTCMonth() + 1;
+    let dayOrdered = dateOrdered.getUTCDate();
+    let yearOrdered = dateOrdered.getUTCFullYear();
+    order.created_at = yearOrdered + '/' + monthOrdered + '/' + dayOrdered;
+
+    const dateDelivered = new Date(order.updated_at);
+    let monthDelivered = dateDelivered.getUTCMonth() + 1;
+    let dayDelivered = dateDelivered.getUTCDate();
+    let yearDelivered = dateDelivered.getUTCFullYear();
+    order.updated_at =
+      yearDelivered + '/' + monthDelivered + '/' + dayDelivered;
+    if (order.updated_at === order.created_at) {
+      order.updated_at = 'In Delivery';
+    }
+  });
+  res.status(200).render('./admin/orders', { data: orderItems });
+});
+
+const updateOrder = asyncWrapper(async (req, res) => {
+  const id = Number(req.params.id);
+
+  const { deliveryAddress, deliveryDate, status } = req.body;
+  console.log(deliveryAddress);
+  const parsedDate = new Date(deliveryDate);
+
+  const order = await prisma.order.update({
+    where: {
+      id,
+    },
+    data: {
+      delivery_address: deliveryAddress,
+      updated_at: parsedDate,
+      status,
+    },
+  });
+  res.status(200).json({
+    success: true,
+    msg: `Successfully updated order with id:${order.id}`,
+  });
+});
+
+const deleteOrder = asyncWrapper(async (req, res) => {
+  const id = Number(req.params.id);
+
+  await prisma.order.delete({
+    where: {
+      id,
+    },
+  });
+  res.status(201).json({ success: true, msg: 'Successfully deleted' });
+});
 module.exports = {
   addItemToCart,
   updateCartItem,
@@ -345,5 +409,8 @@ module.exports = {
   createPaymentIntent,
   webhookListener,
   getOrders,
+  getAllOrders,
+  updateOrder,
+  deleteOrder,
   testRoute,
 };

@@ -32,7 +32,8 @@ h1 {
 } */
 
 #tb-books,
-#tb-users {
+#tb-users,
+#tb-orders {
   width: 100%;
   text-align: center;
 }
@@ -114,7 +115,7 @@ thead {
 }
 
 .div-buttons {
-  margin-top: 20px;
+  margin-top: 30px;
   display: flex;
   justify-content: center;
   gap: 15px;
@@ -150,9 +151,10 @@ h3 {
 }
 
 #btn-books:hover,
-#btn-users:hover {
+#btn-users:hover,
+#btn-orders:hover {
   background-color: rgb(73, 128, 156);
-  color: rgb(61, 40, 40);
+  color: #eee;
 }
 .before {
   background-color: transparent;
@@ -223,6 +225,45 @@ h3 {
   width: 5%;
 }
 
+/* orders */
+.thead-orders th:nth-child(1) {
+  width: 5%;
+}
+.thead-orders th:nth-child(2) {
+  width: 5%;
+}
+.thead-orders th:nth-child(3) {
+  width: 30%;
+}
+.thead-orders th:nth-child(4) {
+  width: 5%;
+}
+
+.thead-orders th:nth-child(5) {
+  width: 10%;
+}
+.thead-orders th:nth-child(6) {
+  width: 5%;
+}
+.thead-orders th:nth-child(7) {
+  width: 5%;
+}
+.thead-orders th:nth-child(8) {
+  width: 10%;
+}
+.thead-orders th:nth-child(9) {
+  width: 5%;
+}
+.thead-orders th:nth-child(10) {
+  width: 10%;
+}
+.thead-orders th:nth-child(11) {
+  width: 5%;
+}
+.thead-orders th:nth-child(12) {
+  width: 5%;
+}
+
 #tb-users {
   width: 600px;
   text-align: center;
@@ -234,4 +275,35 @@ h3 {
   text-transform: uppercase;
   padding: 15px;
   color: #333;
+}
+
+.modal {
+  max-width: 600px;
+  background-color: azure;
+  padding: 10px;
+  top: 50%;
+  left: 50%;
+  border: 2px solid rgb(32, 66, 66);
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  transform: translate(-50%, -50%);
+}
+
+.modal::backdrop {
+  background: rgb(0 0 0 / 0.5);
+}
+
+.div-status {
+  display: flex;
+  justify-content: space-between;
+  margin: 0px 25px;
+}
+
+select {
+  width: 150px;
+}
+
+#status {
+  margin-right: 60px;
 }
