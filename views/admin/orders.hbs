@@ -56,13 +56,13 @@
               </td>
               <td>{{delivery_charge}}</td>
               <td>{{delivery_address}}</td>
-              <td>{{total}}</td>
+              <td>${{total}}</td>
               <td>{{status}}</td>
               <td>{{updated_at}}</td>
-              {{#each cart_items}}
+              {{#if cart_items}}
               <td>{{users.username}}</td>
               <td>{{users.email}}</td>
-              {{/each}}
+              {{/if}}
               <td><button id='btn-update' ><img
                     src='../imgs/edit.png'
                     width='20px'

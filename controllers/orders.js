@@ -346,6 +346,9 @@ const getAllOrders = asyncWrapper(async (req, res) => {
         },
       },
     },
+    orderBy: {
+      updated_at: 'desc',
+    },
   });
   orderItems.forEach((order) => {
     const dateOrdered = new Date(order.created_at);
@@ -363,7 +366,14 @@ const getAllOrders = asyncWrapper(async (req, res) => {
     if (order.updated_at === order.created_at) {
       order.updated_at = 'In Delivery';
     }
+
+    order.cart_items.forEach((cart, index) => {
+      if (index > 0) {
+        delete cart.users;
+      }
+    });
   });
+  console.log(orderItems[0]);
   res.status(200).render('./admin/orders', { data: orderItems });
 });
 
@@ -371,7 +381,6 @@ const updateOrder = asyncWrapper(async (req, res) => {
   const id = Number(req.params.id);
 
   const { deliveryAddress, deliveryDate, status } = req.body;
-  console.log(deliveryAddress);
   const parsedDate = new Date(deliveryDate);
 
   const order = await prisma.order.update({
